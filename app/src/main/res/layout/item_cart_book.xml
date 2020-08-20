@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    app:cardBackgroundColor="@color/colorSendMessage"
+    app:rippleColor="@color/colorPrimary"
+    app:strokeColor="@color/colorDivider"
+    app:strokeWidth="1px"
+    tools:ignore="UnusedAttribute">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/front_image"
+            android:layout_width="130dp"
+            android:layout_height="160dp"
+            android:layout_marginTop="8dp"
+            android:scaleType="centerCrop"
+            android:transitionName="bookImage"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/bg_image" />
+
+        <Button
+            android:id="@+id/btn_buy"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="@string/buy"
+            android:textAllCaps="false"
+            android:textColor="@color/colorAccent"
+            app:backgroundTint="@color/colorSendMessage"
+            app:cornerRadius="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/btn_message"
+            app:rippleColor="@color/colorAccent"
+            app:strokeColor="@color/colorAccent"
+            app:strokeWidth="2dp" />
+
+        <Button
+            android:id="@+id/btn_remove"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="@string/remove"
+            android:textAllCaps="false"
+            android:textColor="@color/colorRed"
+            app:backgroundTint="@color/colorSendMessage"
+            app:cornerRadius="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView17"
+            app:rippleColor="@color/colorRed"
+            app:strokeColor="@color/colorRed"
+            app:strokeWidth="2dp" />
+
+        <TextView
+            android:id="@+id/book_author"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="Ronald Tchuekou"
+            android:textColor="@color/colorRed"
+            android:textSize="@dimen/baseTextSize"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/front_image"
+            app:layout_constraintTop_toBottomOf="@+id/book_title" />
+
+        <TextView
+            android:id="@+id/book_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="3dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="Excellence en mathematiques"
+            android:textColor="@color/dark"
+            android:textSize="@dimen/baseTextSize"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/front_image"
+            app:layout_constraintTop_toBottomOf="@+id/remove_to_cart" />
+
+
+        <TextView
+            android:id="@+id/book_edition"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="Edition : La Mongrove"
+            android:textColor="@color/colorDivider"
+            android:textSize="@dimen/baseTextSize"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/front_image"
+            app:layout_constraintTop_toBottomOf="@+id/book_author" />
+
+        <ImageButton
+            android:id="@+id/remove_to_cart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:contentDescription="@string/remove_to_cart"
+            android:focusable="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_close" />
+
+        <TextView
+            android:id="@+id/textView14"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:text="@string/classe_label"
+            android:textSize="@dimen/baseTextSize"
+            app:layout_constraintStart_toEndOf="@+id/front_image"
+            app:layout_constraintTop_toBottomOf="@+id/book_edition" />
+
+        <TextView
+            android:id="@+id/book_count"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="TC"
+            android:textColor="@color/black"
+            android:textSize="@dimen/baseTextSize"
+            app:layout_constraintBottom_toBottomOf="@+id/textView14"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textView14"
+            app:layout_constraintTop_toTopOf="@+id/textView14" />
+
+        <ImageButton
+            android:id="@+id/remove_quantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toBottomOf="@+id/quantity"
+            app:layout_constraintEnd_toStartOf="@+id/quantity"
+            app:layout_constraintTop_toTopOf="@+id/quantity"
+            app:srcCompat="@drawable/ic_remove" />
+
+        <TextView
+            android:id="@+id/quantity"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/border_outline"
+            android:gravity="center"
+            android:text="@string/_0"
+            android:textAlignment="gravity"
+            android:textSize="@dimen/baseTextSize"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.36"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView19" />
+
+        <ImageButton
+            android:id="@+id/add_quantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            app:layout_constraintBottom_toBottomOf="@+id/quantity"
+            app:layout_constraintStart_toEndOf="@+id/quantity"
+            app:layout_constraintTop_toTopOf="@+id/quantity"
+            app:srcCompat="@drawable/ic_add" />
+
+        <TextView
+            android:id="@+id/textView16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/book"
+            android:textSize="@dimen/baseTextSize"
+            app:layout_constraintBottom_toBottomOf="@+id/add_quantity"
+            app:layout_constraintStart_toEndOf="@+id/add_quantity"
+            app:layout_constraintTop_toTopOf="@+id/add_quantity" />
+
+        <TextView
+            android:id="@+id/textView17"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/total_prise"
+            android:textColor="@color/dark"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toStartOf="@+id/total_prise"
+            app:layout_constraintTop_toBottomOf="@+id/quantity" />
+
+        <TextView
+            android:id="@+id/total_prise"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="0.0 FCFA"
+            android:textColor="@color/colorAccent"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textView17" />
+
+        <TextView
+            android:id="@+id/textView19"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/prise"
+            android:textSize="@dimen/baseTextSize"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/front_image" />
+
+        <TextView
+            android:id="@+id/prise"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="3000.0 FCFA"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/baseTextSize"
+            app:layout_constraintBottom_toBottomOf="@+id/textView19"
+            app:layout_constraintStart_toEndOf="@+id/textView19"
+            app:layout_constraintTop_toTopOf="@+id/textView19" />
+
+        <Button
+            android:id="@+id/btn_message"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:drawableEnd="@drawable/ic_chat"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="@string/message"
+            android:textAllCaps="false"
+            app:backgroundTint="@color/colorAccent"
+            app:cornerRadius="20dp"
+            app:layout_constraintEnd_toStartOf="@+id/btn_buy"
+            app:layout_constraintStart_toEndOf="@+id/btn_remove"
+            app:layout_constraintTop_toTopOf="@+id/btn_remove"
+            app:rippleColor="@color/colorSendMessage" />
+
+        <TextView
+            android:id="@+id/more_info"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="@string/more_info_about"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/remove_to_cart"
+            app:layout_constraintStart_toEndOf="@+id/front_image"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

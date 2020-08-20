@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.ContactUs"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:background="@color/colorWhite"
+        android:layout_height="?actionBarSize">
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            app:titleTextColor="@color/colorTextPrimary"
+            app:title="@string/contact_us" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <LinearLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="wrap_content"
+            android:layout_height="300dp"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/entire_contact"
+            android:contentDescription="@string/contact_us" />
+
+        <Button
+            android:id="@+id/btn_number"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableEnd="@drawable/ic_phone"
+            android:layout_marginTop="5dp"
+            android:padding="10dp"
+            android:onClick="contactNumber"
+            android:text="+237 664 72 66 32"
+            android:textAllCaps="false"
+            android:drawableTint="@color/colorPrimary"
+            android:textSize="@dimen/baseTextSize"
+            app:iconTint="@color/colorPrimary"
+            app:strokeColor="@color/colorPrimary"
+            app:strokeWidth="3dp"
+            tools:ignore="HardcodedText,UnusedAttribute" />
+
+        <Button
+            android:id="@+id/btn_email"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:drawableEnd="@drawable/ic_email"
+            android:padding="10dp"
+            android:onClick="contactEmail"
+            android:drawableTint="@color/colorPrimary"
+            android:text="ephraim.tsague@gmail.com"
+            android:textAllCaps="false"
+            android:textSize="@dimen/baseTextSize"
+            app:strokeColor="@color/colorPrimary"
+            app:strokeWidth="3dp"
+            tools:ignore="HardcodedText,UnusedAttribute" />
+    </LinearLayout>
+</LinearLayout>

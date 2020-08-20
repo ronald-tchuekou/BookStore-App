@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.BookDetails">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/background_image"
+                android:layout_width="0dp"
+                android:layout_height="350dp"
+                android:scaleType="centerCrop"
+                android:background="@drawable/bg_image"
+                android:transitionName="bookImage"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:contentDescription="@string/contact_name"
+                tools:ignore="UnusedAttribute" />
+            <View
+                android:id="@+id/back"
+                android:layout_width="0dp"
+                android:layout_height="350dp"
+                android:background="@color/colorPixelDark"
+                android:scaleType="centerCrop"
+                android:transitionName="bookImage"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="UnusedAttribute" />
+
+            <ImageButton
+                android:id="@+id/imageButton2"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_margin="8dp"
+                android:background="?selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:contentDescription="@string/finish"
+                android:elevation="5dp"
+                android:focusable="true"
+                android:onClick="comeback"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_back"
+                tools:ignore="UnusedAttribute" />
+
+            <ImageView
+                android:id="@+id/front_image"
+                android:layout_width="150dp"
+                android:layout_height="200dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="20dp"
+                android:contentDescription="@string/book"
+                android:scaleType="centerCrop"
+                android:transitionName="bookImage"
+                app:layout_constraintBottom_toTopOf="@+id/title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageButton2"
+                app:layout_constraintVertical_bias="1.0"
+                app:srcCompat="@drawable/bg_image"
+                tools:ignore="UnusedAttribute" />
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPixelDark"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="5dp"
+                android:text="@string/title"
+                android:textColor="@color/colorWhite"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/background_image"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@color/colorWhite"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/title">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/author_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:paddingVertical="5dp"
+                        android:text="@string/author"
+                        android:textSize="@dimen/baseTextSize"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:layout_editor_absoluteY="358dp" />
+
+                    <TextView
+                        android:id="@+id/book_author"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:ellipsize="end"
+                        android:paddingVertical="5dp"
+                        android:singleLine="true"
+                        android:text="@string/app_name"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="@dimen/baseTextSize"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="@+id/author_label"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toEndOf="@+id/author_label"
+                        app:layout_constraintTop_toTopOf="@+id/author_label" />
+
+                    <TextView
+                        android:id="@+id/edition_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:paddingVertical="5dp"
+                        android:text="@string/edition"
+                        android:textSize="@dimen/baseTextSize"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/author_label" />
+
+                    <TextView
+                        android:id="@+id/book_edition"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:paddingVertical="5dp"
+                        android:text="@string/edition"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="@dimen/baseTextSize"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="@+id/edition_label"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toEndOf="@+id/edition_label"
+                        app:layout_constraintTop_toTopOf="@+id/edition_label" />
+
+                    <TextView
+                        android:id="@+id/state_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:paddingVertical="5dp"
+                        android:text="@string/state"
+                        android:textSize="@dimen/baseTextSize"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/edition_label" />
+
+                    <TextView
+                        android:id="@+id/book_state"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:paddingVertical="5dp"
+                        android:text="@string/state"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="@dimen/baseTextSize"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="@+id/state_label"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toEndOf="@+id/state_label"
+                        app:layout_constraintTop_toTopOf="@+id/state_label" />
+
+                    <TextView
+                        android:id="@+id/prise_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:paddingVertical="5dp"
+                        android:text="@string/prise"
+                        android:textSize="@dimen/baseTextSize"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/state_label" />
+
+                    <TextView
+                        android:id="@+id/book_prise"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:paddingVertical="5dp"
+                        android:text="@string/prise"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/baseTextSize"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="@+id/prise_label"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toEndOf="@+id/prise_label"
+                        app:layout_constraintTop_toTopOf="@+id/prise_label" />
+
+                    <TextView
+                        android:id="@+id/quantity_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:paddingVertical="5dp"
+                        android:text="@string/quantity"
+                        android:textSize="@dimen/baseTextSize"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/prise_label" />
+
+                    <TextView
+                        android:id="@+id/book_quantity"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:paddingVertical="5dp"
+                        android:text="@string/quantity"
+                        android:textColor="@color/colorRed"
+                        android:textSize="@dimen/baseTextSize"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toEndOf="@+id/quantity_label"
+                        app:layout_constraintTop_toBottomOf="@+id/book_prise" />
+
+                    <Button
+                        android:id="@+id/commended_btn"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="5dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="16dp"
+                        android:drawableEnd="@drawable/ic_commended"
+                        android:drawableTint="@color/colorWhite"
+                        android:drawableTintMode="@color/colorWhite"
+                        android:text="@string/commended"
+                        android:textAllCaps="false"
+                        android:textSize="@dimen/baseTextSize"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/book_quantity"
+                        tools:ignore="UnusedAttribute" />
+
+                    <Button
+                        android:id="@+id/add_to_kilt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="5dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:backgroundTint="@color/colorAccent"
+                        android:drawableEnd="@drawable/ic_add_to_kilt"
+                        android:drawableTint="@color/colorWhite"
+                        android:drawableTintMode="@color/colorWhite"
+                        android:text="@string/add_to_cart"
+                        android:textAllCaps="false"
+                        android:textSize="@dimen/baseTextSize"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/commended_btn"
+                        tools:ignore="UnusedAttribute" />
+
+                    <TextView
+                        android:id="@+id/textView8"
+                        android:layout_width="0dp"
+                        android:layout_marginVertical="8dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:gravity="center"
+                        android:text="@string/copyright"
+                        android:textAlignment="gravity"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/add_to_kilt" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

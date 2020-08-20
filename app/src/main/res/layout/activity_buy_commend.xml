@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    tools:context=".activities.BuyCommend">
+
+    <include
+        layout="@layout/general_toolbar"
+        android:id="@+id/include"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/include">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="10dp">
+
+<!--            <CheckBox-->
+<!--                android:id="@+id/not_shipping"-->
+<!--                android:textSize="@dimen/baseTextSize"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="@string/no_shipping" />-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/textView25"-->
+<!--                android:layout_marginHorizontal="6dp"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="@string/note_about_no_shipping" />-->
+
+            <View
+                android:id="@+id/view40"
+                android:background="@color/colorDivider"
+                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="1dp" />
+
+            <TextView
+                android:id="@+id/textView15"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:paddingVertical="5dp"
+                android:text="@string/contact_name" />
+
+            <EditText
+                android:id="@+id/contact_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:drawableStart="@drawable/ic_account"
+                android:background="@drawable/border_outline"
+                android:paddingHorizontal="8dp"
+                android:inputType="textCapWords"
+                android:hint="@string/contact_name"
+                android:autofillHints="@string/contact_name" />
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:paddingVertical="5dp"
+                android:text="@string/contact_phone" />
+
+            <EditText
+                android:id="@+id/phone_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:drawableStart="@drawable/ic_phone"
+                android:background="@drawable/border_outline"
+                android:paddingHorizontal="8dp"
+                android:inputType="phone"
+                android:hint="@string/contact_phone"
+                android:autofillHints="@string/contact_phone" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="5dp"
+                android:background="@color/colorDivider" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="4dp"
+                android:text="@string/shipping_type"
+                android:textSize="@dimen/baseTextSize" />
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <RadioButton
+                    android:id="@+id/instant_shipping"
+                    android:layout_width="match_parent"
+                    android:layout_height="22dp"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/instant_shipping" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="5dp"
+                    android:text="@string/instant_shipping_text" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:hint="@string/localisation"
+                    app:errorEnabled="true"
+                    app:helperTextEnabled="true">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/filled_exposed_dropdown"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <RadioButton
+                    android:id="@+id/standard_shipping"
+                    android:layout_width="match_parent"
+                    android:layout_height="22dp"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/standart_shipping" />
+
+                <TextView
+                    android:id="@+id/textView27"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="5dp"
+                    android:text="@string/standart_shipping_text" />
+
+                <RadioButton
+                    android:id="@+id/express_shipping"
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp"
+                    android:layout_marginTop="3dp"
+                    android:text="@string/exprss_shipping" />
+
+                <TextView
+                    android:id="@+id/textView28"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="5dp"
+                    android:text="@string/shipping_express_text" />
+            </RadioGroup>
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:paddingVertical="5dp"
+                android:text="@string/district" />
+
+            <EditText
+                android:id="@+id/district"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints="@string/district"
+                android:background="@drawable/border_outline"
+                android:ems="10"
+                android:hint="@string/district"
+                android:inputType="text"
+                android:paddingHorizontal="8dp" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:paddingVertical="5dp"
+                android:text="@string/street" />
+
+            <EditText
+                android:id="@+id/street"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:background="@drawable/border_outline"
+                android:paddingHorizontal="8dp"
+                android:inputType="text"
+                android:hint="@string/street_ex"
+                android:autofillHints="@string/street_ex" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:paddingVertical="5dp"
+                android:text="@string/more_description" />
+
+            <EditText
+                android:id="@+id/more_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:maxLines="3"
+                android:background="@drawable/border_outline"
+                android:paddingHorizontal="8dp"
+                android:inputType="textMultiLine"
+                android:gravity="top"
+                android:textAlignment="gravity"
+                android:hint="@string/more_description_example"
+                android:autofillHints="@string/more_description" />
+
+
+            <View
+                android:background="@color/colorDivider"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="1dp" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/as_default_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:paddingVertical="6dp"
+                android:text="@string/definid_this_as_default_address"
+                android:textSize="@dimen/baseTextSize"/>
+
+            <TextView
+                android:id="@+id/textView8"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="20dp"
+                android:textAlignment="gravity"
+                android:gravity="center"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/copyright" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="15dp"
+        android:paddingTop="2dp"
+        android:paddingBottom="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <Button
+            android:id="@+id/valid"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/valid_address" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

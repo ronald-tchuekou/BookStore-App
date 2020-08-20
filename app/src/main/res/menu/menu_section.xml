@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/franco_option"
+        android:title="@string/franco_section" />
+    <item
+        android:id="@+id/anglo_option"
+        android:title="@string/anglo_section" />
+</menu>

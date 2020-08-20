@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:focusable="true"
+    android:clickable="true"
+    android:background="?selectableItemBackground"
+    app:cardElevation="@null">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/client_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="Ronald Tchuekou"
+            android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+            app:layout_constraintEnd_toStartOf="@+id/date_cmd"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/date_cmd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="21 Jun 2020"
+            android:textColor="@color/colorAccent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/client_phone"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:drawableStart="@drawable/ic_phone"
+            android:text="6584519852"
+            android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/client_name" />
+
+        <TextView
+            android:id="@+id/book_number"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="2dp"
+            android:drawableStart="@drawable/ic_books"
+            android:text="12 Lives au total"
+            android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
+            app:layout_constraintEnd_toStartOf="@+id/action_btn"
+            app:layout_constraintStart_toEndOf="@+id/client_phone"
+            app:layout_constraintTop_toBottomOf="@+id/client_name" />
+
+        <TextView
+            android:id="@+id/client_location"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:drawableStart="@drawable/ic_location"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="Carrefour acacia, 50 mètres après la maison MTN en allant vers le rond-point express, du même côté que la maison MTN ..."
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/client_phone" />
+
+        <ImageButton
+            android:id="@+id/action_btn"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:focusable="true"
+            android:clickable="true"
+            android:background="?selectableItemBackgroundBorderless"
+            android:scaleType="centerCrop"
+            android:tint="@color/colorRed"
+            app:layout_constraintBottom_toBottomOf="@+id/book_number"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/book_number"
+            app:srcCompat="@drawable/ic_not_valid"
+            android:contentDescription="@string/com_facebook_loginview_cancel_action" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

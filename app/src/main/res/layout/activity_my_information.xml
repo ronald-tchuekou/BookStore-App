@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context=".activities.MyInformation">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:background="@color/colorWhite"
+        android:layout_height="?actionBarSize">
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            app:titleTextColor="@color/colorTextPrimary"
+            app:title="@string/my_information" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <LinearLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:paddingHorizontal="15dp"
+        android:paddingVertical="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            tools:layout_editor_absoluteX="1dp"
+            tools:layout_editor_absoluteY="1dp"
+            android:background="@drawable/border_accent"
+            tools:ignore="UselessParent">
+
+            <TextView
+                android:id="@+id/user_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/baseTextSize"
+                android:padding="10dp"
+                android:drawableStart="@drawable/ic_account"
+                android:drawablePadding="15dp"
+                android:text="Ronald Tchuekou" />
+
+            <View
+                android:background="@color/colorPrimary"
+                android:layout_height="1dp"
+                android:layout_width="match_parent"/>
+
+            <TextView
+                android:id="@+id/login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_email"
+                android:drawablePadding="15dp"
+                android:padding="10dp"
+                android:textColorLink="@color/colorPrimary"
+                android:autoLink="all"
+                android:text="@ronaldtchuekou@gmail.com"
+                android:textSize="@dimen/baseTextSize" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

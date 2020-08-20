@@ -1,0 +1,225 @@
+<resources>
+    <string name="app_name">BookStore</string>
+
+    <string name="facebook_app_id">205389230884647</string>
+    <string name="fb_login_protocol_scheme">fb205389230884647</string>
+
+    <string name="sign_in_with_facebook">Me connecter avec Facebook</string>
+    <string name="sign_in_with_google">Me connecter avec Google</string>
+    <string name="sign_in_with_instangram">Me connecter avec Instangram</string>
+    <string name="sign_in_with_email">Me connecter avec mes identifiants</string>
+    <string name="sign_up_with_facebook">M\'inscrire avec Facebook</string>
+    <string name="sign_up_with_google">M\'inscrire avec Google</string>
+    <string name="sign_up_with_instangram">M\'inscrire avec Instangram</string>
+    <string name="sign_up_with_email">M\'inscrire</string>
+    <string name="or">ou</string>
+    <string name="not_sign_up"><u>Pas encore inscrit</u></string>
+    <string name="already_registered"><u>Déjà inscrit</u></string>
+    <string name="pass_this"><u>passer cette étape</u></string>
+    <string name="text_sign_in">Vous avez déjà un compte BookStore ? \n Connectez-vous dès maintenant</string>
+    <string name="text_sign_up">Vous n\'avez pas de compte BookStore ?\n Inscrivez-vous en quelques secondes</string>
+    <string name="am_connect">Je me connecte</string>
+    <string name="am_sign_up">Je m\'inscris</string>
+    <string name="pass_forgot">Mot de passe oublié ?</string>
+    <string name="prompt_email">Numero téléphone ou adresse e-mail</string>
+    <string name="prompt_login">Numero téléphone ou adresse e-mail</string>
+    <string name="prompt_password">Mot de passe</string>
+    <string name="prompt_confirm_password">Confirmation</string>
+    <string name="prompt_name">Nom</string>
+    <string name="prompt_surname">Prénom</string>
+    <string name="text_in_sign_up">En vous inscrivant, vous acceptez les</string>
+    <string name="text_use_condition"><u>Conditions Générales d\'Utilisation</u></string>
+    <string name="invalid_mail">Votre adresse email est incorrecte</string>
+    <string name="invalid_password">Le mot de passe doit contenir au moins 6 caractères</string>
+    <string name="invalid_surname">Votre prénom doit contenir au moins 3caractères</string>
+    <string name="invalid_name">Votre nom doit contenir au moins 3caractères</string>
+    <string name="home">Home</string>
+    <string name="search">Rechreche</string>
+    <string name="favorites">Favoris</string>
+    <string name="account">Compte</string>
+    <string name="sign_in_up">M\'inscrire / Me connecter</string>
+    <string name="my_information">Mes informations</string>
+    <string name="my_account">Mon Compte</string>
+    <string name="my_favorites">Mes favoris</string>
+    <string name="welcome">Bienvenue</string>
+    <string name="settings">Réglages</string>
+    <string name="help">Aide</string>
+    <string name="note_app">Noter l\'application</string>
+    <string name="contact_us">Nous contacter</string>
+    <string name="disconnect">Se déconnecter</string>
+    <string name="copyright">©Copyright - 2020, DarkComputerClub - RonCoder \n Tous droits réservés</string>
+    <string name="your_books">Votre superbe bibliothèque en ligne …</string>
+    <string name="notifications">Notifications</string>
+    <string name="allow_notifications">Autoriser les notifications</string>
+    <string name="first_cycle">Premier cycle</string>
+    <string name="second_cycle">Second cycle</string>
+    <string name="third_cycle">Troisieme cycle</string>
+    <string name="classes">Classes</string>
+    <string name="see_all">Tout voir</string>
+    <string name="invalid_confirm_password">Le mot de passe de confirmation est incorrect.</string>
+    <string name="buy">Acheter</string>
+    <string name="commended">Commander</string>
+    <string name="cart">Chariot</string>
+    <string name="manager">Manager</string>
+    <string name="add_to_cart">Ajouter au chariot</string>
+    <string name="your_cart">Votre chariot</string>
+    <string name="title">Titre</string>
+    <string name="author">Auteur : </string>
+    <string name="edition">"Edition : "</string>
+    <string name="state">"Etat du livre : "</string>
+    <string name="prise">"Prix unitaire : "</string>
+    <string name="quantity">"Quantité disponible : "</string>
+    <string name="all_cycle_book">Livres disponible</string>
+    <string name="all_books_for">Touts les livres</string>
+    <string name="primary_cycle">Cycle primaire</string>
+    <string name="book_name">Recherche par titre, auteur, edition…</string>
+    <string name="empty_result">Pas de resultat… !</string>
+    <string name="message">Message</string>
+    <string name="classe_label">Classe concerné :</string>
+    <string name="book">Livre(s)</string>
+    <string name="total_prise">"Prix Total : "</string>
+    <string name="maked_commended">Terminer la commande du document</string>
+    <string name="finish">Terminé</string>
+    <string name="remove">Rétirer</string>
+    <string name="cancel">Annuler</string>
+    <string name="_0">0</string>
+    <string name="add">Ajouter</string>
+    <string name="remove_to_cart">Retirer</string>
+    <string name="total">"Total : "</string>
+    <string name="more_info_about"><u>Plus de détails sur l\'article</u></string>
+    <string name="comfim">Messsage de confirmation</string>
+    <string name="confir_removed_to_cart">Voulez-vous vraiment rétirer cette command de votre chariot ?</string>
+    <string name="yes">Oui</string>
+    <string name="remove_success">Rétiré avec succès.</string>
+    <string name="no">Non</string>
+    <string name="messages_chat">Votre boite de chat</string>
+    <string name="send">Envoyer</string>
+    <string name="enter_message">Entrer votre message....</string>
+    <string name="confir_disconnect">Voulez-vous vraiment vous déconnecter de cette application ?</string>
+    <string name="book_number">"Quantité de livre : "</string>
+    <string name="valide">Valider</string>
+    <string name="contact_name">Nom complet.</string>
+    <string name="contact_phone">Saisir un numero de téléphone</string>
+    <string name="district">Ville</string>
+    <string name="street">Localité (residence actuelle)</string>
+    <string name="valid_address">Valider la commande</string>
+    <string name="definid_this_as_default_address">Définir cette adresse comme adresse de livraison par défaut</string>
+    <string name="no_shipping">Recupérer votre collis dans le point de vente concerner</string>
+    <string name="note_about_no_shipping">Pour cette option, si le bénéficière ne debourse pas son collis après 2 jours de la commande, cette dernière sera momentanément annulée.</string>
+    <string name="waranty_or_shipping">Garantie / Adresse de livraison</string>
+    <string name="more_description">Description de votre adresse (Précision)</string>
+    <string name="more_description_example">ex: Carrefour acasia, 50M de la maison MTN en allant vres le rond point express, du même côté de la mainson MTN</string>
+    <string name="shipping_type">Type de livraison</string>
+    <string name="standart_shipping_text">Pour cette option, vous serez livré dans 2 jours. Le coût de livraison sera 500 FCFA</string>
+    <string name="standart_shipping">Livraison standard (Dans 2 jours, 5OO FCFA)</string>
+    <string name="exprss_shipping">Livraison express (Dans 2 à 3h, 2,000 FCFA)</string>
+    <string name="shipping_express_text">Pour cette option, vous serez livré dans 3 à 4 heures de temps. Le coût de livraison ici est de 2,000 FCFA</string>
+    <string name="not_subscribed">Utilisé uniquement dans la ville de Yaoundé, Cameroun</string>
+    <string name="title_activity_administration">administration</string>
+    <string name="administration">Administration</string>
+    <string name="commends_admin">Administration / Rapport</string>
+    <string name="cmd_shipping">C.Livrées</string>
+    <string name="cmd_obselet">C.Obsoletes</string>
+    <string name="cmd_standard">C.Standards</string>
+    <string name="cmd_express">C.Express</string>
+    <string name="cmd_cmd">Commandes</string>
+    <string name="section">Section</string>
+    <string name="instant_shipping">Livraison instantanée (Dans les 24 heures, 500 FCFA)</string>
+    <string name="instant_shipping_text">Pour cette option, vous devez choisir une localité parmis celle ci-dessous. Le coût de livraison sera 500 FCFA.</string>
+    <string name="franco_section">Section Francophone</string>
+    <string name="anglo_section">Section Anglophone</string>
+    <string name="localisation">Choisir une localisation</string>
+    <string name="message_about_cmd">Message des clients</string>
+    <string name="loerm">Lorem Ipsum is simply dummy text of the printing and type setting industry.</string>
+    <string name="localisation_chose">Localisation chosit : </string>
+    <string name="address_desc">Adresse décrite : </string>
+    <string name="total_for_buy">"Prix total à payer : "</string>
+    <string name="commend_state">Etat de la facture</string>
+    <string name="title_cmd_detail">Détails sur la facture.</string>
+    <string name="login">Login</string>
+    <string name="sing_up">Inscription</string>
+    <string name="which_quantity">Quelle quantité voulez-vous ?</string>
+    <string name="street_ex">ex : Chappelle Melen ou Carrefour Obili, ou lycée Efoulan ou etc.</string>
+    <string name="yaounde">Yaoundé</string>
+
+    // Arrays.
+    <string-array name="nursery_anglophone">
+        <item>Nursery 2</item>
+        <item>Nursery 1</item>
+    </string-array>
+    <string-array name="maternelle_francophone">
+        <item>Troisième année</item>
+        <item>Deuxième année</item>
+        <item>Première année</item>
+        <item>Pré Maternelle</item>
+    </string-array>
+    <string-array name="primary_anglophone">
+        <item>Class 6</item>
+        <item>Class 5</item>
+        <item>Class 4</item>
+        <item>Class 3</item>
+        <item>Class 2</item>
+        <item>Class 1</item>
+    </string-array>
+    <string-array name="primaire_francophone">
+        <item>CM2</item>
+        <item>CM1</item>
+        <item>CE2</item>
+        <item>CE1</item>
+        <item>CP</item>
+        <item>SIL</item>
+    </string-array>
+    <string-array name="secondary_anglophone">
+        <item>Lower/Upper Sixth</item>
+        <item>Form 5</item>
+        <item>Form 4</item>
+        <item>Form 3</item>
+        <item>Form 2</item>
+        <item>Form 1</item>
+    </string-array>
+    <string-array name="secondaire_francophone">
+        <item>Terminale</item>
+        <item>Première</item>
+        <item>2nde</item>
+        <item>3ème</item>
+        <item>4ème</item>
+        <item>5ème</item>
+        <item>6ème</item>
+    </string-array>
+    <string-array name="class_groups">
+        <item>Nursery Anglophone</item>
+        <item>Maternelle Francophone</item>
+        <item>Primary Anglophone</item>
+        <item>Primaire Francophone</item>
+        <item>Secondary Anglophone</item>
+        <item>Secondaire Francophone</item>
+    </string-array>
+    <string-array name="instant_shipping_locations">
+        <item>ACACIA</item>
+        <item>BIYEM ASSI STADE, CARREFOUR BIYEM ASSI, HOPITAL DE BIYEM ASSI, LYCEE DE BIYEM ASSI</item>
+        <item>COLLEGE VOGT</item>
+        <item>CARREFOUR NSAM</item>
+        <item>CARREFOUR OLYMPIQUE</item>
+        <item>CES NGOA EKELLE,</item>
+        <item>DAMASE, DAMASE MAISON ROUGE, MAETUR DAMASE, MAISON DAMASE, ENTREE TERRE ROUGE DAMASE</item>
+        <item>ELOUMDEN, CHEFFERIE ELOUDEM, CAMP MILITAIRE ELOUMDEN</item>
+        <item>ETOUG EBE, ETOUG EBE 1, ETOUG EBE 2</item>
+        <item>EFOULAN, EFOULAN COMMISSARIAT, ENEO EFOULAN, LYCEE EFOULAN</item>
+        <item>EMIA</item>
+        <item>ESTIIC</item>
+        <item>JOUVENCE, CHAPELLE JOUVENCE,</item>
+        <item>LOGEMENTS UNIVERSITAIRES</item>
+        <item>OBILI, CARREFOUR OBILI, CHAPELLE OBILI, GP OBILI</item>
+        <item>MELEN, CHAPELLE MELEN, MARCHE MELEN</item>
+        <item>MENDONG, CENTRE COMMERCIAL MENDONG, LYCEE DE MENDONG</item>
+        <item>MVOG BETSI</item>
+        <item>OBOBOGO</item>
+        <item>RECASEMENT NSAM</item>
+        <item>ROND POINT EXPRESS</item>
+        <item>SCALOM</item>
+        <item>NSIMEYONG, SHELL NSIMEYONG 1</item>
+        <item>TKC</item>
+        <item>TAM TAM</item>
+        <item>UNIVERSITE YDE 1</item>
+    </string-array>
+</resources>

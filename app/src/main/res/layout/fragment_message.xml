@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/message_fragment"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/colorWhite"
+    tools:context=".fragments.MessageChat"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:background="@color/colorWhite"
+        android:layout_height="?actionBarSize">
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            app:titleTextColor="@color/colorTextPrimary"
+            app:title="@string/messages_chat" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+   <androidx.recyclerview.widget.RecyclerView
+       android:id="@+id/message_recycler"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       tools:listitem="@layout/item_contact"
+       android:scrollbars="vertical"
+       android:scrollbarSize="7sp"
+       android:scrollbarStyle="outsideOverlay"
+       />
+
+</LinearLayout>

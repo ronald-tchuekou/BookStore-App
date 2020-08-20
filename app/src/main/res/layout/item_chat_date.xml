@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:gravity="center_horizontal"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingVertical="5dp"
+    android:orientation="vertical"
+    android:layout_height="wrap_content">
+    <com.google.android.material.card.MaterialCardView
+        app:cardCornerRadius="10dp"
+        android:background="@color/colorPixel"
+        android:backgroundTint="@color/colorPixel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:ignore="UnusedAttribute">
+        <LinearLayout
+            android:paddingVertical="5dp"
+            android:paddingHorizontal="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/chat_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorWhite"
+                android:textSize="20sp"
+                android:text="TODAY" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorDivider"
+        android:layout_marginTop="5dp"/>
+
+</LinearLayout>

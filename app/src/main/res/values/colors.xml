@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#1AA592</color>
+    <color name="rippleColor">#C824EDD2</color>
+    <color name="colorPrimaryDark">#6D7078</color>
+    <color name="colorIcon">#606A7A</color>
+    <color name="colorPixel">#9A8F8F8F</color>
+    <color name="colorPixelDark">#99000000</color>
+    <color name="colorTextPrimary">#2B2B2B</color>
+    <color name="colorDivider">#C8C8C8</color>
+    <color name="colorAccent">#EC8D27</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorBlue">#3C4B9F</color>
+    <color name="colorRed">#E33333</color>
+    <color name="transparent">#00000000</color>
+    <color name="colorSendMessage">#F4F4F4</color>
+    <color name="colorReceivedMessage">#E6E0FFFB</color>
+    <color name="colorTextMessage">#353535</color>
+    <color name="dark">#575757</color>
+    <color name="black">#363636</color>
+    <color name="tabSelectedTextColor">#FFFFFF</color>
+    <color name="tabTextColor">#92FFFFFF</color>
+</resources>
