@@ -11,6 +11,10 @@ public class backlog {
      *          5. Dans le module de connexion retirer tous les messages d'erreurs, mais indiquer cela dans le module
      *              d'inscription. OK
      *          6. Personnaliser le home pour facilité la navigation. OK
+     *
+     * TODO
+     *      Tâches:
+     *          Ajouter le logo de twitter sur le bouton de connexion.
      */
 
 }

@@ -10,8 +10,8 @@
     <color name="colorDivider">#C8C8C8</color>
     <color name="colorAccent">#EC8D27</color>
     <color name="colorWhite">#FFFFFF</color>
-    <color name="colorBlue">#3C4B9F</color>
-    <color name="colorRed">#E33333</color>
+    <color name="facebookColor">#3C4B9F</color>
+    <color name="googleColor">#E33333</color>
     <color name="transparent">#00000000</color>
     <color name="colorSendMessage">#F4F4F4</color>
     <color name="colorReceivedMessage">#E6E0FFFB</color>
@@ -20,4 +20,5 @@
     <color name="black">#363636</color>
     <color name="tabSelectedTextColor">#FFFFFF</color>
     <color name="tabTextColor">#92FFFFFF</color>
+    <color name="twitterColor">#03A9F4</color>
 </resources>

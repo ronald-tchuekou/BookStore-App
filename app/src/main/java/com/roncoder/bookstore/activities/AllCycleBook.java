@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,7 +19,13 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.roncoder.bookstore.R;
+import com.roncoder.bookstore.api.Result;
+import com.roncoder.bookstore.dbHelpers.BookHelper;
 import com.roncoder.bookstore.fragments.Home;
 import com.roncoder.bookstore.models.Book;
 import com.roncoder.bookstore.utils.Utils;
@@ -27,20 +34,28 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 import static com.roncoder.bookstore.utils.Utils.ListTypes.FIRST_CYCLE;
 import static com.roncoder.bookstore.utils.Utils.ListTypes.PRIMARY_CYCLE;
+import static com.roncoder.bookstore.utils.Utils.ListTypes.SECOND_CYCLE;
 
 public class AllCycleBook extends AppCompatActivity {
-    int commend_count = 2;
+    private static final String TAG = "AllCycleBook";
+    int commend_count = 0;
     TextView cart_badge;
     GridView layout_grid;
     private Utils.ListTypes types;
     private boolean is_francophone;
+    private GridAdapter adapter;
     private List<Book> books;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_cycle_book);
+        commend_count = MainActivity.commend_count;
         Intent extraIntent = getIntent();
         if (extraIntent != null) {
             types = (Utils.ListTypes) Objects.requireNonNull(extraIntent.getExtras()).get(Home.EXTRA_CYCLE);
@@ -49,7 +64,7 @@ public class AllCycleBook extends AppCompatActivity {
         // Adapted the grid_layout vew.
         books = new ArrayList<>();
         layout_grid = findViewById(R.id.grid);
-        GridAdapter adapter = new GridAdapter();
+        adapter = new GridAdapter();
         layout_grid.setAdapter(adapter);
         setBookContent();
         managedActionbar();
@@ -59,50 +74,61 @@ public class AllCycleBook extends AppCompatActivity {
      * Function to get the content books.
      */
     private void setBookContent() {
-        books.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres",
-                "NMI", "image", "Neuf", "Secondaire Francophone",3000, 10));
-        books.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres",
-                "NMI", "image", "Neuf", "Secondaire Francophone",3000, 10));
-        books.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres",
-                "NMI", "image", "Neuf", "Secondaire Francophone",3000, 10));
-        books.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres",
-                "NMI", "image", "Neuf", "Secondaire Francophone",3000, 10));
-        books.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres",
-                "NMI", "image", "Neuf", "Secondaire Francophone",3000, 10));
-        books.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres",
-                "NMI", "image", "Neuf", "Secondaire Francophone",3000, 10));
-        books.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres",
-                "NMI", "image", "Neuf", "Secondaire Francophone",3000, 10));
-        books.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres",
-                "NMI", "image", "Neuf", "Secondaire Francophone",3000, 10));
-        books.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres",
-                "NMI", "image", "Neuf", "Secondaire Francophone",3000, 10));
-        books.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres",
-                "NMI", "image", "Neuf", "Secondaire Francophone",3000, 10));
-        books.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres",
-                "NMI", "image", "Neuf", "Secondaire Francophone",3000, 10));
-        books.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres",
-                "NMI", "image", "Neuf", "Secondaire Francophone",3000, 10));
-        books.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres",
-                "NMI", "image", "Neuf", "Secondaire Francophone",3000, 10));
-        books.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres",
-                "NMI", "image", "Neuf", "Secondaire Francophone",3000, 10));
-        books.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres",
-                "NMI", "image", "Neuf", "Secondaire Francophone",3000, 10));
-        books.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres",
-                "NMI", "image", "Neuf", "Secondaire Francophone",3000, 10));
-        books.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres",
-                "NMI", "image", "Neuf", "Secondaire Francophone",3000, 10));
-        books.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres",
-                "NMI", "image", "Neuf", "Secondaire Francophone",3000, 10));
-        books.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres",
-                "NMI", "image", "Neuf", "Secondaire Francophone",3000, 10));
-        books.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres",
-                "NMI", "image", "Neuf", "Secondaire Francophone",3000, 10));
-        books.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres",
-                "NMI", "image", "Neuf", "Secondaire Francophone",3000, 10));
-        books.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres",
-                "NMI", "image", "Neuf", "Secondaire Francophone",3000, 10));
+        
+        String cycle = "";
+        if (is_francophone){
+            if (types == PRIMARY_CYCLE)
+                cycle = Utils.NURSERY_F;
+            else if (types == FIRST_CYCLE)
+                cycle = Utils.PRIMARY_F;
+            else if (types == SECOND_CYCLE)
+                cycle = Utils.SECONDARY_F;
+        }else {
+            if (types == PRIMARY_CYCLE)
+                cycle = Utils.NURSERY_A;
+            else if (types == FIRST_CYCLE)
+                cycle = Utils.PRIMARY_A;
+            else if (types == SECOND_CYCLE)
+                cycle = Utils.SECONDARY_A;
+        }
+
+        BookHelper.getBooksByCycle(cycle).enqueue(new Callback<Result>() {
+            @Override
+            public void onResponse(Call<Result> call, Response<Result> response) {
+
+                Result result = response.body();
+
+                if (result == null)
+                    return;
+
+                if (result.getError()) {
+                    Utils.setDialogMessage(AllCycleBook.this, result.getMessage());
+                    Log.e(TAG, "Error process : " + result.getMessage(), null);
+                }
+                else if (result.getSuccess()) {
+                    String value = result.getValue();
+                    Log.i(TAG, "Success process : " + value);
+                    Gson gson = new Gson();
+                    JsonArray bookArray = (JsonArray) JsonParser.parseString(value);
+                    for (JsonElement element : bookArray) {
+                        books.add(gson.fromJson(element, Book.class));
+                    }
+                    adapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Result> call, Throwable t) {
+                Utils.setDialogMessage(AllCycleBook.this, t.getMessage());
+                Log.e(TAG, "onFailure: " + call, t);
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        recreate();
     }
 
     /**

@@ -6,11 +6,11 @@
 
     <string name="sign_in_with_facebook">Me connecter avec Facebook</string>
     <string name="sign_in_with_google">Me connecter avec Google</string>
-    <string name="sign_in_with_instangram">Me connecter avec Instangram</string>
+    <string name="sign_in_with_twitter">Me connecter avec Twitter</string>
     <string name="sign_in_with_email">Me connecter avec mes identifiants</string>
     <string name="sign_up_with_facebook">M\'inscrire avec Facebook</string>
     <string name="sign_up_with_google">M\'inscrire avec Google</string>
-    <string name="sign_up_with_instangram">M\'inscrire avec Instangram</string>
+    <string name="sign_up_with_twitter">M\'inscrire avec Twitter</string>
     <string name="sign_up_with_email">M\'inscrire</string>
     <string name="or">ou</string>
     <string name="not_sign_up"><u>Pas encore inscrit</u></string>
@@ -118,11 +118,11 @@
     <string name="title_activity_administration">administration</string>
     <string name="administration">Administration</string>
     <string name="commends_admin">Administration / Rapport</string>
-    <string name="cmd_shipping">C.Livrées</string>
-    <string name="cmd_obselet">C.Obsoletes</string>
-    <string name="cmd_standard">C.Standards</string>
-    <string name="cmd_express">C.Express</string>
-    <string name="cmd_cmd">Commandes</string>
+    <string name="delivered_bills">F.Livrées</string>
+    <string name="obsolete_bills">F.Obsoletes</string>
+    <string name="bills_shipping_standard">F.Standards</string>
+    <string name="bills_shipping_express">F.Express</string>
+    <string name="bills_shipping_instant">F.Instant.</string>
     <string name="section">Section</string>
     <string name="instant_shipping">Livraison instantanée (Dans les 24 heures, 500 FCFA)</string>
     <string name="instant_shipping_text">Pour cette option, vous devez choisir une localité parmis celle ci-dessous. Le coût de livraison sera 500 FCFA.</string>
@@ -134,13 +134,26 @@
     <string name="localisation_chose">Localisation chosit : </string>
     <string name="address_desc">Adresse décrite : </string>
     <string name="total_for_buy">"Prix total à payer : "</string>
-    <string name="commend_state">Etat de la facture</string>
-    <string name="title_cmd_detail">Détails sur la facture.</string>
+    <string name="commend_state">Etat de la bill</string>
+    <string name="title_cmd_detail">Détails sur la bill.</string>
     <string name="login">Login</string>
     <string name="sing_up">Inscription</string>
     <string name="which_quantity">Quelle quantité voulez-vous ?</string>
     <string name="street_ex">ex : Chappelle Melen ou Carrefour Obili, ou lycée Efoulan ou etc.</string>
     <string name="yaounde">Yaoundé</string>
+    <string name="ok">OK</string>
+    <string name="this_has_no_billed_cmd">Cette action est impossible, car dans cette liste contient des commandes non facturées. Veuillez resoudre ce problème avant le chat avec un administrateur de commandes.</string>
+    <string name="all_cmd_has_dit_bill">Toutes ces commandes ont des factures différentes, dont l\'achat global est impossible ici.</string>
+    <string name="books_in_total">Livre(s) au total</string>
+    <string name="set_the_receiver_of_this_cmd">Indiquer le nom de la personne qui recevra ce colis !</string>
+    <string name="set_the_phone">Indiquer le téléphone !</string>
+    <string name="add_successful">Ajoutée avec succès.</string>
+    <string name="no_result_found">Pas de résultat(s) trouvés pour</string>
+    <string name="deleting">Suppression...</string>
+    <string name="valid_successful">Validée avec succès.</string>
+    <string name="validation">Validation...</string>
+    <string name="cmd_not_billed_to_validate">Cette commande n\'est pas facturée pour être validée. Veuillez la facuter en cliquant sur le bouton *Acheter*.</string>
+    <string name="wait_a_moment">Patientez...</string>
 
     // Arrays.
     <string-array name="nursery_anglophone">
@@ -148,10 +161,8 @@
         <item>Nursery 1</item>
     </string-array>
     <string-array name="maternelle_francophone">
-        <item>Troisième année</item>
         <item>Deuxième année</item>
         <item>Première année</item>
-        <item>Pré Maternelle</item>
     </string-array>
     <string-array name="primary_anglophone">
         <item>Class 6</item>
@@ -171,11 +182,11 @@
     </string-array>
     <string-array name="secondary_anglophone">
         <item>Lower/Upper Sixth</item>
-        <item>Form 5</item>
-        <item>Form 4</item>
-        <item>Form 3</item>
-        <item>Form 2</item>
-        <item>Form 1</item>
+        <item>From 5</item>
+        <item>From 4</item>
+        <item>From 3</item>
+        <item>From 2</item>
+        <item>From 1</item>
     </string-array>
     <string-array name="secondaire_francophone">
         <item>Terminale</item>

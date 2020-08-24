@@ -42,27 +42,46 @@
                 app:srcCompat="@drawable/bookstore_icon"
                 android:contentDescription="@string/app_name" />
 
-            <com.facebook.login.widget.LoginButton
+<!--            <com.facebook.login.widget.LoginButton-->
+<!--                android:id="@+id/facebook_btn"-->
+<!--                style="@style/Widget.MaterialComponents.Button"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="16dp"-->
+<!--                android:layout_marginTop="16dp"-->
+<!--                android:layout_marginEnd="16dp"-->
+<!--                android:background="@color/colorBlue"-->
+<!--                android:drawableEnd="@drawable/facebook"-->
+<!--                android:paddingHorizontal="15dp"-->
+<!--                android:paddingVertical="8dp"-->
+<!--                android:text="@string/sign_in_with_facebook"-->
+<!--                android:textAllCaps="false"-->
+<!--                android:textColor="@color/colorWhite"-->
+<!--                android:textSize="@dimen/baseTextSize"-->
+<!--                app:backgroundTint="@color/colorBlue"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/textView"-->
+<!--                app:rippleColor="@color/colorWhite" />-->
+
+            <Button
                 android:id="@+id/facebook_btn"
-                style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginEnd="16dp"
-                android:background="@color/colorBlue"
                 android:drawableEnd="@drawable/facebook"
-                android:paddingHorizontal="15dp"
                 android:paddingVertical="8dp"
-                android:text="@string/sign_in_with_facebook"
+                android:text="@string/sign_in_with_google"
                 android:textAllCaps="false"
-                android:textColor="@color/colorWhite"
                 android:textSize="@dimen/baseTextSize"
-                app:backgroundTint="@color/colorBlue"
+                app:backgroundTint="@color/facebookColor"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView"
                 app:rippleColor="@color/colorWhite" />
+
             <Button
                 android:id="@+id/google_btn"
                 android:layout_width="0dp"
@@ -75,12 +94,12 @@
                 android:text="@string/sign_in_with_google"
                 android:textAllCaps="false"
                 android:textSize="@dimen/baseTextSize"
-                app:backgroundTint="@color/colorRed"
+                app:backgroundTint="@color/googleColor"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/facebook_btn" />
             <Button
-                android:id="@+id/instangram_btn"
+                android:id="@+id/twitter_btn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -88,10 +107,10 @@
                 android:layout_marginEnd="16dp"
                 android:drawableEnd="@drawable/instagram"
                 android:paddingVertical="8dp"
-                android:text="@string/sign_in_with_instangram"
+                android:text="@string/sign_in_with_twitter"
                 android:textAllCaps="false"
                 android:textSize="@dimen/baseTextSize"
-                app:backgroundTint="@color/colorAccent"
+                app:backgroundTint="@color/twitterColor"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/google_btn" />
@@ -117,7 +136,7 @@
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@+id/view2"
                 app:layout_constraintStart_toEndOf="@+id/view"
-                app:layout_constraintTop_toBottomOf="@+id/instangram_btn" />
+                app:layout_constraintTop_toBottomOf="@+id/twitter_btn" />
             <View
                 android:id="@+id/view2"
                 android:layout_width="0dp"
@@ -150,7 +169,7 @@
                 android:layout_marginTop="16dp"
                 android:paddingVertical="8dp"
                 android:text="@string/not_sign_up"
-                android:textColor="@color/colorBlue"
+                android:textColor="@color/facebookColor"
                 android:textSize="19sp"
                 android:textStyle="bold"
                 android:clickable="true"
@@ -166,7 +185,7 @@
                 android:paddingVertical="8dp"
                 android:focusable="true"
                 android:text="@string/pass_this"
-                android:textColor="@color/colorRed"
+                android:textColor="@color/googleColor"
                 android:textSize="19sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"

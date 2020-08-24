@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.roncoder.bookstore.R;
 import com.roncoder.bookstore.models.Book;
-import com.roncoder.bookstore.models.Classe;
+import com.roncoder.bookstore.models.Classes;
 import com.roncoder.bookstore.models.Factory;
 import com.roncoder.bookstore.utils.Utils;
 
@@ -79,9 +79,9 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     .into(cycleHolder.book_iamge);
         }
         else {
-            Classe classe = (Classe) factories.get(position);
+            Classes classes = (Classes) factories.get(position);
             ClassesBooksHolder classesHolder = (ClassesBooksHolder) holder;
-            classesHolder.title.setText(classe.getName());
+            classesHolder.title.setText(classes.getName());
         }
     }
 

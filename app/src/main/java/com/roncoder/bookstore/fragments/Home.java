@@ -8,18 +8,26 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.roncoder.bookstore.R;
 import com.roncoder.bookstore.activities.AllCycleBook;
 import com.roncoder.bookstore.activities.ClassBook;
 import com.roncoder.bookstore.activities.MainActivity;
 import com.roncoder.bookstore.adapters.HomeAdapter;
+import com.roncoder.bookstore.api.Result;
+import com.roncoder.bookstore.dbHelpers.BookHelper;
+import com.roncoder.bookstore.dbHelpers.ClassHelper;
 import com.roncoder.bookstore.models.Book;
-import com.roncoder.bookstore.models.Classe;
+import com.roncoder.bookstore.models.Classes;
 import com.roncoder.bookstore.models.Factory;
 import com.roncoder.bookstore.utils.Utils;
 import com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView;
@@ -27,19 +35,24 @@ import com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class Home extends Fragment implements View.OnClickListener {
 
     public static final String EXTRA_CYCLE = "CycleType";
     public static final String EXTRA_CLASS = "class_books";
     public static final String TRANSITION_IMAGE_NAME = "bookImage";
     public static final String EXTRA_IS_FRANCOPHONE = "is_francophone";
+    private static final String TAG = "Home fragment";
     private static boolean is_francophone_section = true;
     private String[] class_group;
     private TextView all_primary_cycle, all_first_cycle, all_second_cycle, nursery_text, primary_text, secondary_text, class_text;
-    private MultiSnapRecyclerView primary_cycle_recyclerView, first_cycle_recyclerView, second_cycle_recyclerView,
+    private MultiSnapRecyclerView nursery_cycle_recyclerView, primary_cycle_recyclerView, secondary_cycle_recyclerView,
             classes_recyclerView;
-    private List<Factory> primary_cycleBooks, first_cycleBooks, second_cycleBooks, classesBooks;
-    private HomeAdapter primary_cycleBookAdapter, first_cycleBookAdapter, second_cycleBookAdapter, classesBookAdapter;
+    private List<Factory> nursery_cycleBooks, primary_cycleBooks, secondary_cycleBooks, classesList;
+    private HomeAdapter nursery_cycleBookAdapter, primary_cycleBookAdapter, second_cycleBookAdapter, classesAdapter;
 
     public Home() { }
     @Override
@@ -54,9 +67,9 @@ public class Home extends Fragment implements View.OnClickListener {
         all_primary_cycle = root.findViewById(R.id.all_primary_cycle);
         all_first_cycle = root.findViewById(R.id.all_first_cycle);
         all_second_cycle = root.findViewById(R.id.all_second_cycle);
-        primary_cycle_recyclerView = root.findViewById(R.id.first_cycle_recyclerView);
-        first_cycle_recyclerView = root.findViewById(R.id.second_cycle_recyclerView);
-        second_cycle_recyclerView = root.findViewById(R.id.third_cycle_recyclerView);
+        nursery_cycle_recyclerView = root.findViewById(R.id.first_cycle_recyclerView);
+        primary_cycle_recyclerView = root.findViewById(R.id.second_cycle_recyclerView);
+        secondary_cycle_recyclerView = root.findViewById(R.id.third_cycle_recyclerView);
         classes_recyclerView = root.findViewById(R.id.classes_recyclerView);
         nursery_text = root.findViewById(R.id.textView9);
         primary_text = root.findViewById(R.id.textView10);
@@ -69,14 +82,31 @@ public class Home extends Fragment implements View.OnClickListener {
         return root;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateContentList();
+    }
+
     /**
      * Function to set the listener to the recycler view.
      */
     private void initItemListener() {
+        nursery_cycleBookAdapter.setOnCycleItemBookListener(new HomeAdapter.OnCycleItemBookListener() {
+            @Override
+            public void onCycleItemClickListener(int position, View view) {
+                startBookDetailActivity((Book) nursery_cycleBooks.get(position), view);
+            }
+
+            @Override
+            public void onBuyButtonClickListener(int position) {
+                setToCommendActivity((Book) nursery_cycleBooks.get(position));
+            }
+        });
         primary_cycleBookAdapter.setOnCycleItemBookListener(new HomeAdapter.OnCycleItemBookListener() {
             @Override
             public void onCycleItemClickListener(int position, View view) {
-                startCycleActivity((Book) primary_cycleBooks.get(position), view);
+                startBookDetailActivity((Book) primary_cycleBooks.get(position), view);
             }
 
             @Override
@@ -84,31 +114,20 @@ public class Home extends Fragment implements View.OnClickListener {
                 setToCommendActivity((Book) primary_cycleBooks.get(position));
             }
         });
-        first_cycleBookAdapter.setOnCycleItemBookListener(new HomeAdapter.OnCycleItemBookListener() {
-            @Override
-            public void onCycleItemClickListener(int position, View view) {
-                startCycleActivity((Book) first_cycleBooks.get(position), view);
-            }
-
-            @Override
-            public void onBuyButtonClickListener(int position) {
-                setToCommendActivity((Book) first_cycleBooks.get(position));
-            }
-        });
         second_cycleBookAdapter.setOnCycleItemBookListener(new HomeAdapter.OnCycleItemBookListener() {
             @Override
             public void onCycleItemClickListener(int position, View view) {
-                startCycleActivity((Book) second_cycleBooks.get(position), view);
+                startBookDetailActivity((Book) secondary_cycleBooks.get(position), view);
             }
 
             @Override
             public void onBuyButtonClickListener(int position) {
-                setToCommendActivity((Book) second_cycleBooks.get(position));
+                setToCommendActivity((Book) secondary_cycleBooks.get(position));
             }
         });
-        classesBookAdapter.setOnClassItemClickListener(position -> {
+        classesAdapter.setOnClassItemClickListener(position -> {
             Intent classIntent = new Intent(requireContext(), ClassBook.class);
-            classIntent.putExtra(EXTRA_CLASS, (Classe) classesBooks.get(position));
+            classIntent.putExtra(EXTRA_CLASS, (Classes) classesList.get(position));
             requireActivity().startActivityForResult(classIntent, MainActivity.REQUEST_CODE_CYCLE_CLASS);
         });
     }
@@ -118,10 +137,10 @@ public class Home extends Fragment implements View.OnClickListener {
     }
 
     /**
-     * Function to start the cycles books activities.
+     * Function to start the books detail activities.
      * @param book Book item.
      */
-    private void startCycleActivity(Book book, View v) {
+    private void startBookDetailActivity(Book book, View v) {
        Utils.bookDetail(requireActivity(), book, v, TRANSITION_IMAGE_NAME);
     }
 
@@ -130,12 +149,15 @@ public class Home extends Fragment implements View.OnClickListener {
         all_first_cycle.setOnClickListener(this);
         all_second_cycle.setOnClickListener(this);
     }
+
     private void initRecyclerViews() {
+        adapter_nursery_cycleBooks();
         adapter_primary_cycleBooks();
-        adapter_first_cycleBooks();
-        adapt_second_cycleBooks();
+        adapt_secondary_cycleBooks();
         adaptClassesBooks();
+        updateContentList();
     }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -151,6 +173,13 @@ public class Home extends Fragment implements View.OnClickListener {
         }
     }
 
+    private void updateContentList() {
+        setNurseryContent();
+        setPrimaryContent();
+        setSecondaryContent();
+        setClassContent();
+    }
+
     /**
      * Function to set at all cycle books.
      * @param cycleType Cycle type.
@@ -160,6 +189,65 @@ public class Home extends Fragment implements View.OnClickListener {
         allBookIntent.putExtra(EXTRA_CYCLE, cycleType);
         allBookIntent.putExtra(EXTRA_IS_FRANCOPHONE, is_francophone_section);
         requireActivity().startActivityForResult(allBookIntent, MainActivity.REQUEST_CODE_CYCLE_CLASS);
+    }
+
+    private void adapter_nursery_cycleBooks() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL,
+                false);
+        nursery_cycle_recyclerView.setHasFixedSize(true);
+        nursery_cycle_recyclerView.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+        nursery_cycle_recyclerView.setLayoutManager(layoutManager);
+
+        // initialisation of the adapter.
+        if (nursery_cycleBooks == null)
+            nursery_cycleBooks = new ArrayList<>();
+        else
+            nursery_cycleBooks.clear();
+
+        nursery_cycleBookAdapter = new HomeAdapter(nursery_cycleBooks, Utils.ListTypes.PRIMARY_CYCLE);
+        nursery_cycle_recyclerView.setAdapter(nursery_cycleBookAdapter);
+
+        setNurseryContent();
+    }
+
+    private void setNurseryContent() {
+        String cycle;
+        if (is_francophone_section)
+            cycle = Utils.NURSERY_F;
+        else
+            cycle = Utils.NURSERY_A;
+
+        BookHelper.getBooksByCycle (cycle).enqueue(new Callback<Result>() {
+            @Override
+            public void onResponse(Call<Result> call, Response<Result> response) {
+                Log.i(TAG, "onResponse: Call => " + call + " Result => " + response.body());
+                Result result = response.body();
+
+                if (result == null)
+                    return;
+
+                if (result.getError()) {
+                    Utils.setDialogMessage(requireActivity(), result.getMessage());
+                    Log.e(TAG, "Error process : " + result.getMessage(), null);
+                }
+                else if (result.getSuccess()) {
+                    String value = result.getValue();
+                    Log.i(TAG, "Success process : " + value);
+                    Gson gson = new Gson();
+                    JsonArray bookArray = (JsonArray) JsonParser.parseString(value);
+                    for (JsonElement element : bookArray) {
+                        nursery_cycleBooks.add(gson.fromJson(element, Book.class));
+                    }
+                    nursery_cycleBookAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Result> call, Throwable t) {
+                Utils.setDialogMessage(requireActivity(), t.getMessage());
+                Log.e(TAG, "onFailure: " + call, t);
+            }
+        });
     }
 
     private void adapter_primary_cycleBooks() {
@@ -173,62 +261,108 @@ public class Home extends Fragment implements View.OnClickListener {
             primary_cycleBooks = new ArrayList<>();
         else
             primary_cycleBooks.clear();
-        primary_cycleBooks.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres",
-                "NMI", "image", "Neuf", "Secondaire Francophone", 3000, 10));
-        primary_cycleBooks.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres", "NMI", "image",
-                "Neuf", "Secondaire Francophone", 3000, 10));
-        primary_cycleBooks.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres", "NMI", "image",
-                "Neuf", "Secondaire Francophone", 3000, 10));
-        primary_cycleBooks.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres", "NMI", "image",
-                "Neuf", "Secondaire Francophone", 3000, 10));
-        primary_cycleBooks.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres", "NMI", "image",
-                "Neuf", "Secondaire Francophone", 3000, 10));
-        primary_cycleBooks.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres", "NMI", "image",
-                "Neuf", "Secondaire Francophone", 3000, 10));
-        primary_cycleBooks.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres", "NMI", "image",
-                "Neuf", "Secondaire Francophone", 3000, 10));
-        primary_cycleBooks.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres", "NMI", "image",
-                "Neuf", "Secondaire Francophone", 3000, 10));
-        primary_cycleBooks.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres", "NMI", "image",
-                "Neuf", "Secondaire Francophone", 3000, 10));
-        primary_cycleBooks.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres", "NMI", "image",
-                "Neuf", "Secondaire Francophone", 3000, 10));
-        primary_cycleBooks.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres", "NMI", "image",
-                "Neuf", "Secondaire Francophone", 3000, 10));
-        primary_cycleBooks.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres", "NMI", "image",
-                "Neuf", "Secondaire Francophone", 3000, 10));
-        primary_cycleBookAdapter = new HomeAdapter(primary_cycleBooks, Utils.ListTypes.PRIMARY_CYCLE);
+        primary_cycleBookAdapter = new HomeAdapter(primary_cycleBooks, Utils.ListTypes.FIRST_CYCLE);
         primary_cycle_recyclerView.setAdapter(primary_cycleBookAdapter);
+
+        setPrimaryContent();
     }
-    private void adapter_first_cycleBooks() {
+
+    private void setPrimaryContent() {
+        String cycle;
+        if (is_francophone_section)
+            cycle = Utils.PRIMARY_F;
+        else
+            cycle = Utils.PRIMARY_A;
+
+        BookHelper.getBooksByCycle (cycle).enqueue(new Callback<Result>() {
+            @Override
+            public void onResponse(Call<Result> call, Response<Result> response) {
+
+                Result result = response.body();
+                Log.i(TAG, "onResponse: Call => " + call + " Result => " + response.body());
+
+                if (result == null)
+                    return;
+
+                if (result.getError()) {
+                    Utils.setDialogMessage(requireActivity(), result.getMessage());
+                    Log.e(TAG, "Error process : " + result.getMessage(), null);
+                }
+                else if (result.getSuccess()) {
+                    String value = result.getValue();
+                    Log.i(TAG, "Success process : " + value);
+                    Gson gson = new Gson();
+                    JsonArray bookArray = (JsonArray) JsonParser.parseString(value);
+                    for (JsonElement element : bookArray) {
+                        primary_cycleBooks.add(gson.fromJson(element, Book.class));
+                    }
+                    primary_cycleBookAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Result> call, Throwable t) {
+                Utils.setDialogMessage(requireActivity(), t.getMessage());
+                Log.e(TAG, "onFailure: " + call, t);
+            }
+        });
+    }
+
+    private void adapt_secondary_cycleBooks() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL,
                 false);
-        first_cycle_recyclerView.setHasFixedSize(true);
-        first_cycle_recyclerView.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
-        first_cycle_recyclerView.setLayoutManager(layoutManager);
+        secondary_cycle_recyclerView.setHasFixedSize(true);
+        secondary_cycle_recyclerView.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+        secondary_cycle_recyclerView.setLayoutManager(layoutManager);
         // initialisation of the adapter.
-        if (first_cycleBooks == null)
-            first_cycleBooks = new ArrayList<>();
+        if (secondary_cycleBooks == null)
+            secondary_cycleBooks = new ArrayList<>();
         else
-            first_cycleBooks.clear();
-        first_cycleBooks.addAll(primary_cycleBooks);
-        first_cycleBookAdapter = new HomeAdapter(first_cycleBooks, Utils.ListTypes.FIRST_CYCLE);
-        first_cycle_recyclerView.setAdapter(first_cycleBookAdapter);
+            secondary_cycleBooks.clear();
+        second_cycleBookAdapter = new HomeAdapter(secondary_cycleBooks, Utils.ListTypes.SECOND_CYCLE);
+        secondary_cycle_recyclerView.setAdapter(second_cycleBookAdapter);
+
+        setSecondaryContent();
     }
-    private void adapt_second_cycleBooks() {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL,
-                false);
-        second_cycle_recyclerView.setHasFixedSize(true);
-        second_cycle_recyclerView.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
-        second_cycle_recyclerView.setLayoutManager(layoutManager);
-        // initialisation of the adapter.
-        if (second_cycleBooks == null)
-            second_cycleBooks = new ArrayList<>();
+
+    private void setSecondaryContent() {
+        String cycle;
+        if (is_francophone_section)
+            cycle = Utils.SECONDARY_F;
         else
-            second_cycleBooks.clear();
-        second_cycleBooks.addAll(first_cycleBooks);
-        second_cycleBookAdapter = new HomeAdapter(second_cycleBooks, Utils.ListTypes.SECOND_CYCLE);
-        second_cycle_recyclerView.setAdapter(second_cycleBookAdapter);
+            cycle = Utils.SECONDARY_A;
+
+        BookHelper.getBooksByCycle (cycle).enqueue(new Callback<Result>() {
+            @Override
+            public void onResponse(Call<Result> call, Response<Result> response) {
+                Log.i(TAG, "onResponse: Call => " + call + " Result => " + response.body());
+                Result result = response.body();
+
+                if (result == null)
+                    return;
+
+                if (result.getError()) {
+                    Utils.setDialogMessage(requireActivity(), result.getMessage());
+                    Log.e(TAG, "Error process : " + result.getMessage(), null);
+                }
+                else if (result.getSuccess()) {
+                    String value = result.getValue();
+                    Log.i(TAG, "Success process : " + value);
+                    Gson gson = new Gson();
+                    JsonArray bookArray = (JsonArray) JsonParser.parseString(value);
+                    for (JsonElement element : bookArray) {
+                        secondary_cycleBooks.add(gson.fromJson(element, Book.class));
+                    }
+                    second_cycleBookAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Result> call, Throwable t) {
+                Utils.setDialogMessage(requireActivity(), t.getMessage());
+                Log.e(TAG, "onFailure: " + call, t);
+            }
+        });
     }
 
     private void adaptClassesBooks() {
@@ -238,22 +372,54 @@ public class Home extends Fragment implements View.OnClickListener {
         classes_recyclerView.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
         classes_recyclerView.setLayoutManager(layoutManager);
         // initialisation of the adapter.
-        if (classesBooks == null)
-            classesBooks = new ArrayList<>();
+        if (classesList == null)
+            classesList = new ArrayList<>();
         else
-            classesBooks.clear();
-        classesBooks.add(new Classe(1, "SIL", "SIL"));
-        classesBooks.add(new Classe(2, "CP" ,"CP"));
-        classesBooks.add(new Classe(3, "CE1", "cours préparatoire 1"));
-        classesBooks.add(new Classe(4, "CE2", "cours préparatoire 2"));
-        classesBooks.add(new Classe(5, "CM1", "Cours moins 1"));
-        classesBooks.add(new Classe(6, "CM2", "Cours moins 2"));
-        classesBooks.add(new Classe(7, "CLASS I", "CLASS I"));
-        classesBooks.add(new Classe(8, "CLASS II", "CLASS II"));
-        classesBooks.add(new Classe(9, "CLASS III", "CLASS III"));
-        classesBooks.add(new Classe(10, "CLASS IV", "CLASS IV"));
-        classesBookAdapter = new HomeAdapter(classesBooks, Utils.ListTypes.CLASSES);
-        classes_recyclerView.setAdapter(classesBookAdapter);
+            classesList.clear();
+
+        classesAdapter = new HomeAdapter(classesList, Utils.ListTypes.CLASSES);
+        classes_recyclerView.setAdapter(classesAdapter);
+
+        setClassContent();
+    }
+
+    private void setClassContent() {
+        String cycle;
+        if (is_francophone_section)
+            cycle = Utils.CLASS_F;
+        else
+            cycle = Utils.CLASS_A;
+        ClassHelper.getClassesByCycle(cycle).enqueue(new Callback<Result>() {
+            @Override
+            public void onResponse(Call<Result> call, Response<Result> response) {
+                Log.i(TAG, "onResponse: Call => " + call + " Result => " + response.body());
+                Result result = response.body();
+
+                if (result == null)
+                    return;
+
+                if (result.getError()) {
+                    Utils.setDialogMessage(requireActivity(), result.getMessage());
+                    Log.e(TAG, "Error process : " + result.getMessage(), null);
+                }
+                else if (result.getSuccess()) {
+                    String value = result.getValue();
+                    Log.i(TAG, "Success process : " + value);
+                    Gson gson = new Gson();
+                    JsonArray bookArray = (JsonArray) JsonParser.parseString(value);
+                    for (JsonElement element : bookArray) {
+                        classesList.add(gson.fromJson(element, Classes.class));
+                    }
+                    classesAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Result> call, Throwable t) {
+                Utils.setDialogMessage(requireActivity(), t.getMessage());
+                Log.e(TAG, "onFailure: " + call, t);
+            }
+        });
     }
 
     /**
@@ -272,6 +438,7 @@ public class Home extends Fragment implements View.OnClickListener {
                     setToAngloPhoneSection();
                     break;
             }
+            updateContentList();
             return true;
         });
         popupMenu.show();
@@ -282,11 +449,10 @@ public class Home extends Fragment implements View.OnClickListener {
      */
     private void setToFrancoPhoneSection () {
         is_francophone_section = true;
-        nursery_text.setText(class_group[1]);
-        primary_text.setText(class_group[3]);
-        secondary_text.setText(class_group[5]);
-        class_text.setText(getString(R.string.classes));
-        Utils.setToast(requireActivity(), "To implement francophone section.");
+        changeTextView(nursery_text, class_group[1]);
+        changeTextView(primary_text, class_group[3]);
+        changeTextView(secondary_text, class_group[5]);
+        changeTextView(class_text, getString(R.string.classes));
     }
 
     /**
@@ -294,11 +460,24 @@ public class Home extends Fragment implements View.OnClickListener {
      */
     private void setToAngloPhoneSection () {
         is_francophone_section = false;
-        nursery_text.setText(class_group[0]);
-        primary_text.setText(class_group[2]);
-        secondary_text.setText(class_group[4]);
-        class_text.setText(getString(R.string.classes));
-        Utils.setToast(requireActivity(), "To implement anglophone section.");
+        changeTextView(nursery_text, class_group[0]);
+        changeTextView(primary_text, class_group[2]);
+        changeTextView(secondary_text, class_group[4]);
+        changeTextView(class_text, getString(R.string.classes));
     }
-
+    /**
+     * Function that change the text of the textView.
+     * @param textView TextView.
+     * @param stringRes String resource.
+     */
+    private void changeTextView (TextView textView, String stringRes) {
+        textView.animate()
+                .alphaBy(1f)
+                .setDuration(150)
+                .withEndAction(() -> textView.setText(stringRes));
+        textView.animate()
+                .setStartDelay(150)
+                .alphaBy(0f)
+                .setDuration(150);
+    }
 }

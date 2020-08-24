@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,30 +19,43 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.roncoder.bookstore.R;
+import com.roncoder.bookstore.api.Result;
+import com.roncoder.bookstore.dbHelpers.BookHelper;
 import com.roncoder.bookstore.fragments.Home;
 import com.roncoder.bookstore.models.Book;
-import com.roncoder.bookstore.models.Classe;
+import com.roncoder.bookstore.models.Classes;
 import com.roncoder.bookstore.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class ClassBook extends AppCompatActivity {
-    int commend_count = 2;
+    private static final String TAG = "ClassBook";
+    int commend_count = 0;
     TextView cart_badge;
     GridView layout_grid;
+    private GridAdapter adapter;
     private List<Book> books;
-    private Classe classe;
+    private Classes classes;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_class_book);
+        commend_count = MainActivity.commend_count;
         books = new ArrayList<>();
-        classe = getIntent().getParcelableExtra(Home.EXTRA_CLASS);
+        classes = getIntent().getParcelableExtra(Home.EXTRA_CLASS);
         setActionBar();
         layout_grid = findViewById(R.id.grid);
-        GridAdapter adapter = new GridAdapter();
+        adapter = new GridAdapter();
         layout_grid.setAdapter(adapter);
         setBookContent();
     }
@@ -52,7 +66,7 @@ public class ClassBook extends AppCompatActivity {
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            String title = getString(R.string.all_books_for) + " (" + classe.getName() + ")";
+            String title = getString(R.string.all_books_for) + " (" + classes.getName() + ")";
             actionBar.setTitle(title);
             actionBar.setDisplayShowHomeEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -60,43 +74,37 @@ public class ClassBook extends AppCompatActivity {
     }
 
     private void setBookContent() {
-        // TODO
-        books.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres",
-                "NMI", "image", "Neuf", "Secondaire Francophone",3000, 10));
-        books.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres",
-                "NMI", "image", "Neuf", "Secondaire Francophone",3000, 10));
-        books.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres",
-                "NMI", "image", "Neuf", "Secondaire Francophone",3000, 10));
-        books.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres",
-                "NMI", "image", "Neuf", "Secondaire Francophone",3000, 10));
-        books.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres",
-                "NMI", "image", "Neuf", "Secondaire Francophone",3000, 10));
-        books.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres",
-                "NMI", "image", "Neuf", "Secondaire Francophone",3000, 10));
-        books.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres",
-                "NMI", "image", "Neuf", "Secondaire Francophone",3000, 10));
-        books.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres",
-                "NMI", "image", "Neuf", "Secondaire Francophone",3000, 10));
-        books.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres",
-                "NMI", "image", "Neuf", "Secondaire Francophone",3000, 10));
-        books.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres",
-                "NMI", "image", "Neuf", "Secondaire Francophone",3000, 10));
-        books.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres",
-                "NMI", "image", "Neuf", "Secondaire Francophone",3000, 10));
-        books.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres",
-                "NMI", "image", "Neuf", "Secondaire Francophone",3000, 10));
-        books.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres",
-                "NMI", "image", "Neuf", "Secondaire Francophone",3000, 10));
-        books.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres",
-                "NMI", "image", "Neuf", "Secondaire Francophone",3000, 10));
-        books.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres",
-                "NMI", "image", "Neuf", "Secondaire Francophone",3000, 10));
-        books.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres",
-                "NMI", "image", "Neuf", "Secondaire Francophone",3000, 10));
-        books.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres",
-                "NMI", "image", "Neuf", "Secondaire Francophone",3000, 10));
-        books.add(new Book(2, "L'Excellence en Français 6e", "Joseph NANFAH et autres",
-                "NMI", "image", "Neuf", "Secondaire Francophone",3000, 10));
+        BookHelper.getClassBooks(classes.getName()).enqueue(new Callback<Result>() {
+            @Override
+            public void onResponse(Call<Result> call, Response<Result> response) {
+
+                Result result = response.body();
+
+                if (result == null)
+                    return;
+
+                if (result.getError()) {
+                    Utils.setDialogMessage(ClassBook.this, result.getMessage());
+                    Log.e(TAG, "Error process : " + result.getMessage(), null);
+                }
+                else if (result.getSuccess()) {
+                    String value = result.getValue();
+                    Log.i(TAG, "Success process : " + value);
+                    Gson gson = new Gson();
+                    JsonArray bookArray = (JsonArray) JsonParser.parseString(value);
+                    for (JsonElement element : bookArray) {
+                        books.add(gson.fromJson(element, Book.class));
+                    }
+                    adapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Result> call, Throwable t) {
+                Utils.setDialogMessage(ClassBook.this, t.getMessage());
+                Log.e(TAG, "onFailure: " + call, t);
+            }
+        });
     }
 
     @Override
@@ -105,7 +113,7 @@ public class ClassBook extends AppCompatActivity {
         final MenuItem menuItem = menu.findItem(R.id.action_cart);
 
         View actionView = menuItem.getActionView();
-        cart_badge = (TextView) actionView.findViewById(R.id.cart_badge);
+        cart_badge = actionView.findViewById(R.id.cart_badge);
 
         setupBadge();
 

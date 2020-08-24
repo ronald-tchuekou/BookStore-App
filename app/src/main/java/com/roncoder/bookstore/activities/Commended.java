@@ -3,6 +3,7 @@ package com.roncoder.bookstore.activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -11,10 +12,19 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.roncoder.bookstore.R;
+import com.roncoder.bookstore.api.Result;
 import com.roncoder.bookstore.models.Book;
+import com.roncoder.bookstore.models.Commend;
 import com.roncoder.bookstore.utils.Utils;
 
+import java.util.Calendar;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class Commended extends AppCompatActivity {
+    private static final String TAG = "Commended";
     Book book;
     TextView book_title, book_author, book_prise, book_edition, total_prise, book_quantity;
     ImageView front_image;
@@ -39,8 +49,32 @@ public class Commended extends AppCompatActivity {
         total_prise.setText(Utils.formatPrise(totalPrise));
     }
     private void setTheCommend() {
-        // TODO implement the validation of the commend.
-        onBackPressed();
+        Utils.addToCart(this, new Commend(0, book, Integer.parseInt(book_quantity.getText().toString()),
+                Calendar.getInstance().getTime(), false, false)).enqueue(new Callback<Result>() {
+            @Override
+            public void onResponse(Call<Result> call, Response<Result> response) {
+
+                Result result = response.body();
+
+                if (result == null)
+                    return;
+
+                if (result.getError()) {
+                    Utils.setDialogMessage(Commended.this, result.getMessage());
+                    Log.e(TAG, "Error process : " + result.getMessage(), null);
+                }
+                else if (result.getSuccess()) {
+                    Utils.setToastMessage(Commended.this, getString(R.string.add_successful));
+                    onBackPressed();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Result> call, Throwable t) {
+                Utils.setDialogMessage(Commended.this, t.getMessage());
+                Log.e(TAG, "onFailure: " + call, t);
+            }
+        });
     }
 
     private void addQuantity(int number) {

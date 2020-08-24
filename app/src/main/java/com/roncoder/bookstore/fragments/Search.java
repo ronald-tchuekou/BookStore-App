@@ -9,21 +9,32 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.roncoder.bookstore.R;
 import com.roncoder.bookstore.adapters.SearchAdapter;
+import com.roncoder.bookstore.api.Result;
+import com.roncoder.bookstore.dbHelpers.BookHelper;
 import com.roncoder.bookstore.models.Book;
 import com.roncoder.bookstore.utils.Utils;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class Search extends Fragment {
+    private static final String TAG = "Search";
     @SuppressLint("StaticFieldLeak")
     private static Search instance = null;
     private OnSearchFocusListener listener;
@@ -69,14 +80,23 @@ public class Search extends Fragment {
      * Function to adapted all recycler view.
      */
     private void adaptedListViews() {
-
         LinearLayoutManager layoutManagerSearch = new LinearLayoutManager(requireContext());
         searchAdapter = new SearchAdapter(searchBooks);
         recyclerSearch.setLayoutManager(layoutManagerSearch);
         recyclerSearch.setHasFixedSize(true);
         recyclerSearch.setAdapter(searchAdapter);
-        searchAdapter.setOnItemClickListener((position, v) -> Utils.bookDetail(requireActivity(),
-                searchBooks.get(position), v, Home.TRANSITION_IMAGE_NAME));
+        searchAdapter.setOnItemClickListener(new SearchAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position, View v) {
+                Utils.bookDetail(requireActivity(), searchBooks.get(position), v,
+                        Home.TRANSITION_IMAGE_NAME);
+            }
+
+            @Override
+            public void onItemCmdClick(int position) {
+                Utils.commendActivity(requireActivity(), searchBooks.get(position));
+            }
+        });
     }
 
     /**
@@ -115,21 +135,52 @@ public class Search extends Fragment {
         }
         recyclerSearch.setVisibility(View.VISIBLE);
         searchBooks.clear();
-        searchBooks.addAll(getNewBookList());
-        searchAdapter.notifyDataSetChanged();
-        progress_indicator.setVisibility(View.GONE);
+        getNewBookList(result);
     }
 
-    private Collection<? extends Book> getNewBookList() {
-        List<Book> bookList = new ArrayList<>();
+    private void getNewBookList(String query) {
+        BookHelper.getQueryBooks(query).enqueue(new Callback<Result>() {
+            @Override
+            public void onResponse(Call<Result> call, Response<Result> response) {
 
-        // TODO implement this to get book list.
+                Result result = response.body();
 
-        if (bookList.isEmpty())
-            bookList.add(new Book(-1, EMPTY_BOOK, "", "", "", "",
-                    "", 0f, 0));
-        progress_indicator.setVisibility(View.GONE);
-        return bookList;
+                if (result == null)
+                    return;
+
+                if (result.getError()) {
+                    Utils.setDialogMessage(requireActivity(), result.getMessage());
+                    Log.e(TAG, "Error process : " + result.getMessage(), null);
+                }
+                else if (result.getSuccess()) {
+                    String value = result.getValue();
+                    Log.i(TAG, "Success process : " + value);
+                    Gson gson = new Gson();
+                    JsonArray bookArray = (JsonArray) JsonParser.parseString(value);
+                    for (JsonElement element : bookArray) {
+                        searchBooks.add(gson.fromJson(element, Book.class));
+                    }
+
+                    /* If the content list is empty */
+                    if (searchBooks.isEmpty()){
+                        Book empty_book = new Book();
+                        empty_book.setTitle(EMPTY_BOOK);
+                        empty_book.setAuthor(query);
+                        searchBooks.add(empty_book);
+                    }
+
+                    searchAdapter.notifyDataSetChanged();
+                }
+                progress_indicator.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onFailure(Call<Result> call, Throwable t) {
+                Utils.setDialogMessage(requireActivity(), t.getMessage());
+                Log.e(TAG, "onFailure: " + call, t);
+                progress_indicator.setVisibility(View.GONE);
+            }
+        });
     }
 
 }

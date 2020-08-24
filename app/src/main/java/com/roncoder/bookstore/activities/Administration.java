@@ -54,11 +54,11 @@ public class Administration extends AppCompatActivity {
         tabLayout.addTab(tabLayout.newTab().setCustomView(R.layout.item_tab_customize));
         tabLayout.addTab(tabLayout.newTab().setCustomView(R.layout.item_tab_customize));
         tabLayout.addTab(tabLayout.newTab().setCustomView(R.layout.item_tab_customize));
-        setTabTitle(0, R.string.cmd_cmd);
-        setTabTitle(1, R.string.cmd_standard);
-        setTabTitle(2, R.string.cmd_express);
-        setTabTitle(3, R.string.cmd_shipping);
-        setTabTitle(4, R.string.cmd_obselet);
+        setTabTitle(0, R.string.bills_shipping_instant);
+        setTabTitle(1, R.string.bills_shipping_standard);
+        setTabTitle(2, R.string.bills_shipping_express);
+        setTabTitle(3, R.string.delivered_bills);
+        setTabTitle(4, R.string.obsolete_bills);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {

@@ -3,20 +3,17 @@ package com.roncoder.bookstore.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.roncoder.bookstore.databases.CommendHelper;
-
 /**
  * Class that hold the information about the shipping address.
  *
  * @author Ronald Tchuekou.
  */
 public class ShippingAddress implements Parcelable {
-    private int id;
+    private String ref;
     private String receiver_name;
     private String phone_number;
     private String district;
     private String street;
-    private String shipping_type; // this is the type of the shipping (Instant / Standard / Express).
     private String more_description;
     private boolean is_default;
 
@@ -24,34 +21,32 @@ public class ShippingAddress implements Parcelable {
      * Default constructor of the class.
      */
     public ShippingAddress() {
-        id = -1;
+        ref = "F12";
         receiver_name = "receiver_name";
         phone_number = "phone_number";
         district = "Yaoundé";
         street = "street";
-        shipping_type = CommendHelper.INSTANT_SHIPPING_TYPE;
         more_description = "more_description";
         is_default = false;
     }
 
-    public ShippingAddress(int id, String receiver_name, String phone_number, String district,
-                           String street, String more_description, String shipping_type, boolean is_default) {
-        this.id = id;
-        this.receiver_name = receiver_name;
-        this.phone_number = phone_number;
-        this.district = district;
-        this.street = street;
-        this.shipping_type = shipping_type;
-        this.more_description = more_description;
-        this.is_default = is_default;
+    public ShippingAddress(String ref, String receiver_name, String phone_number, String district,
+                           String street, String more_description, boolean is_default) {
+        setRef(ref);
+        setReceiver_name(receiver_name);
+        setPhone_number(phone_number);
+        setDistrict(district);
+        setStreet(street);
+        setMore_description(more_description);
+        setIs_default(is_default);
     }
 
-    public int getId() {
-        return id;
+    public String getRef() {
+        return ref;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setRef(String id) {
+        this.ref = ref;
     }
 
     public String getReceiver_name() {
@@ -86,14 +81,6 @@ public class ShippingAddress implements Parcelable {
         this.street = street;
     }
 
-    public String getShipping_type() {
-        return shipping_type;
-    }
-
-    public void setShipping_type(String shipping_type) {
-        this.shipping_type = shipping_type;
-    }
-
     public String getMore_description() {
         return more_description;
     }
@@ -111,12 +98,11 @@ public class ShippingAddress implements Parcelable {
     }
 
     protected ShippingAddress(Parcel in) {
-        id = in.readInt();
+        ref = in.readString();
         receiver_name = in.readString();
         phone_number = in.readString();
         district = in.readString();
         street = in.readString();
-        shipping_type = in.readString();
         more_description = in.readString();
         is_default = in.readByte() != 0;
     }
@@ -140,13 +126,12 @@ public class ShippingAddress implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
+        dest.writeString(ref);
         dest.writeString(receiver_name);
         dest.writeString(phone_number);
         dest.writeString(district);
         dest.writeString(street);
         dest.writeString(more_description);
-        dest.writeString(shipping_type);
         dest.writeInt(is_default ? 1 : 0);
     }
 }

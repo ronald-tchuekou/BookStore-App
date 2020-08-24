@@ -46,18 +46,6 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <Button
-            android:id="@+id/btn_chat_all"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:layout_marginHorizontal="5dp"
-            android:text="@string/message"
-            android:textAllCaps="false"
-            app:backgroundTint="@color/colorAccent" />
-
-        <Button
             android:id="@+id/btn_buy_all"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -92,7 +80,7 @@
             android:layout_weight="1"
             android:ellipsize="end"
             android:singleLine="true"
-            android:textColor="@color/colorRed"
+            android:textColor="@color/googleColor"
             android:textSize="@dimen/baseTextSize"
             android:textStyle="bold" />
     </LinearLayout>

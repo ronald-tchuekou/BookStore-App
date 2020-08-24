@@ -55,7 +55,7 @@
             android:drawableStart="@drawable/ic_books"
             android:text="12 Lives au total"
             android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
-            app:layout_constraintEnd_toStartOf="@+id/action_btn"
+            app:layout_constraintEnd_toStartOf="@+id/action_state_btn"
             app:layout_constraintStart_toEndOf="@+id/client_phone"
             app:layout_constraintTop_toBottomOf="@+id/client_name" />
 
@@ -73,14 +73,14 @@
             app:layout_constraintTop_toBottomOf="@+id/client_phone" />
 
         <ImageButton
-            android:id="@+id/action_btn"
+            android:id="@+id/action_state_btn"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:focusable="true"
             android:clickable="true"
             android:background="?selectableItemBackgroundBorderless"
             android:scaleType="centerCrop"
-            android:tint="@color/colorRed"
+            android:tint="@color/googleColor"
             app:layout_constraintBottom_toBottomOf="@+id/book_number"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/book_number"

@@ -11,29 +11,28 @@ public class User implements Parcelable {
     private String surname;
     private String phone;
     private String login;
-    private String token;
     private String password;
-    private String status;
+    private boolean is_admin;
+
     public User () {
         this.id = -1;
         this.name = "name";
         this.surname = "surname";
         this.phone = "phone";
         this.login = "login";
-        this.token = "token";
         this.password = "";
-        this.status = "client";
+        this.is_admin = false;
     }
-    public User (int id, String name, String surname, String phone, String login, String token, String password,
-                 String status) {
+
+    public User (int id, String name, String surname, String phone, String login, String password,
+                 boolean is_admin) {
         setId(id);
         setName(name);
         setSurname(surname);
         setPhone(phone);
         setLogin(login);
-        setToken(token);
         setPassword(password);
-        setStatus(status);
+        setIs_admin(is_admin);
     }
 
     protected User(Parcel in) {
@@ -42,9 +41,8 @@ public class User implements Parcelable {
         surname = in.readString();
         phone = in.readString();
         login = in.readString();
-        token = in.readString();
         password = in.readString();
-        status = in.readString();
+        is_admin = in.readInt() != 0;
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
@@ -69,12 +67,10 @@ public class User implements Parcelable {
     public String getPhone () { return phone; }
     public void setLogin (String login) { this.login = login; }
     public String getLogin () { return login; }
-    public void setToken (String token) { this.token = token; }
-    public String getToken () { return token; }
     public void setPassword (String password) { this.password = password; }
     public String getPassword () { return password; }
-    public void setStatus (String status) { this.status = status; }
-    public String getStatus () { return status; }
+    public void setIs_admin (boolean is_admin) { this.is_admin = is_admin; }
+    public boolean isIs_admin() { return is_admin; }
 
     @NonNull
     @Override
@@ -85,9 +81,8 @@ public class User implements Parcelable {
                 ", surname='" + surname + '\'' +
                 ", phone='" + phone + '\'' +
                 ", login='" + login + '\'' +
-                ", token='" + token + '\'' +
                 ", password='" + password + '\'' +
-                ", status='" + status + '\'' +
+                ", is_admin='" + is_admin + '\'' +
                 '}';
     }
 
@@ -101,9 +96,9 @@ public class User implements Parcelable {
         dest.writeInt(id);
         dest.writeString(name);
         dest.writeString(surname);
+        dest.writeString(phone);
         dest.writeString(login);
-        dest.writeString(token);
         dest.writeString(password);
-        dest.writeString(status);
+        dest.writeInt(is_admin ? 1 : 0);
     }
 }

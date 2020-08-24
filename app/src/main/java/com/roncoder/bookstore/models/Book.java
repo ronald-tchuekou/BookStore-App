@@ -12,6 +12,7 @@ public class Book extends Factory implements Parcelable {
     private String editor;
     private String image1_front;
     private String book_state;
+    private String classes;
     private String cycle;
     private float unit_prise;
     private int stock_quantity;
@@ -22,18 +23,20 @@ public class Book extends Factory implements Parcelable {
         this.editor = "";
         this.image1_front = "";
         this.book_state = "";
+        this.classes = "null";
         this.cycle = "null";
-        this.unit_prise = 0f;
-        this.stock_quantity = -1;
+        this.unit_prise = 500f;
+        this.stock_quantity = 0;
     }
     public Book(int id, String title, String author, String editor, String image1_front,
-                String book_state, String cycle, float unit_prise, int stock_quantity) {
+                String book_state, String classes, String cycle, float unit_prise, int stock_quantity) {
         setId(id);
         setTitle(title);
         setAuthor(author);
         setEditor(editor);
         setImage1_front(image1_front);
         setBook_state(book_state);
+        setClasses(classes);
         setCycle(cycle);
         setUnit_prise(unit_prise);
         setStock_quantity(stock_quantity);
@@ -45,6 +48,7 @@ public class Book extends Factory implements Parcelable {
         editor = in.readString();
         image1_front = in.readString();
         book_state = in.readString();
+        classes = in.readString();
         cycle = in.readString();
         unit_prise = in.readFloat();
         stock_quantity = in.readInt();
@@ -110,6 +114,14 @@ public class Book extends Factory implements Parcelable {
         this.book_state = book_state;
     }
 
+    public String getClasses() {
+        return classes;
+    }
+
+    public void setClasses(String classes) {
+        this.classes = classes;
+    }
+
     public String getCycle() {
         return cycle;
     }
@@ -144,6 +156,7 @@ public class Book extends Factory implements Parcelable {
                 ", editor='" + editor + '\'' +
                 ", image1_front='" + image1_front + '\'' +
                 ", book_state='" + book_state + '\'' +
+                ", classes='" + classes + '\'' +
                 ", cycle='" + cycle + '\'' +
                 ", unit_prise=" + unit_prise +
                 ", stock_quantity=" + stock_quantity +
@@ -163,6 +176,7 @@ public class Book extends Factory implements Parcelable {
         dest.writeString(editor);
         dest.writeString(image1_front);
         dest.writeString(book_state);
+        dest.writeString(classes);
         dest.writeString(cycle);
         dest.writeFloat(unit_prise);
         dest.writeInt(stock_quantity);

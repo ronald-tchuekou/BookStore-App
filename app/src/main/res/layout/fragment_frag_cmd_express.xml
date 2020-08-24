@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    tools:context=".administration.FragFactureExpress"
+    tools:context=".administration.FragBillExpress"
     android:id="@+id/list_cmd"
     android:divider="@color/colorPixelDark"
     android:dividerHeight="1px"
-    tools:listitem="@layout/item_admin_cmd" />
+    tools:listitem="@layout/item_admin_bill" />

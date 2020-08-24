@@ -3,12 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardElevation="@null">
+    android:layout_marginHorizontal="8dp"
+    android:layout_marginVertical="5dp"
+    app:cardBackgroundColor="#E9F8FF"
+    app:cardCornerRadius="5dp"
+    app:cardElevation="1dp"
+    app:strokeColor="#FFFFFF"
+    app:strokeWidth="1dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="4dp">
+        android:paddingHorizontal="4dp">
 
         <ImageView
             android:id="@+id/book_image"
@@ -30,14 +36,14 @@
             android:textSize="@dimen/baseTextSize"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/book_image"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/date_cmd" />
 
         <TextView
             android:id="@+id/book_edition"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="3dp"
             android:layout_marginEnd="8dp"
             android:text="Book edition"
             android:textSize="@dimen/baseTextSize"
@@ -46,11 +52,11 @@
             app:layout_constraintTop_toBottomOf="@+id/book_title" />
 
         <TextView
-            android:id="@+id/book_count"
+            android:id="@+id/book_prise"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="3dp"
             android:layout_marginEnd="8dp"
             android:text="Book count"
             android:textSize="@dimen/baseTextSize"
@@ -63,13 +69,32 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="3dp"
             android:layout_marginEnd="8dp"
             android:text="Total prise"
-            android:textColor="@color/colorRed"
+            android:textColor="@color/googleColor"
             android:textSize="@dimen/baseTextSize"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/book_image"
-            app:layout_constraintTop_toBottomOf="@+id/book_count" />
+            app:layout_constraintTop_toBottomOf="@+id/book_prise" />
+
+        <ImageView
+            android:id="@+id/cmd_state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_cmd_validate" />
+
+        <TextView
+            android:id="@+id/date_cmd"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="TextView"
+            app:layout_constraintEnd_toStartOf="@+id/cmd_state"
+            app:layout_constraintStart_toEndOf="@+id/book_image"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

@@ -14,6 +14,7 @@ public class PopupQuantity extends Dialog {
     private TextView quantity;
     private ImageButton remove_quantity, add_quantity;
     private Book book;
+    private OnSubmitListener listener;
     public PopupQuantity(@NonNull Context context, int themeResId, Book book) {
         super(context, themeResId);
         this.book = book;
@@ -24,7 +25,7 @@ public class PopupQuantity extends Dialog {
         remove_quantity.setOnClickListener(v -> addQuantity(-1));
         findViewById(R.id.cancel).setOnClickListener(v -> dismiss());
         findViewById(R.id.submit).setOnClickListener(v -> {
-            // TODO implement this to add commend.
+            listener.onSubmit(Integer.parseInt(quantity.getText().toString()), this);
             dismiss();
         });
     }
@@ -44,4 +45,11 @@ public class PopupQuantity extends Dialog {
         add_quantity = findViewById(R.id.add_quantity);
     }
 
+    public interface OnSubmitListener {
+        void onSubmit(int quantity, Dialog dialog);
+    }
+
+    public void setOnSubmitListener (OnSubmitListener listener) {
+        this.listener = listener;
+    }
 }

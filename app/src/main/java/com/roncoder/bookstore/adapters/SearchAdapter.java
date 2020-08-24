@@ -1,17 +1,21 @@
 package com.roncoder.bookstore.adapters;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.roncoder.bookstore.R;
 import com.roncoder.bookstore.fragments.Search;
 import com.roncoder.bookstore.models.Book;
+import com.roncoder.bookstore.utils.Utils;
 
 import java.util.List;
 
@@ -22,7 +26,9 @@ public class SearchAdapter extends RecyclerView.Adapter <RecyclerView.ViewHolder
     private List<Book> books;
     public interface OnItemClickListener {
         void onItemClick(int position, View v);
+        void onItemCmdClick(int position);
     }
+    private Context context;
     public void setOnItemClickListener (OnItemClickListener listener) {
         this.listener = listener;
     }
@@ -33,6 +39,7 @@ public class SearchAdapter extends RecyclerView.Adapter <RecyclerView.ViewHolder
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        context = parent.getContext();
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         if (viewType == EMPTY_ELEMENT){
             View v = layoutInflater.inflate(R.layout.item_empty_result, parent, false);
@@ -45,12 +52,22 @@ public class SearchAdapter extends RecyclerView.Adapter <RecyclerView.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        Book book = books.get(position);
         if (holder instanceof TextHolder){
             TextHolder textHolder = (TextHolder) holder;
-            // TODO implement the error state.
+            String text = context.getString(R.string.no_result_found) + " : " + book.getAuthor();
+            textHolder.textView.setText(text);
         }else  {
             ItemHolder itemHolder = (ItemHolder) holder;
-            // TODO implement the value state.
+            Glide.with(context)
+                    .load(book.getImage1_front())
+                    .error(R.drawable.bg_image)
+                    .into(itemHolder.book_image);
+
+            itemHolder.book_title.setText(book.getTitle());
+            itemHolder.book_author.setText(book.getAuthor());
+            itemHolder.book_edition.setText(book.getEditor());
+            itemHolder.book_prise.setText(Utils.formatPrise(book.getUnit_prise()));
         }
     }
 
@@ -77,10 +94,22 @@ public class SearchAdapter extends RecyclerView.Adapter <RecyclerView.ViewHolder
 
     private static class ItemHolder extends RecyclerView.ViewHolder  {
         ImageView book_image;
+        TextView book_title, book_author, book_edition, book_prise;
+        Button btn_commended;
         public ItemHolder (@NonNull View itemView, OnItemClickListener mListener) {
             super(itemView);
             book_image = itemView.findViewById(R.id.book_image);
+            book_title = itemView.findViewById(R.id.book_title);
+            book_author = itemView.findViewById(R.id.book_author);
+            book_edition = itemView.findViewById(R.id.book_edition);
+            book_prise = itemView.findViewById(R.id.book_prise);
+            btn_commended = itemView.findViewById(R.id.btn_commended);
 
+            btn_commended.setOnClickListener(v ->{
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION)
+                    mListener.onItemCmdClick(position);
+            });
             itemView.setOnClickListener(v -> {
                 int position = getAdapterPosition();
                 if (position != RecyclerView.NO_POSITION)

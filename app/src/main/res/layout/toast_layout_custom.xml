@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    android:gravity="center_horizontal|center_vertical"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/toast_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/cambay"
+        android:gravity="center"
+        android:shadowColor="@color/colorPixelDark"
+        android:shadowRadius="5"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="5dp"
+        android:soundEffectsEnabled="true"
+        android:text="This is a toast message."
+        android:textColor="@color/colorWhite"
+        android:textSize="20sp"
+        android:typeface="sans" />
+</LinearLayout>

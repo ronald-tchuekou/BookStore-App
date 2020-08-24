@@ -14,6 +14,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.roncoder.bookstore.R;
 import com.roncoder.bookstore.models.User;
+import com.roncoder.bookstore.utils.Utils;
 
 public class SignUpWithEmail extends AppCompatActivity {
     private TextInputLayout layout_surname, layout_name, layout_email, layout_pass, layout_confirm_pass;
@@ -34,9 +35,8 @@ public class SignUpWithEmail extends AppCompatActivity {
         submit_btn.setOnClickListener(v->submitForm());
     }
     private void submitForm() {
-        User user = new User(1, name, surname,"phone", mail, "tokent", pass, "client");
-        Toast.makeText(this, "Submited : " + user,
-                Toast.LENGTH_SHORT).show();
+        User user = new User();
+        Utils.setToastMessage(this, "Submited : " + user);
         // TODO implement the submit event of this form.
     }
     private void surnameWatcher() {

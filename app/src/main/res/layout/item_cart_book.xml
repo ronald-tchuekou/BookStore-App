@@ -47,21 +47,21 @@
             app:strokeWidth="2dp" />
 
         <Button
-            android:id="@+id/btn_remove"
+            android:id="@+id/btn_validate"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="@string/remove"
+            android:text="@string/valide"
             android:textAllCaps="false"
-            android:textColor="@color/colorRed"
+            android:textColor="@color/colorPrimary"
             app:backgroundTint="@color/colorSendMessage"
             app:cornerRadius="20dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView17"
-            app:rippleColor="@color/colorRed"
-            app:strokeColor="@color/colorRed"
+            app:rippleColor="@color/colorPrimary"
+            app:strokeColor="@color/colorPrimary"
             app:strokeWidth="2dp" />
 
         <TextView
@@ -73,7 +73,7 @@
             android:ellipsize="end"
             android:singleLine="true"
             android:text="Ronald Tchuekou"
-            android:textColor="@color/colorRed"
+            android:textColor="@color/googleColor"
             android:textSize="@dimen/baseTextSize"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/front_image"
@@ -134,7 +134,7 @@
             app:layout_constraintTop_toBottomOf="@+id/book_edition" />
 
         <TextView
-            android:id="@+id/book_count"
+            android:id="@+id/book_prise"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -254,8 +254,8 @@
             app:backgroundTint="@color/colorAccent"
             app:cornerRadius="20dp"
             app:layout_constraintEnd_toStartOf="@+id/btn_buy"
-            app:layout_constraintStart_toEndOf="@+id/btn_remove"
-            app:layout_constraintTop_toTopOf="@+id/btn_remove"
+            app:layout_constraintStart_toEndOf="@+id/btn_validate"
+            app:layout_constraintTop_toTopOf="@+id/btn_validate"
             app:rippleColor="@color/colorSendMessage" />
 
         <TextView
@@ -272,6 +272,19 @@
             app:layout_constraintEnd_toStartOf="@+id/remove_to_cart"
             app:layout_constraintStart_toEndOf="@+id/front_image"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/cmd_billed_state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:soundEffectsEnabled="true"
+            android:background="?selectableItemBackgroundBorderless"
+            android:clickable="false"
+            android:focusable="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/book_prise"
+            app:srcCompat="@drawable/ic_is_billed" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </com.google.android.material.card.MaterialCardView>

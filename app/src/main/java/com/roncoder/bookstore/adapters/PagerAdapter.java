@@ -5,11 +5,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
-import com.roncoder.bookstore.administration.FragFacture;
-import com.roncoder.bookstore.administration.FragFactureExpress;
-import com.roncoder.bookstore.administration.FragFactureObsoleted;
-import com.roncoder.bookstore.administration.FragFactureShipping;
-import com.roncoder.bookstore.administration.FragFactureStandard;
+import com.roncoder.bookstore.administration.FragBill;
+import com.roncoder.bookstore.administration.FragBillExpress;
+import com.roncoder.bookstore.administration.FragBillObsoleted;
+import com.roncoder.bookstore.administration.FragBillShipping;
+import com.roncoder.bookstore.administration.FragBillStandard;
 
 public class PagerAdapter extends FragmentStatePagerAdapter {
 
@@ -25,15 +25,15 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
    public Fragment getItem(int position) {
       switch (position) {
          case 0:
-            return new FragFacture();
+            return new FragBill();
          case 1:
-            return new FragFactureStandard();
+            return new FragBillStandard();
          case 2:
-            return new FragFactureExpress();
+            return new FragBillExpress();
          case 3:
-            return new FragFactureShipping();
+            return new FragBillShipping();
          default:
-            return new FragFactureObsoleted();
+            return new FragBillObsoleted();
       }
    }
 

@@ -146,7 +146,7 @@
                     android:paddingVertical="8dp"
                     android:textStyle="bold"
                     android:text="@string/pass_forgot"
-                    android:textColor="@color/colorRed"
+                    android:textColor="@color/googleColor"
                     android:textSize="19sp"
                     android:clickable="true"
                     android:focusable="true"

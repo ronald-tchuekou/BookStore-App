@@ -3,8 +3,9 @@ package com.roncoder.bookstore.administration;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 
-import android.drm.DrmStore;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,22 +19,35 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.roncoder.bookstore.R;
+import com.roncoder.bookstore.models.Bill;
+import com.roncoder.bookstore.models.Book;
 import com.roncoder.bookstore.models.Commend;
+import com.roncoder.bookstore.models.ShippingAddress;
+import com.roncoder.bookstore.utils.Utils;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class AdminFactureDetail extends AppCompatActivity {
+import static com.roncoder.bookstore.administration.FragBill.EXTRA_BILL;
+
+public class AdminBillDetail extends AppCompatActivity {
 
     private ListView listView;
     CommendAdapter adapter;
     List<Commend> listCommends;
     private MenuItem menuItem;
+    Bill bill;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_cmd_detail);
+
+        Intent extraIntent = getIntent();
+        if (extraIntent != null && extraIntent.hasExtra(EXTRA_BILL)){
+            bill = extraIntent.getParcelableExtra(EXTRA_BILL);
+        }else
+            bill = new Bill();
+
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setTitle(R.string.title_cmd_detail);
@@ -41,24 +55,17 @@ public class AdminFactureDetail extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
         listView = findViewById(R.id.list_cmd);
-        setCommendList();
+        listCommends = bill.getCommends();
         adapter = new CommendAdapter(listCommends);
         setListHeader();
         listView.setAdapter(adapter);
-    }
-
-    private void setCommendList() {
-        listCommends = new ArrayList<>();
-        listCommends.add(new Commend());
-        listCommends.add(new Commend());
-        listCommends.add(new Commend());
     }
 
     /**
      * Function to managed the header and footer of the list.
      */
     private void setListHeader() {
-        View listHeader = LayoutInflater.from(this).inflate(R.layout.header_admin_cmd, listView, false),
+        View listHeader = LayoutInflater.from(this).inflate(R.layout.header_admin_bill, listView, false),
                 listFooter = LayoutInflater.from(this).inflate(R.layout.copyright, listView, false);
         TextView client_name = listHeader.findViewById(R.id.client_name);
         TextView client_phone = listHeader.findViewById(R.id.client_phone);
@@ -66,9 +73,29 @@ public class AdminFactureDetail extends AppCompatActivity {
         TextView address_des = listHeader.findViewById(R.id.address_des);
         TextView total_prise = listHeader.findViewById(R.id.total_prise);
 
+        ShippingAddress shippingAddress = bill.getShippingAddress();
+
+        client_location.setText(shippingAddress.getStreet());
+        client_name.setText(shippingAddress.getReceiver_name());
+        client_phone.setText(shippingAddress.getPhone_number());
+        address_des.setText(shippingAddress.getMore_description());
+        total_prise.setText(Utils.formatPrise(getTotalPayment(listCommends)));
+
         listView.addHeaderView(listHeader);
         listView.addFooterView(listFooter);
 
+    }
+
+    /**
+     * Function that return the total prise of this bill.
+     * @param commends List of commends.
+     * @return Result.
+     */
+    private float getTotalPayment(List<Commend> commends) {
+        float tp = 0;
+        for (Commend c : commends)
+            tp += c.getTotal_prise();
+        return tp;
     }
 
     @Override
@@ -129,16 +156,20 @@ public class AdminFactureDetail extends AppCompatActivity {
             ImageView book_image = convertView.findViewById(R.id.book_image);
             TextView book_title = convertView.findViewById(R.id.book_title),
                     book_edition = convertView.findViewById(R.id.book_edition),
-                    book_count = convertView.findViewById(R.id.book_count),
+                    book_count = convertView.findViewById(R.id.book_prise),
                     total_prise = convertView.findViewById(R.id.total_prise);
+
+            Book book = commend.getBook();
+            book_title.setText(book.getTitle());
+            book_edition.setText(book.getEditor());
+            book_count.setText(commend.getQuantity());
+            total_prise.setText(String.valueOf(commend.getTotal_prise()));
 
             Glide.with(parent.getContext())
                     .load(commend.getBook().getImage1_front())
-                    .placeholder(parent.getContext().getResources().getDrawable(R.drawable.excellence_en_svteehb_3e))
+                    .placeholder(ResourcesCompat.getDrawable(parent.getContext().getResources(),
+                            R.drawable.excellence_en_svteehb_3e, null))
                     .into(book_image);
-
-            // TODO
-
             return convertView;
         }
     }

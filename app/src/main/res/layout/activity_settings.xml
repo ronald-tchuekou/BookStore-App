@@ -38,14 +38,14 @@
             tools:layout_editor_absoluteX="191dp"
             tools:layout_editor_absoluteY="219dp" />
 
-        <Switch
+        <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/allow_notifications"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingVertical="6dp"
+            android:text="@string/allow_notifications"
             android:textColor="@color/colorTextPrimary"
-            android:textSize="@dimen/baseTextSize"
-            android:text="@string/allow_notifications" />
+            android:textSize="@dimen/baseTextSize" />
     </LinearLayout>
 
 </LinearLayout>

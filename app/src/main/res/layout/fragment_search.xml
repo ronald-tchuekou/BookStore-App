@@ -26,7 +26,7 @@
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:background="@color/colorRed"
+            android:background="@color/googleColor"
             android:layout_height="@dimen/actionBarSize">
 
             <ImageButton
@@ -58,7 +58,7 @@
                         android:autofillHints="@string/book_name"
                         android:background="@color/transparent"
                         android:drawableStart="@drawable/ic_search"
-                        android:drawableTint="@color/colorRed"
+                        android:drawableTint="@color/googleColor"
                         android:drawableTintMode="multiply"
                         android:hint="@string/book_name"
                         android:singleLine="true"
@@ -93,6 +93,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:trackColor="@color/colorRed" />
+        app:trackColor="@color/googleColor" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

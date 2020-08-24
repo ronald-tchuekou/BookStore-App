@@ -8,14 +8,16 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ExpandableListView;
-import android.widget.Toast;
 
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -27,6 +29,7 @@ import com.roncoder.bookstore.fragments.Cart;
 import com.roncoder.bookstore.fragments.Home;
 import com.roncoder.bookstore.fragments.MessageChat;
 import com.roncoder.bookstore.fragments.Search;
+import com.roncoder.bookstore.models.Classes;
 import com.roncoder.bookstore.utils.Utils;
 
 import java.util.ArrayList;
@@ -36,17 +39,22 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
 
+import static com.roncoder.bookstore.fragments.Home.EXTRA_CLASS;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final SparseArray<Fragment> LAYOUT_RES_MAP = new SparseArray<>();
     public static final int REQUEST_CODE_CYCLE_CLASS = 0;
+    public static final String EXTRA_CMD_COUNT = "Cmd_count";
+    public static final String EXTRA_CMD_REPLACE = "Cmd_count_replace";
+    public static final String CMD_COUNT_ACTION = "Cmd_count_action";
+    public static int commend_count = 0;
     private DrawerLayout drawerLayout;
     private NavAdapter adapter;
     private ExpandableListView listView;
     private List<String> groups;
     private Map<String, List<String>> child;
     @IdRes int currentItem;
-
     static {
         LAYOUT_RES_MAP.append(R.id.action_home, new Home());
         LAYOUT_RES_MAP.append(R.id.action_search, Search.getInstance());
@@ -55,6 +63,19 @@ public class MainActivity extends AppCompatActivity {
         LAYOUT_RES_MAP.append(R.id.action_account, new Account());
     }
     private BottomNavigationView bottomNavigationView;
+    public static int not_read_msg_count = 0;
+    BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.hasExtra(EXTRA_CMD_COUNT) && intent.hasExtra(EXTRA_CMD_REPLACE)) {
+                if (intent.getBooleanExtra(EXTRA_CMD_REPLACE, false))
+                    commend_count = intent.getIntExtra(EXTRA_CMD_COUNT, 0);
+                else
+                    commend_count += intent.getIntExtra(EXTRA_CMD_COUNT, 0);
+            }
+            updateNumberCartBadge(R.id.action_kilt, commend_count);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +100,24 @@ public class MainActivity extends AppCompatActivity {
         searchFragment.setOnSearchFocus(hasFocus -> bottomNavigationView.setVisibility(hasFocus ? View.GONE : View.VISIBLE));
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(receiver, new IntentFilter(CMD_COUNT_ACTION));
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(receiver);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(receiver);
+    }
+
     /**
      * Function to init the expandable view.
      */
@@ -87,10 +126,12 @@ public class MainActivity extends AppCompatActivity {
         listView.addHeaderView(listHeader);
         listView.setAdapter(adapter);
         listView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
-            String classe = Objects.requireNonNull(child.get(groups.get(groupPosition))).get(childPosition);
-            Toast.makeText(MainActivity.this, classe, Toast.LENGTH_SHORT).show();
+            String class_name = Objects.requireNonNull(child.get(groups.get(groupPosition))).get(childPosition);
 
-            // TODO implement this method to set the correspond calss books.
+            Intent intent = new Intent(this, ClassBook.class);
+            intent.putExtra(EXTRA_CLASS, new Classes(0, class_name, "", ""));
+            startActivity(intent);
+
             drawerLayout.closeDrawer(GravityCompat.START);
             return true;
         });
@@ -163,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
         fadeThrough.addTarget(R.id.kilt_fragment);
         fadeThrough.addTarget(R.id.message_fragment);
         fadeThrough.addTarget(R.id.account_fragment);
-        Log.i("MainAcitivity", "createTransition: " + fadeThrough);
+        Log.i("MainActivity", "createTransition: " + fadeThrough);
         return fadeThrough;
     }
 
@@ -192,8 +233,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         Search.getInstance().setOnDrawerClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
-        updateNumberCartBadge(R.id.action_message, 3);
-        updateNumberCartBadge(R.id.action_kilt, 2);
+        updateNumberCartBadge(R.id.action_message, not_read_msg_count);
+        updateNumberCartBadge(R.id.action_kilt, commend_count);
     }
 
     @Override
