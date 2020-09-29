@@ -13,9 +13,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.imageview.ShapeableImageView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.roncoder.bookstore.R;
 import com.roncoder.bookstore.dbHelpers.UserHelper;
-import com.roncoder.bookstore.models.ContactMessage;
+import com.roncoder.bookstore.models.Conversation;
 import com.roncoder.bookstore.models.User;
 import com.roncoder.bookstore.utils.Utils;
 
@@ -23,17 +24,19 @@ import java.util.List;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactHolder> {
     private static final String TAG = "ContactAdapter";
-    private List<ContactMessage> contactMessages;
+    private List<Conversation> conversations;
     private OnItemClickListener listener;
     private Context context;
+    private FirebaseAuth auth;
     public interface OnItemClickListener {
         void onItemClick (int position);
     }
     public void setOnItemClickListener (OnItemClickListener listener) {
         this.listener = listener;
     }
-    public ContactAdapter (List<ContactMessage> contactMessages) {
-        this.contactMessages = contactMessages;
+    public ContactAdapter (List<Conversation> conversations) {
+        this.conversations = conversations;
+        auth = FirebaseAuth.getInstance();
     }
     @NonNull
     @Override
@@ -45,9 +48,11 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
 
     @Override
     public void onBindViewHolder(@NonNull ContactHolder holder, int position) {
-        ContactMessage contactMessage = contactMessages.get(position);
-        holder.name.setText(contactMessage.getSender());
-        UserHelper.getUserById(contactMessage.getSender()).addOnCompleteListener(com-> {
+        Conversation conversation = conversations.get(position);
+        String[] members = conversation.getMembers();
+        String receiver = members[0].equals(auth.getUid()) ? members[1] : members[0];
+        holder.name.setText(receiver);
+        UserHelper.getUserById(receiver).addOnCompleteListener(com-> {
             if (!com.isSuccessful()) {
                 Log.e(TAG, "onBindViewHolder: ", com.getException());
                 return;
@@ -64,19 +69,19 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
                         .into(holder.image_contact);
             }
         });
-        holder.last_message.setText(contactMessage.getLast_message().getText());
-        holder.date.setText(Utils.formatDate(contactMessage.getDate()));
-        if (contactMessage.getNot_read_count() == 0){
+        holder.last_message.setText(conversation.getLast_message().getText());
+        holder.date.setText(Utils.formatDate(conversation.getDate()));
+        if (conversation.getNot_read_count1() == 0){
             holder.not_read_count.setVisibility(View.GONE);
         }else{
             holder.not_read_count.setVisibility(View.VISIBLE);
-            holder.not_read_count.setText(String.valueOf(contactMessage.getNot_read_count()));
+            holder.not_read_count.setText(String.valueOf(conversation.getNot_read_count1()));
         }
     }
 
     @Override
     public int getItemCount() {
-        return contactMessages.size();
+        return conversations.size();
     }
 
     public static class ContactHolder extends RecyclerView.ViewHolder {

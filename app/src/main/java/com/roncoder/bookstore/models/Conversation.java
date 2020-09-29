@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
-import java.util.Objects;
 
 public class ContactMessage implements Parcelable {
     private String id;
@@ -27,15 +26,14 @@ public class ContactMessage implements Parcelable {
         setNot_read_count(0);
     }
 
-    public ContactMessage(String id, String sender, String receiver, Date date, int not_read_count) {
+    public ContactMessage(String sender, String receiver, Date date) {
         setId(id);
         setSender(sender);
         setReceiver(receiver);
-        setLast_message(new Message());
+        setLast_message(null);
         setDate(date);
         setNot_read_count(not_read_count);
     }
-
 
     protected ContactMessage(Parcel in) {
         id = in.readString();
@@ -137,7 +135,7 @@ public class ContactMessage implements Parcelable {
         dest.writeString(sender);
         dest.writeString(receiver);
         dest.writeParcelable(last_message, Parcelable.PARCELABLE_WRITE_RETURN_VALUE);
-        dest.writeString(date.toString());
+        dest.writeString(DateFormat.getDateInstance().format(date));
         dest.writeInt(not_read_count);
     }
 }
