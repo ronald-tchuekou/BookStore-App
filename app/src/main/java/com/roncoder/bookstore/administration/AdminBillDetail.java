@@ -19,13 +19,17 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.roncoder.bookstore.R;
+import com.roncoder.bookstore.dbHelpers.BookHelper;
+import com.roncoder.bookstore.dbHelpers.ShippingAddressHelper;
 import com.roncoder.bookstore.models.Bill;
 import com.roncoder.bookstore.models.Book;
 import com.roncoder.bookstore.models.Commend;
 import com.roncoder.bookstore.models.ShippingAddress;
 import com.roncoder.bookstore.utils.Utils;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static com.roncoder.bookstore.administration.FragBill.EXTRA_BILL;
 
@@ -43,10 +47,7 @@ public class AdminBillDetail extends AppCompatActivity {
         setContentView(R.layout.activity_admin_cmd_detail);
 
         Intent extraIntent = getIntent();
-        if (extraIntent != null && extraIntent.hasExtra(EXTRA_BILL)){
-            bill = extraIntent.getParcelableExtra(EXTRA_BILL);
-        }else
-            bill = new Bill();
+        bill = extraIntent.getParcelableExtra(EXTRA_BILL);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -55,10 +56,28 @@ public class AdminBillDetail extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
         listView = findViewById(R.id.list_cmd);
-        listCommends = bill.getCommends();
+        listCommends = getFlashCommendList();
         adapter = new CommendAdapter(listCommends);
         setListHeader();
         listView.setAdapter(adapter);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (bill.getShipping_type().equals(Utils.BILL_DELIVER))
+            changCommendState();
+    }
+
+    private List<Commend> getFlashCommendList() {
+        List<Commend> result = new ArrayList<>();
+        for (String cmd_id : bill.getCommend_ids())
+        {
+            Commend cmd = new Commend();
+            cmd.setId(cmd_id);
+            result.add(cmd);
+        }
+        return result;
     }
 
     /**
@@ -73,12 +92,17 @@ public class AdminBillDetail extends AppCompatActivity {
         TextView address_des = listHeader.findViewById(R.id.address_des);
         TextView total_prise = listHeader.findViewById(R.id.total_prise);
 
-        ShippingAddress shippingAddress = bill.getShippingAddress();
+        ShippingAddressHelper.getShippingAddressByRef(bill.getShipping_ref()).addOnCompleteListener(com -> {
+           if (com.isSuccessful()){
+               ShippingAddress shippingAddress = Objects.requireNonNull(com.getResult()).toObject(ShippingAddress.class);
+               assert shippingAddress != null;
+               client_location.setText(shippingAddress.getStreet());
+               client_name.setText(shippingAddress.getReceiver_name());
+               client_phone.setText(shippingAddress.getPhone_number());
+               address_des.setText(shippingAddress.getMore_description());
+           }
+        });
 
-        client_location.setText(shippingAddress.getStreet());
-        client_name.setText(shippingAddress.getReceiver_name());
-        client_phone.setText(shippingAddress.getPhone_number());
-        address_des.setText(shippingAddress.getMore_description());
         total_prise.setText(Utils.formatPrise(getTotalPayment(listCommends)));
 
         listView.addHeaderView(listHeader);
@@ -154,22 +178,28 @@ public class AdminBillDetail extends AppCompatActivity {
                         .item_admin_cmd_list, parent, false);
 
             ImageView book_image = convertView.findViewById(R.id.book_image);
-            TextView book_title = convertView.findViewById(R.id.book_title),
-                    book_edition = convertView.findViewById(R.id.book_edition),
-                    book_count = convertView.findViewById(R.id.book_prise),
-                    total_prise = convertView.findViewById(R.id.total_prise);
+            TextView book_title = convertView.findViewById(R.id.book_title);
+            TextView book_edition = convertView.findViewById(R.id.book_edition);
+            TextView book_count = convertView.findViewById(R.id.book_count);
+            TextView total_prise = convertView.findViewById(R.id.total_prise);
 
-            Book book = commend.getBook();
-            book_title.setText(book.getTitle());
-            book_edition.setText(book.getEditor());
-            book_count.setText(commend.getQuantity());
-            total_prise.setText(String.valueOf(commend.getTotal_prise()));
+            if (!commend.getBook_id().equals(""))
+                BookHelper.getBookById(commend.getBook_id()).addOnCompleteListener(com -> {
+                   if (com.isSuccessful()) {
+                       Book book = Objects.requireNonNull(com.getResult()).toObject(Book.class);
+                       assert book != null;
+                       book_title.setText(book.getTitle());
+                       book_edition.setText(book.getEditor());
+                       Glide.with(parent.getContext())
+                               .load(book.getImage1_front())
+                               .placeholder(ResourcesCompat.getDrawable(parent.getContext().getResources(),
+                                       R.drawable.bg_image, null))
+                               .into(book_image);
+                   }
+                });
 
-            Glide.with(parent.getContext())
-                    .load(commend.getBook().getImage1_front())
-                    .placeholder(ResourcesCompat.getDrawable(parent.getContext().getResources(),
-                            R.drawable.excellence_en_svteehb_3e, null))
-                    .into(book_image);
+            book_count.setText(String.valueOf(commend.getQuantity()));
+            total_prise.setText(Utils.formatPrise(commend.getTotal_prise()));
             return convertView;
         }
     }
