@@ -8,9 +8,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
 import com.roncoder.bookstore.R;
 import com.roncoder.bookstore.models.Message;
 import com.roncoder.bookstore.models.MessageCmd;
@@ -25,9 +27,11 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public static final int ITEM_MESSAGE_CMD_SEND = 3;
     private List<Message> messages;
     private Context context;
+    private FirebaseAuth auth;
 
     public MessageAdapter(List<Message> messages) {
         this.messages = messages;
+        auth = FirebaseAuth.getInstance();
     }
 
     @NonNull
@@ -58,6 +62,9 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             sendHolder.date.setText(Utils.getDate(message.getDate()));
             sendHolder.time.setText(Utils.getTime(message.getDate()));
             sendHolder.text.setText(message.getText());
+            if (message.getId() != null)
+                sendHolder.sms_indicator.setImageDrawable(ResourcesCompat.getDrawable(context.getResources(),
+                        R.drawable.ic_sms_send, null));
         }
         else {
             MessageCmd messageCmd = message.getMessage_cmd();
@@ -86,7 +93,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public int getItemViewType(int position) {
         Message message = messages.get(position);
-        if (message.getType().equals("received")) {
+        if (!message.getSender().equals(auth.getUid())) {
             if (message.getMessage_cmd() != null)
                 return ITEM_MESSAGE_CMD_RECEIVED;
             return ITEM_MESSAGE_RECEIVED;
@@ -99,11 +106,13 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     static class MessageHolder extends RecyclerView.ViewHolder {
         TextView date,time, text;
+        ImageView sms_indicator;
         public MessageHolder(@NonNull View itemView) {
             super(itemView);
             date = itemView.findViewById(R.id.date_message);
             text = itemView.findViewById(R.id.text_message);
             time = itemView.findViewById(R.id.time_message);
+            sms_indicator = itemView.findViewById(R.id.sms_indicator);
         }
     }
 

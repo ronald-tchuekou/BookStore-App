@@ -22,7 +22,7 @@ import com.roncoder.bookstore.utils.Utils;
 
 import java.util.List;
 
-public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactHolder> {
+public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapter.ContactHolder> {
     private static final String TAG = "ContactAdapter";
     private List<Conversation> conversations;
     private OnItemClickListener listener;
@@ -34,7 +34,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
     public void setOnItemClickListener (OnItemClickListener listener) {
         this.listener = listener;
     }
-    public ContactAdapter (List<Conversation> conversations) {
+    public ConversationAdapter(List<Conversation> conversations) {
         this.conversations = conversations;
         auth = FirebaseAuth.getInstance();
     }
@@ -49,8 +49,8 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
     @Override
     public void onBindViewHolder(@NonNull ContactHolder holder, int position) {
         Conversation conversation = conversations.get(position);
-        String[] members = conversation.getMembers();
-        String receiver = members[0].equals(auth.getUid()) ? members[1] : members[0];
+        List<String> members = conversation.getMembers();
+        String receiver = members.get(0).equals(auth.getUid()) ? members.get(1) : members.get(0);
         holder.name.setText(receiver);
         UserHelper.getUserById(receiver).addOnCompleteListener(com-> {
             if (!com.isSuccessful()) {

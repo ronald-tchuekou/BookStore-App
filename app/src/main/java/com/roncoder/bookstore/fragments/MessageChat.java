@@ -16,9 +16,9 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.roncoder.bookstore.R;
 import com.roncoder.bookstore.activities.Chat;
-import com.roncoder.bookstore.adapters.ContactAdapter;
+import com.roncoder.bookstore.adapters.ConversationAdapter;
 import com.roncoder.bookstore.dbHelpers.MessageHelper;
-import com.roncoder.bookstore.models.ContactMessage;
+import com.roncoder.bookstore.models.Conversation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,10 +26,11 @@ import java.util.List;
 public class MessageChat extends Fragment {
 
     public static final String TAG = "MessageChat";
-    public static final String CONTACT_MESSAGE_EXTRA = "contact_message";
+    public static final String CHAT_DESTINATION_EXTRA = "receiver";
+    public static final String CHAT_CON_ID_EXTRA = "conversation_id";
     private static MessageChat instance = null;
-    private List<ContactMessage> contactMessages;
-    private ContactAdapter adapter;
+    private List<Conversation> conversations;
+    private ConversationAdapter adapter;
     private FirebaseAuth auth;
     private TextView text_empty;
     private View empty;
@@ -57,32 +58,36 @@ public class MessageChat extends Fragment {
         recyclerView = root.findViewById(R.id.message_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerView.setHasFixedSize(true);
-        contactMessages = new ArrayList<>();
-        adapter = new ContactAdapter(contactMessages);
+        conversations = new ArrayList<>();
+        adapter = new ConversationAdapter(conversations);
         recyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener(this::setToChatActivity);
-        setContactMessageList();
+        setConversationList();
         return root;
     }
 
     private void setToChatActivity(int position) {
+        Conversation conversation = conversations.get(position);
+        List<String> members = conversation.getMembers();
+        String receiver = members.get(0).equals(auth.getUid()) ? members.get(1) : members.get(0);
         Intent chatIntent = new Intent(requireContext(), Chat.class);
-        chatIntent.putExtra(CONTACT_MESSAGE_EXTRA, contactMessages.get(position));
+        chatIntent.putExtra(CHAT_DESTINATION_EXTRA, receiver);
+        chatIntent.putExtra(CHAT_CON_ID_EXTRA, conversation.getId());
         startActivity(chatIntent);
     }
 
-    private void setContactMessageList() {
-        MessageHelper.getContactMessages(auth.getUid()).addSnapshotListener((value, error) -> {
+    private void setConversationList() {
+        MessageHelper.getConversations(auth.getUid()).addSnapshotListener((value, error) -> {
             if (error != null) {
                 Log.e(TAG, "setContactMessageList: ", error);
                 return;
             }
             if (value != null) {
-                contactMessages.clear();
-                contactMessages.addAll(value.toObjects(ContactMessage.class));
+                conversations.clear();
+                conversations.addAll(value.toObjects(Conversation.class));
                 adapter.notifyDataSetChanged();
 
-                if (contactMessages.isEmpty()) {
+                if (conversations.isEmpty()) {
                     recyclerView.setVisibility(View.GONE);
                     empty.setVisibility(View.VISIBLE);
                     text_empty.setText(R.string.not_massages);
@@ -90,6 +95,8 @@ public class MessageChat extends Fragment {
                     recyclerView.setVisibility(View.VISIBLE);
                     empty.setVisibility(View.GONE);
                 }
+
+                Log.i(TAG, "setConversationList: " + conversations);
 
             }
         });

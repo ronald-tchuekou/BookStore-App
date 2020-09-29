@@ -18,26 +18,28 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.imageview.ShapeableImageView;
+import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.roncoder.bookstore.R;
 import com.roncoder.bookstore.adapters.MessageAdapter;
 import com.roncoder.bookstore.dbHelpers.MessageHelper;
 import com.roncoder.bookstore.dbHelpers.UserHelper;
-import com.roncoder.bookstore.fragments.MessageChat;
-import com.roncoder.bookstore.models.ContactMessage;
 import com.roncoder.bookstore.models.Message;
 import com.roncoder.bookstore.models.User;
 import com.roncoder.bookstore.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+
+import static com.roncoder.bookstore.fragments.MessageChat.CHAT_CON_ID_EXTRA;
+import static com.roncoder.bookstore.fragments.MessageChat.CHAT_DESTINATION_EXTRA;
 
 public class Chat extends AppCompatActivity {
 
     private static final String TAG = "Chat";
     private FirebaseAuth auth;
-    private ContactMessage contactMessage;
+    private String receiver, conversation_id;
     private RecyclerView chat_recycler;
     private MessageAdapter adapter;
     private List<Message> messages;
@@ -57,10 +59,11 @@ public class Chat extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
 
-        contactMessage = getIntent().getParcelableExtra(MessageChat.CONTACT_MESSAGE_EXTRA);
+        receiver = getIntent().getStringExtra(CHAT_DESTINATION_EXTRA);
+        conversation_id = getIntent().getStringExtra(CHAT_CON_ID_EXTRA);
         initViews();
 
-        Log.i(TAG, "onCreate: Contact Message => " + contactMessage);
+        Log.i(TAG, "onCreate: (Receiver , Conversation id)  => (" + receiver + ", " + conversation_id + ")");
 
         adaptRecycler();
         setMessageList();
@@ -81,21 +84,28 @@ public class Chat extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        UserHelper.getUserById(auth.getUid()).addOnCompleteListener(com-> {
+        UserHelper.getUserById(receiver).addOnCompleteListener(com-> {
             if (!com.isSuccessful()) {
+                if (com.getException() instanceof FirebaseNetworkException)
+                    Utils.setDialogMessage(this, R.string.network_not_allowed);
+                else
+                    Utils.setDialogMessage(this, R.string.error_has_provide);
                 Log.e(TAG, "managedMessage: ", com.getException());
                 return;
             }
-            user = Objects.requireNonNull(com.getResult()).toObject(User.class);
-
-            // Set info.
-            sender_name.setText(user.getSurname() + " " + user.getName());
-            Glide.with(this)
-                    .load(user.getProfile())
-                    .placeholder(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_account, null))
-                    .placeholder(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_account, null))
-                    .into(profile_image);
-
+            DocumentSnapshot value = com.getResult();
+            if (value != null) {
+                user = value.toObject(User.class);
+                // Set info.
+                if (user == null) { finish(); return;}
+                String username = user.getSurname() + " " + user.getName();
+                sender_name.setText(username);
+                Glide.with(this)
+                        .load(user.getProfile())
+                        .placeholder(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_account, null))
+                        .placeholder(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_account, null))
+                        .into(profile_image);
+            }
         });
     }
 
@@ -138,22 +148,34 @@ public class Chat extends AppCompatActivity {
         });
         //  Send the message.
         send_btn.setOnClickListener(v -> {
-            Message message = new Message(Utils.SMS_SEND, Utils.now(), this.message, contactMessage.getId());
+            Message message = new Message(conversation_id, auth.getUid(), this.message, Utils.now());
             MessageHelper.sendMessage(message).addOnCompleteListener(com-> {
                 if (!com.isSuccessful()) {
+                    if (com.getException() instanceof FirebaseNetworkException)
+                        Utils.setDialogMessage(this, R.string.network_not_allowed);
+                    else
+                        Utils.setToastMessage(this, getString(R.string.error_has_provide));
                     Log.e(TAG, "managedMessage: ", com.getException());
                     return;
                 }
                 if (com.getResult() != null) {
                     String id = com.getResult().getId();
-                    // Update id.
+                    // Update message id.
                     MessageHelper.getCollectionRef().document(id).update("id", id).addOnCompleteListener(com1-> {
                         if (!com1.isSuccessful()) {
                             Log.e(TAG, "managedMessage: ", com1.getException());
                             return;
                         }
-                        // TODO
-                        Log.i(TAG, "managedMessage: Message is sent.");
+                        message.setId(id);
+                        // UPDATE LAST MESSAGE OF THIS CONVERSATION.
+                        MessageHelper.getConCollectionRef().document(conversation_id).update("last_message", message)
+                                .addOnCompleteListener(com12 -> {
+                                    if (!com1.isSuccessful()) {
+                                        Log.e(TAG, "managedMessage: ", com1.getException());
+                                        return;
+                                    }
+                                    Log.i(TAG, "managedMessage: Message is sent.");
+                                });
                     });
                 }
             });
@@ -176,11 +198,11 @@ public class Chat extends AppCompatActivity {
     }
 
     private void setMessageList() {
-        if (contactMessage == null)
+        if (conversation_id == null)
             return;
 
         load_indicator.setVisibility(View.VISIBLE);
-        MessageHelper.getMessages(contactMessage.getId()).addSnapshotListener((value, error) -> {
+        MessageHelper.getMessages(conversation_id).addSnapshotListener((value, error) -> {
             if (error != null) {
                 Log.e(TAG, "setMessageList: ", error);
                 load_indicator.setVisibility(View.GONE);
@@ -190,8 +212,9 @@ public class Chat extends AppCompatActivity {
                 messages.clear();
                 messages.addAll(value.toObjects(Message.class));
                 adapter.notifyDataSetChanged();
-                chat_recycler.scrollToPosition(messages.size() - contactMessage.getNot_read_count());
+                chat_recycler.scrollToPosition(messages.size()-1);
                 load_indicator.setVisibility(View.GONE);
+                Log.i(TAG, "setMessageList: "+ messages);
             }
         });
     }

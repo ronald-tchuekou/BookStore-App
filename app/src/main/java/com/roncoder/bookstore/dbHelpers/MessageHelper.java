@@ -9,22 +9,24 @@ import com.roncoder.bookstore.models.Message;
 
 public class MessageHelper {
     public static final String COLLECTION = "Messages";
-    public static final String CM_COLLECTION = "Contacts_messages";
+    public static final String CON_COLLECTION = "Conversations";
 
     public static CollectionReference getCollectionRef () {
         return FirebaseFirestore.getInstance().collection(COLLECTION);
     }
 
-    public static CollectionReference getCMCollectionRef () {
-        return FirebaseFirestore.getInstance().collection(CM_COLLECTION);
+    public static CollectionReference getConCollectionRef () {
+        return FirebaseFirestore.getInstance().collection(CON_COLLECTION);
     }
 
     public static Query getMessages (String container) {
-        return getCollectionRef().whereEqualTo("container", container);
+        return getCollectionRef().whereEqualTo("con_id", container).orderBy("date");
     }
 
-    public static Query getContactMessages (String user_id) {
-        return getCollectionRef().whereEqualTo("sender", user_id).whereEqualTo("receiver", user_id);
+    public static Query getConversations(String user_id) {
+        return getConCollectionRef()
+                .whereArrayContains("members", user_id)
+                .orderBy("date", Query.Direction.DESCENDING);
     }
 
     public static Task<DocumentReference> sendMessage(Message message) {

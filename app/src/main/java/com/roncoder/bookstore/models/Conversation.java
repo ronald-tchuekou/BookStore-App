@@ -1,67 +1,30 @@
 package com.roncoder.bookstore.models;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import androidx.annotation.NonNull;
 
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.util.Date;
+import java.util.List;
 
-public class ContactMessage implements Parcelable {
+public class Conversation {
     private String id;
-    private String sender;
-    private String receiver;
+    private String creator;
+    private List<String> members;
     private Message last_message;
     private Date date;
-    private int not_read_count;
+    private int not_read_count1;
+    private int not_read_count2;
 
-    public ContactMessage() {
-        setId("");
-        setSender("");
-        setReceiver("");
-        setLast_message(new Message());
-        setDate(new Date());
-        setNot_read_count(0);
-    }
+    public Conversation() { }
 
-    public ContactMessage(String sender, String receiver, Date date) {
+    public Conversation(String creator, List<String> members, Date date) {
         setId(id);
-        setSender(sender);
-        setReceiver(receiver);
-        setLast_message(null);
+        setCreator(creator);
+        setMembers(members);
+        setLast_message(last_message);
         setDate(date);
-        setNot_read_count(not_read_count);
+        setNot_read_count1(0);
+        setNot_read_count2(0);
     }
-
-    protected ContactMessage(Parcel in) {
-        id = in.readString();
-        sender = in.readString();
-        receiver = in.readString();
-        last_message = in.readParcelable(Message.class.getClassLoader());
-        String date_str = in.readString();
-        if (date_str != null) {
-            try {
-                date = DateFormat.getDateInstance().parse(date_str);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
-        not_read_count = in.readInt();
-    }
-
-    public static final Creator<ContactMessage> CREATOR = new Creator<ContactMessage>() {
-        @Override
-        public ContactMessage createFromParcel(Parcel in) {
-            return new ContactMessage(in);
-        }
-
-        @Override
-        public ContactMessage[] newArray(int size) {
-            return new ContactMessage[size];
-        }
-    };
 
     public String getId() {
         return id;
@@ -71,20 +34,20 @@ public class ContactMessage implements Parcelable {
         this.id = id;
     }
 
-    public String getSender() {
-        return sender;
+    public String getCreator() {
+        return creator;
     }
 
-    public void setSender(String sender) {
-        this.sender = sender;
+    public void setCreator(String creator) {
+        this.creator = creator;
     }
 
-    public String getReceiver() {
-        return receiver;
+    public List<String> getMembers() {
+        return members;
     }
 
-    public void setReceiver(String receiver) {
-        this.receiver = receiver;
+    public void setMembers(List<String> members) {
+        this.members = members;
     }
 
     public Message getLast_message() {
@@ -103,12 +66,20 @@ public class ContactMessage implements Parcelable {
         this.date = date;
     }
 
-    public int getNot_read_count() {
-        return not_read_count;
+    public int getNot_read_count1() {
+        return not_read_count1;
     }
 
-    public void setNot_read_count(int not_read_count) {
-        this.not_read_count = not_read_count;
+    public void setNot_read_count1(int not_read_count1) {
+        this.not_read_count1 = not_read_count1;
+    }
+
+    public int getNot_read_count2() {
+        return not_read_count2;
+    }
+
+    public void setNot_read_count2(int not_read_count2) {
+        this.not_read_count2 = not_read_count2;
     }
 
     @NonNull
@@ -116,26 +87,12 @@ public class ContactMessage implements Parcelable {
     public String toString() {
         return "ContactMessage{" +
                 "id='" + id + '\'' +
-                ", sender='" + sender + '\'' +
-                ", receiver='" + receiver + '\'' +
+                ", creator='" + creator + '\'' +
                 ", last_message='" + last_message + '\'' +
                 ", date=" + date +
-                ", not_read_count=" + not_read_count +
+                ", not_read_count1=" + not_read_count1 +
+                ", not_read_count2=" + not_read_count2 +
                 '}';
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
-        dest.writeString(sender);
-        dest.writeString(receiver);
-        dest.writeParcelable(last_message, Parcelable.PARCELABLE_WRITE_RETURN_VALUE);
-        dest.writeString(DateFormat.getDateInstance().format(date));
-        dest.writeInt(not_read_count);
-    }
 }

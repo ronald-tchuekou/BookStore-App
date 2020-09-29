@@ -33,9 +33,8 @@ import com.roncoder.bookstore.dbHelpers.UserHelper;
 import com.roncoder.bookstore.models.Bill;
 import com.roncoder.bookstore.models.Book;
 import com.roncoder.bookstore.models.Commend;
-import com.roncoder.bookstore.models.ContactMessage;
+import com.roncoder.bookstore.models.Conversation;
 import com.roncoder.bookstore.models.Message;
-import com.roncoder.bookstore.models.MessageCmd;
 import com.roncoder.bookstore.models.User;
 import com.roncoder.bookstore.utils.Utils;
 
@@ -43,6 +42,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
+
+import static com.roncoder.bookstore.fragments.MessageChat.CHAT_CON_ID_EXTRA;
+import static com.roncoder.bookstore.fragments.MessageChat.CHAT_DESTINATION_EXTRA;
 
 public class Cart extends Fragment {
 
@@ -165,104 +167,172 @@ public class Cart extends Fragment {
         Commend cmd = commends.get(position);
 
         Utils.setProgressDialog(requireActivity(), getString(R.string.wait_a_moment));
+
         // Check if the comment are messaging.
-        if (cmd.getCm_id() == null || cmd.getCm_id().equals("")) { // If this message is not messaging.
-            getAdminUsers(cmd);
-        } else {
-            MessageHelper.getCMCollectionRef().document(cmd.getId())
-                    .get().addOnCompleteListener(com-> {
+        if (cmd.getCon_id() == null || cmd.getCon_id().equals("")) { // If this message is not messaging.
+            getAdminUsers(cmd.getId());
+        }
+        else { // If this commend are messaging.
+            MessageHelper.getConCollectionRef().document(cmd.getCon_id()).get().addOnCompleteListener(com-> {
                 Utils.dismissDialog();
                 if (!com.isSuccessful()) {
                     Log.e(TAG, "message - get contact message: ", com.getException());
-                    Utils.setDialogMessage(requireActivity(), R.string.error_has_provide);
+                    if (com.getException() instanceof FirebaseNetworkException)
+                        Utils.setDialogMessage(requireActivity(), R.string.network_not_allowed);
+                    else
+                        Utils.setDialogMessage(requireActivity(), R.string.error_has_provide);
                     return;
                 }
-                Intent messageIntent = new Intent(requireActivity(), Chat.class);
-                messageIntent.putExtra(MessageChat.CONTACT_MESSAGE_EXTRA,
-                        Objects.requireNonNull(com.getResult()).toObject(ContactMessage.class));
-                startActivity(messageIntent);
+                if (com.getResult() != null) {
+                    setToMessage(Objects.requireNonNull(com.getResult().toObject(Conversation.class)));
+                }
             });
         }
     }
 
-    private void getAdminUsers (Commend cmd) {
+    /**
+     * Open activity of messages.
+     * @param conversation Contact message.
+     */
+    private void setToMessage(Conversation conversation) {
+        List<String> members = conversation.getMembers();
+        String receiver = members.get(0).equals(user.getUid()) ? members.get(1) : members.get(0);
+        Intent chatIntent = new Intent(requireContext(), Chat.class);
+        chatIntent.putExtra(CHAT_DESTINATION_EXTRA, receiver);
+        chatIntent.putExtra(CHAT_CON_ID_EXTRA, conversation.getId());
+        startActivity(chatIntent);
+    }
+
+    /**
+     * Function to get the receiver message.
+     */
+    private void getAdminUsers (String cmd_id) {
         UserHelper.getCollectionRef().whereEqualTo("is_admin", true)
                 .addSnapshotListener((value, error) -> {
+
+                    // Where error are provided.
                     if (error != null) {
                         Utils.dismissDialog();
                         Log.e(TAG, "manageDMessageCmd: ", error);
                         return;
                     }
+
+                    // Where values.
                     if (value != null) {
                         List<User> users = value.toObjects(User.class);
                         if (users.isEmpty()) {
                             Utils.dismissDialog();
                             Utils.setDialogMessage(requireActivity(), R.string.impossible_to_make_message);
-                        } else {
-                            int random = (int) (Math.random()*(users.size() + 1));
-                            User user1 = users.get(random);
-
-                            // Save new message.
-                           Message message = new Message();
-                            message.setType(Utils.SMS_SEND);
-                            message.setText("Bonjour à vous, information sur cette command.");
-                            message.setDate(Calendar.getInstance().getTime());
-                            message.setIs_read(false);
-
-                            // The message of this.
-                            saveMessage(message, cmd, user1);
+                            return;
                         }
+
+                        // Random an user. (receiver user);
+                        User user1; int test = 0;
+                        do{
+                            int random = (int) (Math.random()*(users.size()));
+                            user1 = users.get(random);
+                            test ++;
+                        }while(user1.getId().equals(user.getUid()) && test <= 10);
+
+                        if (test > 10 && user1 == null) { Utils.setDialogMessage(requireActivity(), R.string.impossible_to_make_message); return; }
+
+                        // Save new contact message.
+                        List<String> members = new ArrayList<>();
+                        members.add(user.getUid());
+                        members.add(user1.getId());
+                        Conversation conversation = new Conversation(user.getUid(), members, Calendar.getInstance().getTime());
+                        MessageHelper.getConCollectionRef().add(conversation).addOnSuccessListener(success -> {
+                            String conversation_id = success.getId();
+
+                            // UPDATE CONVERSATION ID.
+                            MessageHelper.getConCollectionRef().document(conversation_id).update("id", conversation_id).addOnSuccessListener(v -> {
+                                conversation.setId(conversation_id);
+                                // UPDATE THE PARENT COMMEND.
+                                CommendHelper.getCollectionRef().document(cmd_id).update("con_id", conversation.getId())
+                                        .addOnCompleteListener(command -> {
+                                            if (!command.isSuccessful()) {
+                                                Utils.dismissDialog();
+                                                Log.e(TAG, "Error where update the commend contact id : ", command.getException());
+                                                if (command.getException() instanceof FirebaseNetworkException)
+                                                    Utils.setDialogMessage(requireActivity(), R.string.network_not_allowed);
+                                                else
+                                                    Utils.setDialogMessage(requireActivity(), R.string.error_has_provide);
+                                                // Delete the last added contact message if saver as failed.
+                                                MessageHelper.getConCollectionRef().document(conversation_id).delete();
+                                                return;
+                                            }
+                                            // Save an message.
+                                           sendMessage(cmd_id, conversation);
+                                        });
+                            }).addOnFailureListener(fail -> {
+                                Utils.dismissDialog();
+                                // Delete the last added contact message if saver as failed.
+                                MessageHelper.getConCollectionRef().document(conversation_id).delete();
+                                if (fail instanceof FirebaseNetworkException)
+                                    Utils.setDialogMessage(requireActivity(), R.string.network_not_allowed);
+                                else
+                                    Utils.setDialogMessage(requireActivity(), R.string.error_has_provide);
+                            });
+                        }).addOnFailureListener(fail -> {
+                            Utils.dismissDialog();
+                            if (fail instanceof FirebaseNetworkException)
+                                Utils.setDialogMessage(requireActivity(), R.string.network_not_allowed);
+                            else
+                                Utils.setDialogMessage(requireActivity(), R.string.error_has_provide);
+                        });
                     }
         });
     }
 
-    private void saveMessage(Message message, Commend cmd, User user1) {
-        BookHelper.getBookById(cmd.getBook_id()).addOnSuccessListener(s -> {
-            MessageCmd mcd = new MessageCmd();
-            Book book = s.toObject(Book.class);
-            assert book != null;
-            mcd.setImage(book.getImage1_front());
-
-            message.setMessage_cmd(new MessageCmd(book.getImage1_front(), book.getTitle(),
-                    cmd.getQuantity(), cmd.getTotal_prise()));
-            // add message.
-            MessageHelper.getCollectionRef().add(message).addOnCompleteListener(com -> {
-                if (!com.isSuccessful()) {
-                    Log.e(TAG, "message - add message : ", com.getException());
+    /**
+     * Function to send the message.
+     * @param cmd_id Commend id.
+     * @param conversation Conversation id.
+     */
+    private void sendMessage(String cmd_id, Conversation conversation) {
+        Message message = new Message(conversation.getId(), user.getUid(), "Message sur la commend *"+cmd_id+"*",
+                Calendar.getInstance().getTime());
+        MessageHelper.sendMessage(message).addOnCompleteListener(command -> {
+            if (!command.isSuccessful()) {
+                Utils.dismissDialog();
+                Log.e(TAG, "Error where update the commend contact id : ", command.getException());
+                if (command.getException() instanceof FirebaseNetworkException)
+                    Utils.setDialogMessage(requireActivity(), R.string.network_not_allowed);
+                else
                     Utils.setDialogMessage(requireActivity(), R.string.error_has_provide);
-                    return;
-                }
-                // Update id.
-                String id = Objects.requireNonNull(com.getResult()).getId();
-                message.setId(id);
-                MessageHelper.getCollectionRef().document(id).update("id", id)
-                        .addOnSuccessListener(suc -> {
-                            Utils.dismissDialog();
-                            // Add contactMessage.
-                            ContactMessage cm = new ContactMessage();
-                            cm.setSender(user.getUid());
-                            cm.setReceiver(user1.getId());
-                            cm.setLast_message(message);
-                            cm.setDate(Calendar.getInstance().getTime());
-                            cm.setNot_read_count(0);
-                            MessageHelper.getCMCollectionRef().add(cm).addOnSuccessListener(success -> {
-                                String cm_id = success.getId();
-                               MessageHelper.getCMCollectionRef().document(cm_id).get().addOnSuccessListener(v -> {
-                                   cm.setId(cm_id);
-                                   CommendHelper.getCollectionRef().document(cmd.getId()).update("cm_id", cm.getId());
-                                   Intent messageIntent = new Intent(requireActivity(), Chat.class);
-                                   messageIntent.putExtra(MessageChat.CONTACT_MESSAGE_EXTRA, cm);
-                                   startActivity(messageIntent);
-                               });
-                            });
-                        }).addOnFailureListener(e -> {
-                            Log.e(TAG, "onFailure: ", e);
-                            Utils.dismissDialog();
+                return;
+            }
+            if (command.getResult() != null) {
+                String message_id = command.getResult().getId();
+                message.setId(message_id);
+                // UPDATE THE MESSAGE ID.
+                MessageHelper.getCollectionRef().document(message_id).update("id", message_id)
+                        .addOnCompleteListener(com -> {
+                            if (!command.isSuccessful()) {
+                                Utils.dismissDialog();
+                                Log.e(TAG, "Error where update the commend contact id : ", command.getException());
+                                if (command.getException() instanceof FirebaseNetworkException)
+                                    Utils.setDialogMessage(requireActivity(), R.string.network_not_allowed);
+                                else
+                                    Utils.setDialogMessage(requireActivity(), R.string.error_has_provide);
+                                return;
+                            }
+                            // UPDATE LAST MESSAGE OF CONVERSATION.
+                            MessageHelper.getConCollectionRef().document(conversation.getId()).update("last_message", message)
+                                    .addOnSuccessListener(suc -> {
+                                        Utils.dismissDialog();
+                                        setToMessage(conversation);
+                                    })
+                                    .addOnFailureListener(fail -> {
+                                        Utils.dismissDialog();
+                                        Log.e(TAG, "Error where update the commend contact id : ", fail);
+                                        if (fail instanceof FirebaseNetworkException)
+                                            Utils.setDialogMessage(requireActivity(), R.string.network_not_allowed);
+                                        else
+                                            Utils.setDialogMessage(requireActivity(), R.string.error_has_provide);
+                                    });
                         });
-            });
-        }).addOnFailureListener(e -> {
-            Log.e(TAG, "onFailure: ", e);
-            Utils.dismissDialog();
+            }
         });
     }
 
@@ -275,7 +345,7 @@ public class Cart extends Fragment {
         Bill bill = new Bill();
         Commend cmd = commends.get(position);
 
-        if (cmd.isIs_billed()) {
+        if (cmd.isIs_billed()) { // If this commend are billing.
             Utils.setProgressDialog(requireActivity(), getString(R.string.wait_a_moment));
             BillHelper.getBillByRef(cmd.getBill_ref()).addOnCompleteListener(command -> {
                 Utils.dismissDialog();
@@ -292,16 +362,15 @@ public class Cart extends Fragment {
                 cmdIntent.putExtra(Utils.BILL_EXTRA, b);
                 startActivity(cmdIntent);
             });
-        } else {
+        } else { // If this commend are not billing.
             List<String> cmd_id = new ArrayList<>();
             cmd_id.add(cmd.getId());
             bill.setCommend_ids(cmd_id);
             bill.setTotal_prise(cmd.getTotal_prise());
             bill.setUser_id(user.getUid());
+            cmdIntent.putExtra(Utils.BILL_EXTRA, bill);
+            startActivity(cmdIntent);
         }
-
-        cmdIntent.putExtra(Utils.BILL_EXTRA, bill);
-        startActivity(cmdIntent);
     }
 
     /**

@@ -19,7 +19,7 @@ public class Commend implements Parcelable {
     private Date date_cmd;
     private boolean is_billed;
     private boolean is_validate;
-    private String cm_id;
+    private String con_id;
     private String bill_ref;
 
     public Commend () {
@@ -31,7 +31,7 @@ public class Commend implements Parcelable {
         date_cmd = new Date();
         is_billed = false;
         is_validate = false;
-        cm_id = "";
+        con_id = "";
         bill_ref = "";
     }
     public Commend (String book_id, String user_id, int quantity, Date date_cmd, float total_prise) {
@@ -42,7 +42,7 @@ public class Commend implements Parcelable {
         setDate_cmd(date_cmd);
         setIs_billed(false);
         setIs_validate(false);
-        setCm_id("");
+        setCon_id("");
         setBill_ref("");
         setTotal_prise(total_prise);
     }
@@ -56,7 +56,7 @@ public class Commend implements Parcelable {
         setDate_cmd(date_cmd);
         setIs_billed(is_billed);
         setIs_validate(is_validate);
-        setCm_id("");
+        setCon_id("");
         setBill_ref(bill_ref);
     }
     protected Commend(Parcel in) throws ParseException {
@@ -68,7 +68,7 @@ public class Commend implements Parcelable {
         date_cmd = DateFormat.getDateInstance().parse(Objects.requireNonNull(in.readString()));
         is_billed = in.readInt() != 0;
         is_validate = in.readInt() != 0;
-        cm_id = in.readString();
+        con_id = in.readString();
         bill_ref = in.readString();
     }
     public static final Creator<Commend> CREATOR = new Creator<Commend>() {
@@ -104,8 +104,8 @@ public class Commend implements Parcelable {
     public void setIs_billed(boolean is_billed) { this.is_billed = is_billed; }
     public boolean isIs_validate() { return is_validate; }
     public void setIs_validate(boolean is_validate) { this.is_validate = is_validate; }
-    public String getCm_id() { return cm_id; }
-    public void setCm_id(String cm_id) { this.cm_id = cm_id; }
+    public String getCon_id() { return con_id; }
+    public void setCon_id(String con_id) { this.con_id = con_id; }
     public String getBill_ref () { return bill_ref; }
     public void setBill_ref (String bill_ref) { this.bill_ref = bill_ref; }
 
@@ -121,7 +121,7 @@ public class Commend implements Parcelable {
                 ", date_cmd=" + date_cmd +
                 ", is_billed=" + is_billed +
                 ", is_validate=" + is_validate +
-                ", cm_id=" + cm_id +
+                ", cm_id=" + con_id +
                 ", bill_ref=" + bill_ref +
                 '}';
     }
@@ -141,7 +141,7 @@ public class Commend implements Parcelable {
         dest.writeString(DateFormat.getDateInstance().format(date_cmd));
         dest.writeInt(is_billed ? 1 : 0);
         dest.writeInt(is_validate ? 1 : 0);
-        dest.writeString(cm_id);
+        dest.writeString(con_id);
         dest.writeString(bill_ref);
     }
 }

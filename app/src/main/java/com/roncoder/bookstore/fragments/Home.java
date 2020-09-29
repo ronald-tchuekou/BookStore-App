@@ -76,6 +76,7 @@ public class Home extends Fragment implements View.OnClickListener {
         initItemListener();
         if( is_francophone_section ) setToFrancoPhoneSection();
         else setToAngloPhoneSection();
+        updateContentList();
         return root;
     }
 
@@ -99,12 +100,6 @@ public class Home extends Fragment implements View.OnClickListener {
         empty_first = root.findViewById(R.id.empty_first);
         empty_second = root.findViewById(R.id.empty_second);
         empty_third = root.findViewById(R.id.empty_third);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        updateContentList();
     }
 
     /**

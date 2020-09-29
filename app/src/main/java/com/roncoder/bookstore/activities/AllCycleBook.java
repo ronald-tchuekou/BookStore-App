@@ -232,8 +232,8 @@ public class AllCycleBook extends AppCompatActivity {
             book_title.setText(title);
             Glide.with(AllCycleBook.this)
                     .load(book.getImage1_front())
-                    .placeholder(R.drawable.excellence_en_svteehb_3e)
-                    .error(R.drawable.excellence_en_svteehb_3e)
+                    .placeholder(R.drawable.bg_image)
+                    .error(R.drawable.bg_image)
                     .into(book_image);
 
 //            Button buy = itemView.findViewById(R.id.buy_button);

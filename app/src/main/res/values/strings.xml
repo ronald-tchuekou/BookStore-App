@@ -220,6 +220,9 @@
     <string name="book_quantity">"Quantité : "</string>
     <string name="not_massages">Pas de messages.</string>
     <string name="impossible_to_make_message">C\'est impossible de faire des messages pour le moment. Veillez reessayer plutard.</string>
+    <string name="commended_successful">Votre commande à été enregistrée avec succès.</string>
+    <string name="bill_label_info">Informations sur le client et emplacement de livraison.</string>
+    <string name="label_quantity">Quantité: </string>
 
     // Arrays.
 

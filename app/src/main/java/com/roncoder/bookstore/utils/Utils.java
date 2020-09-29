@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -161,11 +162,15 @@ public class Utils {
      * @param ac Activity of context.
      */
     public static void setCmdCountBroadcast(int count, boolean edit, Activity ac) {
-        Intent broadcastIntent = new Intent();
-        broadcastIntent.setAction(MainActivity.CMD_COUNT_ACTION);
-        broadcastIntent.putExtra(MainActivity.EXTRA_CMD_COUNT, count);
-        broadcastIntent.putExtra(MainActivity.EXTRA_CMD_REPLACE, edit);
-        ac.sendBroadcast(broadcastIntent);
+        try {
+            Intent broadcastIntent = new Intent();
+            broadcastIntent.setAction(MainActivity.CMD_COUNT_ACTION);
+            broadcastIntent.putExtra(MainActivity.EXTRA_CMD_COUNT, count);
+            broadcastIntent.putExtra(MainActivity.EXTRA_CMD_REPLACE, edit);
+            ac.sendBroadcast(broadcastIntent);
+        }
+        catch(Exception e) { Log.e("Utils", "updateTotalPrise: BroadCast is not set.", e); }
+
     }
 
     /**

@@ -18,6 +18,7 @@ import android.widget.RadioButton;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.switchmaterial.SwitchMaterial;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -39,6 +40,7 @@ public class BuyCommend extends AppCompatActivity {
     private static final String TAG = "BuyCommend";
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private Button valid;
+    private TextInputLayout autoComplete;
     private EditText contact_name, phone_number, district_view, street, more_desc;
     private RadioButton standard_shipping, instant_shipping, express_shipping;
     private AutoCompleteTextView instant_shipping_address;
@@ -109,13 +111,12 @@ public class BuyCommend extends AppCompatActivity {
         if (shipping_type.equals(Utils.SHIPPING_INSTANT)) {
             instant_shipping.setChecked(true);
             instant_shipping_address.setText(shippingAddress.getStreet());
-            instant_shipping_address.setVisibility(View.VISIBLE);
+            autoComplete.setVisibility(View.VISIBLE);
             street.setVisibility(View.GONE);
             findViewById(R.id.street_label).setVisibility(View.GONE);
         }
         else {
-            instant_shipping_address.setEnabled(false);
-            instant_shipping_address.setVisibility(View.GONE);
+            autoComplete.setVisibility(View.GONE);
             street.setVisibility(View.VISIBLE);
             findViewById(R.id.street_label).setVisibility(View.VISIBLE);
 
@@ -142,14 +143,14 @@ public class BuyCommend extends AppCompatActivity {
             if (isChecked) {
                 instant_shipping_address.setEnabled(true);
                 street.setEnabled(false);
-                instant_shipping_address.setVisibility(View.VISIBLE);
+                autoComplete.setVisibility(View.VISIBLE);
                 street.setVisibility(View.GONE);
                 findViewById(R.id.street_label).setVisibility(View.GONE);
             }
             else {
                 instant_shipping_address.setEnabled(false);
                 street.setEnabled(true);
-                instant_shipping_address.setVisibility(View.GONE);
+                autoComplete.setVisibility(View.GONE);
                 street.setVisibility(View.VISIBLE);
                 findViewById(R.id.street_label).setVisibility(View.VISIBLE);
 
@@ -270,8 +271,11 @@ public class BuyCommend extends AppCompatActivity {
                                             Log.e(TAG, "updated bill error : ", command.getException());
                                             return;
                                         }
-                                        Utils.setDialogMessage(this, getString(R.string.add_successful));
-                                        onBackPressed();
+                                        Utils.setDialogMessage(this, R.string.commended_successful,
+                                                ((dialog, s)-> {
+                                                    dialog.dismiss();
+                                                    onBackPressed();
+                                                }));
                                     });
                         } else {
                             Utils.dismissDialog();
@@ -352,6 +356,7 @@ public class BuyCommend extends AppCompatActivity {
         instant_shipping = findViewById(R.id.instant_shipping);
         express_shipping = findViewById(R.id.express_shipping);
         as_default_address = findViewById(R.id.as_default_address);
+        autoComplete = findViewById(R.id.autoComplete);
 
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter<>(
                 this,

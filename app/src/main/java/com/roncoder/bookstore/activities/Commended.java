@@ -2,6 +2,7 @@ package com.roncoder.bookstore.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,12 +17,16 @@ import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.roncoder.bookstore.R;
+import com.roncoder.bookstore.dbHelpers.BillHelper;
 import com.roncoder.bookstore.dbHelpers.CommendHelper;
+import com.roncoder.bookstore.models.Bill;
 import com.roncoder.bookstore.models.Book;
 import com.roncoder.bookstore.models.Commend;
 import com.roncoder.bookstore.utils.Utils;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Objects;
 
 public class Commended extends AppCompatActivity {
@@ -31,6 +36,7 @@ public class Commended extends AppCompatActivity {
     ImageView front_image;
     ImageButton remove_quantity, add_quantity;
     Button finish;
+    FirebaseAuth auth;
     private int quantity = 1;
     double total_unit_prise = 0;
 
@@ -38,6 +44,8 @@ public class Commended extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_commended);
+        // Auth
+        auth = FirebaseAuth.getInstance();
         // Get book.
         book = getIntent().getParcelableExtra(Utils.EXTRA_BOOK);
         initViews();
@@ -67,6 +75,7 @@ public class Commended extends AppCompatActivity {
                     return;
                 }
                 String id = Objects.requireNonNull(com.getResult()).getId();
+                commend.setId(id);
                 CommendHelper.getCollectionRef().document(id).update("id", id).addOnCompleteListener(command -> {
                     if (!command.isSuccessful()){
                         Utils.setToastMessage(this, getString(R.string.error_has_provide));
@@ -74,10 +83,48 @@ public class Commended extends AppCompatActivity {
                     }
                     Utils.dismissDialog();
                     Utils.setCmdCountBroadcast(1, false, this);
-                    Utils.setToastMessage(this, getString(R.string.add_successful));
-                    onBackPressed();
+                    // Fish to commend in BuyCommend activity.
+                    buyCommend(commend);
                 });
             });
+    }
+
+    /**
+     * Finish to buy this commend.
+     * @param cmd Commend
+     */
+    private void buyCommend(Commend cmd) {
+        Intent cmdIntent = new Intent(this, BuyCommend.class);
+        Bill bill = new Bill();
+
+        if (cmd.isIs_billed()) { // If this commend are billing.
+            Utils.setProgressDialog(this, getString(R.string.wait_a_moment));
+            BillHelper.getBillByRef(cmd.getBill_ref()).addOnCompleteListener(command -> {
+                Utils.dismissDialog();
+                if (!command.isSuccessful()) {
+                    Exception e = command.getException();
+                    if (e instanceof FirebaseNetworkException)
+                        Utils.setDialogMessage(this, R.string.network_not_allowed);
+                    else
+                        Utils.setToastMessage(this, getString(R.string.failled));
+                    Log.e(TAG, "onBuyListener: ", e);
+                    return;
+                }
+                Bill b = Objects.requireNonNull(command.getResult()).toObject(Bill.class);
+                cmdIntent.putExtra(Utils.BILL_EXTRA, b);
+                startActivity(cmdIntent);
+                finish();
+            });
+        } else { // If this commend are not billing.
+            List<String> cmd_id = new ArrayList<>();
+            cmd_id.add(cmd.getId());
+            bill.setCommend_ids(cmd_id);
+            bill.setTotal_prise(cmd.getTotal_prise());
+            bill.setUser_id(auth.getUid());
+            cmdIntent.putExtra(Utils.BILL_EXTRA, bill);
+            startActivity(cmdIntent);
+            finish();
+        }
     }
 
     private void addQuantity(int number) {

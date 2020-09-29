@@ -26,6 +26,7 @@
         app:layout_constraintVertical_bias="0.0"
         tools:ignore="UnusedAttribute" />
 
+
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/materialCardView2"
         android:layout_width="0dp"
@@ -79,6 +80,16 @@
         </LinearLayout>
 
     </com.google.android.material.card.MaterialCardView>
+
+    <ImageView
+        android:id="@+id/sms_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/transparent"
+        android:elevation="1dp"
+        app:layout_constraintBottom_toBottomOf="@+id/materialCardView2"
+        app:layout_constraintEnd_toEndOf="@+id/materialCardView2"
+        app:srcCompat="@drawable/ic_sms_cours" />
 
     <View
         android:id="@+id/view"

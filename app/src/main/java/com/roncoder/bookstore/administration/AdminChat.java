@@ -16,20 +16,21 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.roncoder.bookstore.R;
 import com.roncoder.bookstore.activities.Chat;
-import com.roncoder.bookstore.adapters.ContactAdapter;
+import com.roncoder.bookstore.adapters.ConversationAdapter;
 import com.roncoder.bookstore.dbHelpers.MessageHelper;
-import com.roncoder.bookstore.models.ContactMessage;
+import com.roncoder.bookstore.models.Conversation;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.roncoder.bookstore.fragments.MessageChat.CONTACT_MESSAGE_EXTRA;
+import static com.roncoder.bookstore.fragments.MessageChat.CHAT_CON_ID_EXTRA;
+import static com.roncoder.bookstore.fragments.MessageChat.CHAT_DESTINATION_EXTRA;
 
 public class AdminChat extends AppCompatActivity {
 
     private static final String TAG = "AdminChat";
-    private List<ContactMessage> contactMessages;
-    private ContactAdapter adapter;
+    private List<Conversation> conversations;
+    private ConversationAdapter adapter;
     private FirebaseAuth auth;
     private RecyclerView recyclerView;
     private View empty;
@@ -46,11 +47,11 @@ public class AdminChat extends AppCompatActivity {
         recyclerView = findViewById(R.id.message_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
-        contactMessages = new ArrayList<>();
-        adapter = new ContactAdapter(contactMessages);
+        conversations = new ArrayList<>();
+        adapter = new ConversationAdapter(conversations);
         recyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener(this::setToChatActivity);
-        setContactMessages();
+        setConversationList();
     }
 
     private void managedActionBar() {
@@ -74,23 +75,25 @@ public class AdminChat extends AppCompatActivity {
     }
 
     private void setToChatActivity(int position) {
+        Conversation conversation = conversations.get(position);
+        List<String> members = conversation.getMembers();
+        String receiver = members.get(0).equals(auth.getUid()) ? members.get(1) : members.get(0);
         Intent chatIntent = new Intent(this, Chat.class);
-        chatIntent.putExtra(CONTACT_MESSAGE_EXTRA, contactMessages.get(position));
+        chatIntent.putExtra(CHAT_DESTINATION_EXTRA, receiver);
+        chatIntent.putExtra(CHAT_CON_ID_EXTRA, conversation.getId());
         startActivity(chatIntent);
     }
 
-    private void setContactMessages() {
-        MessageHelper.getContactMessages(auth.getUid()).addSnapshotListener((value, error) -> {
+    private void setConversationList() {
+        MessageHelper.getConversations(auth.getUid()).addSnapshotListener((value, error) -> {
             if (error != null) {
                 Log.e(TAG, "setContactMessageList: ", error);
                 return;
             }
             if (value != null) {
-                contactMessages.clear();
-                contactMessages.addAll(value.toObjects(ContactMessage.class));
-                adapter.notifyDataSetChanged();
-
-                if (contactMessages.isEmpty()){
+                conversations.clear();
+                conversations.addAll(value.toObjects(Conversation.class));
+                if (conversations.isEmpty()){
                     recyclerView.setVisibility(View.GONE);
                     empty.setVisibility(View.VISIBLE);
                     text_empty.setText(R.string.not_massages);
@@ -98,7 +101,7 @@ public class AdminChat extends AppCompatActivity {
                     recyclerView.setVisibility(View.VISIBLE);
                     empty.setVisibility(View.GONE);
                 }
-
+                adapter.notifyDataSetChanged();
             }
         });
     }

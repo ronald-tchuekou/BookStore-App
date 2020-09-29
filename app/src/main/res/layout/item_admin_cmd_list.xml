@@ -2,6 +2,7 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -35,62 +36,66 @@
                 android:id="@+id/book_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                android:text="Book title + author"
+                android:layout_marginStart="8dp"
+                android:textColor="@color/black"
+                android:singleLine="true"
+                android:ellipsize="end"
                 android:textSize="@dimen/baseTextSize"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/book_image"
+                app:layout_constraintStart_toEndOf="@+id/textView26"
                 app:layout_constraintTop_toBottomOf="@+id/date_cmd" />
 
             <TextView
                 android:id="@+id/book_edition"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="4dp"
                 android:layout_marginTop="3dp"
                 android:layout_marginEnd="8dp"
-                android:text="Book edition"
+                android:textColor="@color/black"
                 android:textSize="@dimen/baseTextSize"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/book_image"
+                app:layout_constraintHorizontal_bias="0.4"
+                app:layout_constraintStart_toEndOf="@+id/textView30"
                 app:layout_constraintTop_toBottomOf="@+id/book_title" />
 
             <TextView
                 android:id="@+id/book_count"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
                 android:layout_marginTop="3dp"
                 android:layout_marginEnd="8dp"
-                android:text="Book count"
+                android:layout_marginStart="3dp"
+                android:textColor="@color/black"
                 android:textSize="@dimen/baseTextSize"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/book_image"
+                app:layout_constraintStart_toEndOf="@+id/textView3"
                 app:layout_constraintTop_toBottomOf="@+id/book_edition" />
 
             <TextView
                 android:id="@+id/total_prise"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
                 android:layout_marginTop="3dp"
                 android:layout_marginEnd="8dp"
-                android:text="Total prise"
+                android:layout_marginStart="4dp"
                 android:textColor="@color/googleColor"
                 android:textSize="@dimen/baseTextSize"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/book_image"
+                app:layout_constraintStart_toEndOf="@+id/textView32"
                 app:layout_constraintTop_toBottomOf="@+id/book_count" />
 
             <ImageView
                 android:id="@+id/cmd_state"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_cmd_validate" />
+                app:srcCompat="@drawable/ic_cmd_validate"
+                android:contentDescription="@string/app_name" />
 
             <TextView
                 android:id="@+id/date_cmd"
@@ -99,10 +104,53 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="3dp"
                 android:layout_marginEnd="8dp"
-                android:text="12/45/2020"
                 app:layout_constraintEnd_toStartOf="@+id/cmd_state"
                 app:layout_constraintStart_toEndOf="@+id/book_image"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="3dp"
+                android:textSize="@dimen/baseTextSize"
+                android:text="@string/label_quantity"
+                app:layout_constraintStart_toEndOf="@+id/book_image"
+                app:layout_constraintTop_toBottomOf="@+id/book_edition" />
+
+            <TextView
+                android:id="@+id/textView26"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:textSize="@dimen/baseTextSize"
+                android:text="@string/title"
+                app:layout_constraintStart_toEndOf="@+id/book_image"
+                app:layout_constraintTop_toBottomOf="@+id/date_cmd" />
+
+            <TextView
+                android:id="@+id/textView30"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="3dp"
+                android:text="@string/edition"
+                android:textSize="@dimen/baseTextSize"
+                app:layout_constraintStart_toEndOf="@+id/book_image"
+                app:layout_constraintTop_toTopOf="@+id/book_edition" />
+
+            <TextView
+                android:id="@+id/textView32"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="3dp"
+                android:text="@string/total_prise"
+                android:textSize="@dimen/baseTextSize"
+                app:layout_constraintStart_toEndOf="@+id/book_image"
+                app:layout_constraintTop_toTopOf="@+id/total_prise" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 

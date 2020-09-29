@@ -85,8 +85,8 @@ public class BookDetails extends AppCompatActivity {
         // The front image.
         Glide.with(this)
                 .load(book.getImage1_front())
-                .placeholder(R.drawable.excellence_physique_chimie_2ndc)
-                .error(R.drawable.excellence_physique_chimie_2ndc)
+                .placeholder(R.drawable.bg_image)
+                .error(R.drawable.bg_image)
                 .into(front_image);
         title.setText(book.getTitle());
         book_author.setText(book.getAuthor());
