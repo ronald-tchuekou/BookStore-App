@@ -12,7 +12,7 @@
     android:layout_marginBottom="10dp"
     android:layout_marginTop="5dp"
     app:cardCornerRadius="5dp"
-    android:layout_width="170dp"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content">
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,7 +22,7 @@
 
         <ImageView
             android:id="@+id/book_image"
-            android:layout_width="match_parent"
+            android:layout_width="150dp"
             android:layout_height="200dp"
             android:scaleType="centerCrop"
             android:transitionName="bookImage"
@@ -39,26 +39,6 @@
             android:paddingVertical="3dp"
             android:ellipsize="end"
             android:text="Ronald Tchuekou : Informatiques, dans l'esemble" />
-            <TextView
-                android:id="@+id/book_prise"
-                android:layout_width="match_parent"
-                android:textSize="13sp"
-                android:textColor="@color/colorPrimary"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="8dp"
-                android:textStyle="bold" />
-
-            <Button
-                android:id="@+id/buy_button"
-                android:layout_width="wrap_content"
-                android:layout_height="37dp"
-                android:layout_gravity="end"
-                android:layout_marginEnd="8dp"
-                android:textAllCaps="false"
-                android:layout_marginBottom="8dp"
-                android:backgroundTint="@color/colorAccent"
-                android:text="@string/commended"
-                tools:ignore="UnusedAttribute" />
 
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

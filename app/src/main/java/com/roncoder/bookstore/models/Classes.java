@@ -6,17 +6,17 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 
 public class Classes extends Factory implements Parcelable {
-    private int id;
+    private String id;
     private String name;
     private String libel;
     private String cycle;
     public Classes() {
-        this.id = -1;
+        this.id = "";
         this.name = "";
         this.libel = "";
         this.cycle = "";
     }
-    public Classes(int id, String name, String libel, String cycle) {
+    public Classes(String id, String name, String libel, String cycle) {
         setId(id);
         setName(name);
         setLibel(libel);
@@ -24,7 +24,7 @@ public class Classes extends Factory implements Parcelable {
     }
 
     protected Classes(Parcel in) {
-        id = in.readInt();
+        id = in.readString();
         name = in.readString();
         libel = in.readString();
         cycle = in.readString();
@@ -42,8 +42,8 @@ public class Classes extends Factory implements Parcelable {
         }
     };
 
-    public int getId () { return id; }
-    public void setId (int id) { this.id = id; }
+    public String getId () { return id; }
+    public void setId (String id) { this.id = id; }
     public String getName () { return name; }
     public void setName (String name) { this.name = name; }
     public String getLibel() { return libel; }
@@ -69,7 +69,7 @@ public class Classes extends Factory implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
+        dest.writeString(id);
         dest.writeString(name);
         dest.writeString(libel);
         dest.writeString(cycle);

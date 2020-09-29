@@ -3,32 +3,38 @@ package com.roncoder.bookstore.utils;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Parcelable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.animation.Interpolator;
-import android.widget.ProgressBar;
+import android.webkit.MimeTypeMap;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.roncoder.bookstore.R;
 import com.roncoder.bookstore.activities.BookDetails;
 import com.roncoder.bookstore.activities.BuyCommend;
 import com.roncoder.bookstore.activities.Commended;
+import com.roncoder.bookstore.activities.LoginWithSocial;
 import com.roncoder.bookstore.activities.MainActivity;
-import com.roncoder.bookstore.api.Result;
 import com.roncoder.bookstore.dbHelpers.CommendHelper;
 import com.roncoder.bookstore.models.Book;
 import com.roncoder.bookstore.models.Commend;
-import com.roncoder.bookstore.models.User;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -36,25 +42,20 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import okhttp3.Interceptor;
-import retrofit2.Call;
-
 import static androidx.core.app.ActivityOptionsCompat.makeSceneTransitionAnimation;
 
 public class Utils {
 
     // Cycle type
-    public static final String PRIMARY_F = "Primaire";
-    public static final String PRIMARY_A = "Primary";
-    public static final String SECONDARY_F = "Secondaire";
-    public static final String SECONDARY_A = "Secondary";
-    public static final String NURSERY_F = "Maternelle";
-    public static final String NURSERY_A = "Nursery";
+    public static final String PRIMARY_F = "Primaire Francophone";
+    public static final String PRIMARY_A = "Primary Anglophone";
+    public static final String SECONDARY_F = "Secondaire Francophone";
+    public static final String SECONDARY_A = "Secondary Anglophone";
+    public static final String NURSERY_F = "Maternelle Francophone";
+    public static final String NURSERY_A = "Nursery Anglophone";
     public static final String CLASS_F = "Francophone";
     public static final String CLASS_A = "Anglophone";
 
-    // Current user.
-    private static User user;
 
     // Payment types
     public static final String PAYMENT_AT_SHIPPING = "A la livraison";
@@ -76,11 +77,6 @@ public class Utils {
     public static final String BILL_IN_COURSE = "In Course";
     public static final String BILL_OBSOLETE = "Obsolete";
 
-    /**
-     * Id of the current user.
-     */
-    public static int user_id;
-
     public static final int FRAG_HOME = 0;
     public static final int FRAG_SEARCH = 1;
     public static final int FRAG_KILT = 2;
@@ -88,6 +84,12 @@ public class Utils {
     public static final int FRAG_MESSAGE = 4;
     public static final int COMMENDED_REQUEST_CODE = 12;
     public static final String EXTRA_COMMEND = "Commend";
+    public static final String BILL_EXTRA = "Bill";
+    public static final String SMS_SEND = "send";
+    public static final String SMS_RECEIVED = "received";
+    public static final String PROFILE_IMAGE_EXTRA = "Profile image";
+    public static final String SENDER_NAME_EXTRA = "Send name";
+    public static final String MESSAGE_CM_EXTRA = "Message Cmd";
 
     private static ProgressDialog progressDialog;
 
@@ -113,6 +115,7 @@ public class Utils {
     public static Date getDateOf (String date_str) {
         return new Date(Long.parseLong(date_str));
     }
+
     /**
      * Function to format the date.
      * @param date Date.
@@ -132,57 +135,37 @@ public class Utils {
      * Function to get the current date.
      */
     public static Date now () { return Calendar.getInstance().getTime(); }
-    /**
-     * Function to buy a commend.
-     * @param activity Activity of application.
-     * @param commends The commend.
-     */
-    public static void buyCommend(Activity activity, List<Commend> commends) {
-        Intent buyCommend = new Intent(activity, BuyCommend.class);
-        buyCommend.putExtra(EXTRA_COMMEND, (ArrayList<? extends Parcelable>) commends);
-        activity.startActivity(buyCommend);
-    }
-
-    /**
-     * Function that return the current user.
-     * @return User.
-     */
-    public static User getCurrentUser() {
-        if (Utils.user == null)
-            return new User();
-        return Utils.user;
-    }
-
-    /**
-     * Function that set the current user.
-     * @param user User.
-     */
-    public static void setCurrentUser (User user) {
-        Utils.user = user;
-    }
-
-    /**
-     * Function that send broadcast to update the cart badge.
-     * @param activity Activity.
-     * @param count Commend count.
-     * @param replace State of action.
-     */
-    public static void sendCmdCountBroadCast(Activity activity, int count, boolean replace) {
-        Intent broadcastIntent = new Intent();
-        broadcastIntent.putExtra(MainActivity.EXTRA_CMD_COUNT, count);
-        broadcastIntent.putExtra(MainActivity.EXTRA_CMD_REPLACE, replace);
-        activity.sendBroadcast(broadcastIntent, MainActivity.CMD_COUNT_ACTION);
-    }
 
     public static void setProgressDialog(Activity activity, String message) {
         progressDialog = new ProgressDialog(activity);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage(message);
+        progressDialog.setCancelable(false);
         progressDialog.show();
     }
 
+    public static void updateDialogMessage(String string) {
+        if (progressDialog != null)
+            progressDialog.setMessage(string);
+    }
+
     public static void dismissDialog() {
-        progressDialog.dismiss();
+        if (progressDialog != null)
+            progressDialog.dismiss();
+    }
+
+    /**
+     * Function that set a broadcast commend count.
+     * @param count Commend count.
+     * @param edit Edited type.
+     * @param ac Activity of context.
+     */
+    public static void setCmdCountBroadcast(int count, boolean edit, Activity ac) {
+        Intent broadcastIntent = new Intent();
+        broadcastIntent.setAction(MainActivity.CMD_COUNT_ACTION);
+        broadcastIntent.putExtra(MainActivity.EXTRA_CMD_COUNT, count);
+        broadcastIntent.putExtra(MainActivity.EXTRA_CMD_REPLACE, edit);
+        ac.sendBroadcast(broadcastIntent);
     }
 
     /**
@@ -201,7 +184,7 @@ public class Utils {
      * @param message message.
      */
     public static void setDialogMessage (Activity activity, @StringRes int message) {
-        new MaterialAlertDialogBuilder(activity, R.style.Theme_MaterialComponents_Light_BottomSheetDialog)
+        new MaterialAlertDialogBuilder(activity, R.style.AppTheme_Dialog)
                 .setMessage(message)
                 .setPositiveButton(R.string.ok, null)
                 .show();
@@ -211,11 +194,32 @@ public class Utils {
      * @param activity Activity.
      * @param message message.
      */
-    public static void setDialogMessage (Activity activity,String message) {
-        new MaterialAlertDialogBuilder(activity, R.style.Theme_MaterialComponents_Light_BottomSheetDialog)
+    public static void setDialogMessage (Activity activity, @StringRes int message, DialogInterface.OnClickListener listener) {
+        new MaterialAlertDialogBuilder(activity, R.style.AppTheme_Dialog)
                 .setMessage(message)
-                .setPositiveButton(R.string.ok, null)
+                .setPositiveButton(R.string.ok, listener)
                 .show();
+    }
+    /**
+     * Function that set a dialog message.
+     * @param activity Activity.
+     * @param message message.
+     */
+    public static void setDialogMessage (Activity activity, @Nullable String message) {
+        if (message == null)
+            new MaterialAlertDialogBuilder(activity)
+                    .setTitle(R.string.infon)
+                    .setMessage(R.string.your_not_auth)
+                    .setPositiveButton(R.string.ok, (dialog, which) -> {
+                        activity.startActivity(new Intent(activity, LoginWithSocial.class));
+                        dialog.dismiss();
+                    })
+                    .setCancelable(false).show();
+        else
+            new MaterialAlertDialogBuilder(activity, R.style.AppTheme_Dialog)
+                    .setMessage(message)
+                    .setPositiveButton(R.string.ok, null)
+                    .show();
     }
     /**
      * Function that set to the book details activity.
@@ -235,8 +239,13 @@ public class Utils {
      * Function to add book to the kilt.
      * @param commend The commend.
      */
-    public static Call<Result> addToCart (Activity activity, Commend commend) {
-        Utils.sendCmdCountBroadCast(activity, 1, false);
+    public static Task<DocumentReference> addToCart (Activity activity, Commend commend) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) {
+            setDialogMessage(activity, R.string.your_not_auth, (dialog, which) -> activity
+                    .startActivity(new Intent(activity, LoginWithSocial.class)));
+            return null;
+        }
         return CommendHelper.addCommend (commend);
     }
 
@@ -245,10 +254,16 @@ public class Utils {
      * @param activity Application activity.
      */
     public static void commendActivity(Activity activity, Book book) {
-        Intent commendIntent = new Intent(activity, Commended.class);
-        commendIntent.putExtra(Utils.EXTRA_BOOK, book);
-        activity.startActivityForResult(commendIntent, Utils.COMMENDED_REQUEST_CODE);
-        activity.overridePendingTransition(R.anim.slide_in_top, R.anim.slide_out_bottom);
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            Intent commendIntent = new Intent(activity, Commended.class);
+            commendIntent.putExtra(Utils.EXTRA_BOOK, book);
+            activity.startActivityForResult(commendIntent, Utils.COMMENDED_REQUEST_CODE);
+            activity.overridePendingTransition(R.anim.slide_in_top, R.anim.slide_out_bottom);
+        }else {
+            setDialogMessage(activity, R.string.your_not_auth, (dialog, which) -> activity
+                    .startActivity(new Intent(activity, LoginWithSocial.class)));
+        }
     }
 
     /**
@@ -284,12 +299,27 @@ public class Utils {
      */
     public static void setToastMessage(Context context, String message) {
         Toast toast = new Toast(context);
-        toast.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, -100);
+        toast.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 100);
         @SuppressLint("InflateParams") View toastLayout = LayoutInflater.from(context)
                 .inflate(R.layout.toast_layout_custom, null, false);
         toast.setView(toastLayout);
         ((TextView)toast.getView().findViewById(R.id.toast_message)).setText(message);
         toast.setDuration(Toast.LENGTH_LONG);
         toast.show();
+    }
+
+    /**
+     * Function to get the file extension.
+     * @param uri Uri of the file.
+     * @param context Application context.
+     */
+    public static String getFileExtension(Uri uri, Context context) {
+        ContentResolver cr = context.getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        String result = mime.getExtensionFromMimeType(cr.getType(uri));
+        if (result == null)
+            return "";
+        else
+            return "." + result;
     }
 }

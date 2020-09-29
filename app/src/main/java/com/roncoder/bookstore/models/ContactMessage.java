@@ -7,7 +7,6 @@ import androidx.annotation.NonNull;
 
 import java.text.DateFormat;
 import java.text.ParseException;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
 
@@ -15,30 +14,41 @@ public class ContactMessage implements Parcelable {
     private String id;
     private String sender;
     private String receiver;
-    private String last_message;
+    private Message last_message;
     private Date date;
     private int not_read_count;
 
-    public ContactMessage() { }
-
-    public ContactMessage(String id, String sender, String receiver, String last_message, Date date, int not_read_count) {
-        this.id = id;
-        this.sender = sender;
-        this.receiver = receiver;
-        this.last_message = last_message;
-        this.date = date;
-        this.not_read_count = not_read_count;
+    public ContactMessage() {
+        setId("");
+        setSender("");
+        setReceiver("");
+        setLast_message(new Message());
+        setDate(new Date());
+        setNot_read_count(0);
     }
+
+    public ContactMessage(String id, String sender, String receiver, Date date, int not_read_count) {
+        setId(id);
+        setSender(sender);
+        setReceiver(receiver);
+        setLast_message(new Message());
+        setDate(date);
+        setNot_read_count(not_read_count);
+    }
+
 
     protected ContactMessage(Parcel in) {
         id = in.readString();
         sender = in.readString();
         receiver = in.readString();
-        last_message = in.readString();
-        try {
-            date = DateFormat.getDateInstance().parse(Objects.requireNonNull(in.readString()));
-        } catch (ParseException e) {
-            e.printStackTrace();
+        last_message = in.readParcelable(Message.class.getClassLoader());
+        String date_str = in.readString();
+        if (date_str != null) {
+            try {
+                date = DateFormat.getDateInstance().parse(date_str);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
         not_read_count = in.readInt();
     }
@@ -79,11 +89,11 @@ public class ContactMessage implements Parcelable {
         this.receiver = receiver;
     }
 
-    public String getLast_message() {
+    public Message getLast_message() {
         return last_message;
     }
 
-    public void setLast_message(String last_message) {
+    public void setLast_message(Message last_message) {
         this.last_message = last_message;
     }
 
@@ -126,7 +136,7 @@ public class ContactMessage implements Parcelable {
         dest.writeString(id);
         dest.writeString(sender);
         dest.writeString(receiver);
-        dest.writeString(last_message);
+        dest.writeParcelable(last_message, Parcelable.PARCELABLE_WRITE_RETURN_VALUE);
         dest.writeString(date.toString());
         dest.writeInt(not_read_count);
     }

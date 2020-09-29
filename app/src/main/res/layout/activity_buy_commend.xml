@@ -28,20 +28,6 @@
             android:orientation="vertical"
             android:paddingHorizontal="10dp">
 
-<!--            <CheckBox-->
-<!--                android:id="@+id/not_shipping"-->
-<!--                android:textSize="@dimen/baseTextSize"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="@string/no_shipping" />-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/textView25"-->
-<!--                android:layout_marginHorizontal="6dp"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="@string/note_about_no_shipping" />-->
-
             <View
                 android:id="@+id/view40"
                 android:background="@color/colorDivider"
@@ -151,6 +137,13 @@
                     android:layout_marginHorizontal="5dp"
                     android:text="@string/standart_shipping_text" />
 
+                <RadioButton
+                    android:id="@+id/express_shipping"
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp"
+                    android:layout_marginTop="3dp"
+                    android:text="@string/exprss_shipping" />
+
                 <TextView
                     android:id="@+id/textView28"
                     android:layout_width="match_parent"
@@ -165,7 +158,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:paddingVertical="5dp"
-                android:text="@string/district" />
+                android:text="@string/district_label" />
 
             <EditText
                 android:id="@+id/district"
@@ -179,7 +172,7 @@
                 android:paddingHorizontal="8dp" />
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/street_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -246,12 +239,6 @@
                 android:layout_height="wrap_content"
                 android:text="@string/copyright" />
 
-            <RadioButton
-                android:id="@+id/express_shipping"
-                android:layout_width="match_parent"
-                android:layout_height="25dp"
-                android:layout_marginTop="3dp"
-                android:text="@string/exprss_shipping" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

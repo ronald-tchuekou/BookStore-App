@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,7 +27,6 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
     public interface OnCycleItemBookListener {
       void onCycleItemClickListener (int position, View view);
-      void onBuyButtonClickListener(int position);
     }
     public interface OnClassesItemClickListener {
       void onClassesItemClickListener(int position);
@@ -70,7 +68,6 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             Book book = (Book) factory;
             String title = book.getTitle() + " : " + book.getAuthor();
             CycleBooksHolder cycleHolder = (CycleBooksHolder) holder;
-            cycleHolder.prise.setText(Utils.formatPrise(book.getUnit_prise()));
             cycleHolder.title.setText(title);
             Glide.with(context)
                     .load(book.getImage1_front())
@@ -92,24 +89,16 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     static class CycleBooksHolder extends RecyclerView.ViewHolder {
         ImageView book_iamge;
-        TextView title, prise;
-        Button buy;
+        TextView title;
 
         CycleBooksHolder(@NonNull View itemView, OnCycleItemBookListener listener) {
             super(itemView);
             book_iamge = itemView.findViewById(R.id.book_image);
             title = itemView.findViewById(R.id.book_title);
-            prise = itemView.findViewById(R.id.book_prise);
-            buy = itemView.findViewById(R.id.buy_button);
             itemView.setOnClickListener(view -> {
                 int position = getAdapterPosition();
                 if (position != RecyclerView.NO_POSITION)
                     listener.onCycleItemClickListener(position, book_iamge);
-            });
-            buy.setOnClickListener(view -> {
-                int position = getAdapterPosition();
-                if (position != RecyclerView.NO_POSITION)
-                    listener.onBuyButtonClickListener(position);
             });
         }
     }

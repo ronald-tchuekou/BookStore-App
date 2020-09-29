@@ -2,8 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.roncoder.bookstore">
 
+    <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".App"
@@ -13,16 +16,46 @@
         android:roundIcon="@drawable/bookstore_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".administration.AdminBillDetail"
-            android:theme="@style/Theme.MaterialComponents.Light.Bridge"/>
         <activity
-            android:name=".administration.AdminChat"
+            android:label="@string/add_class"
+            android:name=".administration.AddClass"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="nosensor"
+            android:theme="@style/AppTheme"/>
+        <activity
+            android:label="@string/add_book"
+            android:name=".administration.AddBook"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="nosensor"
+            android:theme="@style/AppTheme"/>
+        <activity
+            android:name=".administration.AdminBillDetail"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="nosensor"
             android:theme="@style/Theme.MaterialComponents.Light.Bridge" />
         <activity
+            android:name=".activities.UserMoreInfo"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="nosensor" />
+        <activity
+            android:name=".administration.AdminChat"
+            android:label="@string/chat_message"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="nosensor" />
+        <activity
             android:name=".activities.Administration"
-            android:label="@string/title_activity_administration" />
-        <activity android:name=".activities.BuyCommend" />
-        <activity android:name=".activities.Chat" />
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_administration"
+            android:screenOrientation="nosensor" />
+        <activity
+            android:name=".activities.BuyCommend"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="nosensor" />
+        <activity
+            android:name=".activities.Chat"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="nosensor" />
         <activity
             android:name=".activities.Commended"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -98,6 +131,12 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat" />
+        <meta-data
+            android:name="com.facebook.sdk.AutoLogAppEventsEnabled"
+            android:value="true" />
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
@@ -105,4 +144,5 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
     </application>
+
 </manifest>

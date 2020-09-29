@@ -26,6 +26,19 @@
         android:paddingHorizontal="15dp"
         android:paddingVertical="10dp">
 
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/image_profile"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:scaleType="centerCrop"
+            android:padding="3dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="5dp"
+            app:shapeAppearanceOverlay="@style/circleImageView"
+            app:srcCompat="@drawable/ic_account"
+            app:strokeColor="@color/colorPrimary"
+            app:strokeWidth="2dp"
+            app:tintMode="add" />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -41,9 +54,9 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/baseTextSize"
                 android:padding="10dp"
-                android:drawableStart="@drawable/ic_account"
+                android:textColor="@color/colorPrimary"
                 android:drawablePadding="15dp"
-                android:text="Ronald Tchuekou" />
+                app:drawableStartCompat="@drawable/ic_account" />
 
             <View
                 android:background="@color/colorPrimary"
@@ -54,13 +67,11 @@
                 android:id="@+id/login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_email"
                 android:drawablePadding="15dp"
                 android:padding="10dp"
-                android:textColorLink="@color/colorPrimary"
-                android:autoLink="all"
-                android:text="@ronaldtchuekou@gmail.com"
-                android:textSize="@dimen/baseTextSize" />
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/baseTextSize"
+                app:drawableStartCompat="@drawable/ic_email" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

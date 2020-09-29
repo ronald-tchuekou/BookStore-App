@@ -19,33 +19,12 @@
             app:title="@string/settings" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <LinearLayout
+    <FrameLayout
+        android:id="@+id/fragment_manager"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:paddingHorizontal="15dp"
-        android:paddingVertical="10dp">
-
-        <TextView
-            android:id="@+id/textView7"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/notifications"
-            android:paddingVertical="6dp"
-            android:textAllCaps="true"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="@dimen/baseTextSize"
-            tools:layout_editor_absoluteX="191dp"
-            tools:layout_editor_absoluteY="219dp" />
-
-        <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/allow_notifications"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingVertical="6dp"
-            android:text="@string/allow_notifications"
-            android:textColor="@color/colorTextPrimary"
-            android:textSize="@dimen/baseTextSize" />
-    </LinearLayout>
+        android:paddingVertical="10dp"/>
 
 </LinearLayout>

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activities.UserMoreInfo"
     android:padding="10dp">
 
     <TextView
@@ -11,7 +12,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Compléter les informations de votre compte pour la facilitation de vos achats."
+        android:text="@string/complete_information"
         android:textAlignment="gravity"
         android:textColor="@color/black"
         android:textSize="@dimen/baseTextSize"
@@ -119,5 +120,17 @@
             android:background="@color/colorWhite"
             android:inputType="textEmailAddress" />
     </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/submit_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/validate"
+        android:textAllCaps="false"
+        android:textSize="@dimen/baseTextSize"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_email_layout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

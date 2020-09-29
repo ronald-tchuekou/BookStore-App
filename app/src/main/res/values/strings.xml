@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BookStore</string>
+    <string name="app_name">BookStore CM</string>
 
     <string name="facebook_app_id">205389230884647</string>
     <string name="fb_login_protocol_scheme">fb205389230884647</string>
@@ -21,7 +21,7 @@
     <string name="am_connect">Je me connecte</string>
     <string name="am_sign_up">Je m\'inscris</string>
     <string name="pass_forgot">Mot de passe oublié ?</string>
-    <string name="prompt_email">Numero téléphone ou adresse e-mail</string>
+    <string name="prompt_email">Adresse e-mail</string>
     <string name="prompt_login">Numero téléphone ou adresse e-mail</string>
     <string name="prompt_password">Mot de passe</string>
     <string name="prompt_confirm_password">Confirmation</string>
@@ -29,7 +29,7 @@
     <string name="prompt_surname">Prénom</string>
     <string name="text_in_sign_up">En vous inscrivant, vous acceptez les</string>
     <string name="text_use_condition"><u>Conditions Générales d\'Utilisation</u></string>
-    <string name="invalid_mail">Votre adresse email est incorrecte</string>
+    <string name="invalid_login">Votre adresse email ou numéro de téléphone n\'est pas sous un bon format (ex: +237 655448877 ou roncoder@bookstore.com)</string>
     <string name="invalid_password">Le mot de passe doit contenir au moins 6 caractères</string>
     <string name="invalid_surname">Votre prénom doit contenir au moins 3caractères</string>
     <string name="invalid_name">Votre nom doit contenir au moins 3caractères</string>
@@ -48,7 +48,7 @@
     <string name="contact_us">Nous contacter</string>
     <string name="disconnect">Se déconnecter</string>
     <string name="copyright">©Copyright - 2020, DarkComputerClub - RonCoder \n Tous droits réservés</string>
-    <string name="your_books">Votre superbe bibliothèque en ligne …</string>
+    <string name="your_books">Application de vente de livres scolaire en ligne …</string>
     <string name="notifications">Notifications</string>
     <string name="allow_notifications">Autoriser les notifications</string>
     <string name="first_cycle">Premier cycle</string>
@@ -101,20 +101,21 @@
     <string name="contact_name">Nom complet.</string>
     <string name="contact_phone">Saisir un numero de téléphone</string>
     <string name="district">Ville</string>
-    <string name="street">Localité (residence actuelle)</string>
+    <string name="district_label">Ville (Les autres villes sont à venir)</string>
+    <string name="street">Localité (Emplacement de livraison)</string>
     <string name="valid_address">Valider la commande</string>
     <string name="definid_this_as_default_address">Définir cette adresse comme adresse de livraison par défaut</string>
     <string name="no_shipping">Recupérer votre collis dans le point de vente concerner</string>
     <string name="note_about_no_shipping">Pour cette option, si le bénéficière ne debourse pas son collis après 2 jours de la commande, cette dernière sera momentanément annulée.</string>
     <string name="waranty_or_shipping">Garantie / Adresse de livraison</string>
     <string name="more_description">Description de votre adresse (Précision)</string>
-    <string name="more_description_example">ex: Carrefour acasia, 50M de la maison MTN en allant vres le rond point express, du même côté de la mainson MTN</string>
+    <string name="more_description_example">ex: Carrefour acacia, 50 mètres après la maison MTN en allant vers le rond-point express, du même côté que la maison MTN …</string>
     <string name="shipping_type">Type de livraison</string>
     <string name="standart_shipping_text">Pour cette option, vous serez livré dans 2 jours. Le coût de livraison sera 500 FCFA</string>
     <string name="standart_shipping">Livraison standard (Dans 2 jours, 5OO FCFA)</string>
-    <string name="exprss_shipping">Livraison express (Dans 2 à 3h, 2,000 FCFA)</string>
+    <string name="exprss_shipping">Livraison express (Dans 2 à 3h, 2000 FCFA)</string>
     <string name="shipping_express_text">Pour cette option, vous serez livré dans 3 à 4 heures de temps. Le coût de livraison ici est de 2,000 FCFA</string>
-    <string name="not_subscribed">Utilisé uniquement dans la ville de Yaoundé, Cameroun</string>
+    <string name="not_subscribed">Gestion et administration de votre compte utilisateur</string>
     <string name="title_activity_administration">administration</string>
     <string name="administration">Administration</string>
     <string name="commends_admin">Administration / Rapport</string>
@@ -125,13 +126,13 @@
     <string name="bills_shipping_instant">F.Instant.</string>
     <string name="section">Section</string>
     <string name="instant_shipping">Livraison instantanée (Dans les 24 heures, 500 FCFA)</string>
-    <string name="instant_shipping_text">Pour cette option, vous devez choisir une localité parmis celle ci-dessous. Le coût de livraison sera 500 FCFA.</string>
+    <string name="instant_shipping_text">Pour cette option, nous ne livrons qu\'aux localitées ci-dessous. Le coût de livraison sera de 500 FCFA.</string>
     <string name="franco_section">Section Francophone</string>
     <string name="anglo_section">Section Anglophone</string>
-    <string name="localisation">Choisir une localisation</string>
+    <string name="localisation">Choisir une localitée</string>
     <string name="message_about_cmd">Message des clients</string>
     <string name="loerm">Lorem Ipsum is simply dummy text of the printing and type setting industry.</string>
-    <string name="localisation_chose">Localisation chosit : </string>
+    <string name="localisation_chose">Localitée chosit : </string>
     <string name="address_desc">Adresse décrite : </string>
     <string name="total_for_buy">"Prix total à payer : "</string>
     <string name="commend_state">Etat de la bill</string>
@@ -143,7 +144,7 @@
     <string name="yaounde">Yaoundé</string>
     <string name="ok">OK</string>
     <string name="this_has_no_billed_cmd">Cette action est impossible, car dans cette liste contient des commandes non facturées. Veuillez resoudre ce problème avant le chat avec un administrateur de commandes.</string>
-    <string name="all_cmd_has_dit_bill">Toutes ces commandes ont des factures différentes, dont l\'achat global est impossible ici.</string>
+    <string name="all_cmd_has_dit_bill">Toutes ces commandes ont déjà été facturées, dont l\'achat global est impossible ici.</string>
     <string name="books_in_total">Livre(s) au total</string>
     <string name="set_the_receiver_of_this_cmd">Indiquer le nom de la personne qui recevra ce colis !</string>
     <string name="set_the_phone">Indiquer le téléphone !</string>
@@ -154,8 +155,78 @@
     <string name="validation">Validation...</string>
     <string name="cmd_not_billed_to_validate">Cette commande n\'est pas facturée pour être validée. Veuillez la facuter en cliquant sur le bouton *Acheter*.</string>
     <string name="wait_a_moment">Patientez...</string>
+    <string name="connect_successful">Connecté avec succès.</string>
+    <string name="send_mail">Envoie d\'e-mail.</string>
+    <string name="allow_notification_summary">Recevoir une notification pour vous avisez de la disposition d\'un nouveau livre au programme.</string>
+    <string name="your_all_ready_auth">Vous êtes déjà authentifié.</string>
+    <string name="error_has_provide">Une erreur est survenu.</string>
+    <string name="configuration_of_new_pass">Configuration d\'un nouveau mot de passe pour votre compte.</string>
+    <string name="email_not_send">Le mail n\'a pas été envoyé. Veuillez reessayer.</string>
+    <string name="mail_is_sent">Mail envoyé.</string>
+    <string name="this_email_is_not_recognized">Ce login n\'est pas reconnu, renseignez un login qui est a été utilisé dans cette application.</string>
+    <string name="error_code_verification">Code de vérification incorrect.</string>
+    <string name="sms_code_send">Le code de vérification à été envoyé.</string>
+    <string name="exceeded_sms_quota">Le quota des sms pour ce projet est atteinte.</string>
+    <string name="enter_code">Entrer le code de confirmation envoyé au numéro de téléphone</string>
+    <string name="cgu">"Condiditions Générales d'Utilisation "</string>
+    <string name="this_number_is_allowed">Ce numero n\'est pas reconnu comme votre login. Veuillez renseigner un numero correct.</string>
+    <string name="network_not_allowed">Votre téléphone n\'est pas connecté à internet. Veuillez activer votre connexion.</string>
+    <string name="login_error">Votre identifiant ou mot de passe n\'est pas correct.</string>
+    <string name="login_with_email">Utiliser une adresse email</string>
+    <string name="login_with_phone">Utiliser un number de téléphone</string>
+    <string name="enter_your_phone">Entrer votre numero de téléphone</string>
+    <string name="enter_your_email">Entrer votre adresse e-mail</string>
+    <string name="invalid_phone">Votre numero de téléphone est invalide. ex: 6 23 58 41 23</string>
+    <string name="invalid_code">Entrer un code de 6 chiffres</string>
+    <string name="invalid_mail">Le champ ne doit pas être vide.</string>
+    <string name="prompt_phone">Numero de téléphone</string>
+    <string name="invalid_email">Votre adresse e-mail n\'est pas sous le bon format. ex: boostore@roncoder.com</string>
+    <string name="wait_auth">Authentification...</string>
+    <string name="saver_data">Sauvegarde de données...</string>
+    <string name="book_allready_commended">Vous avez déjà commandé ce livre, pour les modifications, aller dans votre pagné.</string>
+    <string name="not_auth">Vous n\'êtes pas authentifié. Veuillez le faire.</string>
+    <string name="verification">Vérification...</string>
+    <string name="chose_app">Choisir une application.</string>
+    <string name="complete_information">Compléter les informations de votre compte pour la facilitation de vos achats.</string>
+    <string name="validate">Validé</string>
+    <string name="error_name">Le nom doit contenir au moins 3 caractères.</string>
+    <string name="error_surname">Votre nom doit contenir au moins 3 caractères.</string>
+    <string name="error_mail">Votre adresse email n\'est pas sous le bon format. ex: bookstore@ron.com</string>
+    <string name="saver_image_profile">Sauvegarde de l\'image...</string>
+    <string name="loading">Chargement...</string>
+    <string name="deleted_succesful">Supprimé.</string>
+    <string name="your_not_auth">Vous n\'êtes pas un utilisateur authentifier. Pour pouvoir éffectuer cette action, vous devez vous authentifier en cliquant sur le bouton \"OK\".</string>
+    <string name="empty_bill">Pas de facture trouvées !!!</string>
+    <string name="empty_commend">Vous n\'avez enregistré aucune commande.</string>
+    <string name="add_book">Publication d\'un livre</string>
+    <string name="cycle">"Cycle : "</string>
+    <string name="classe">"Classe : "</string>
+    <string name="title_">"Titre : "</string>
+    <string name="error_this_field_can_be_empty">Ce champ ne doit pas être vide.</string>
+    <string name="what_to_add">Que voulez-vous ajouter ?</string>
+    <string name="add_class">Ajout d\'une classe</string>
+    <string name="libel">"Libelle : "</string>
+    <string name="infon">Message de confirmation</string>
+    <string name="not_save">Echèc de la sauvegarde.</string>
+    <string name="cmd_is_billed">Commande facturée</string>
+    <string name="cmd_is_not_billed">Commande non facturée.</string>
+    <string name="failled">Echèc...</string>
+    <string name="cmd_has_been_billed">Cette commande à déjà été facturée.</string>
+    <string name="not_commend_to_buy">Vous n\'avez pas de commandes dans votre pagné.</string>
+    <string name="update_successful">Mis à jour avec succès.</string>
+    <string name="chat_message">Messagerie</string>
+    <string name="book_allready_exist">Ce livre existe déjà dans la plateforme.</string>
+    <string name="class_allready_exist">Cette classe a déjà été ajoutée.</string>
+    <string name="book_quantity">"Quantité : "</string>
+    <string name="not_massages">Pas de messages.</string>
+    <string name="impossible_to_make_message">C\'est impossible de faire des messages pour le moment. Veillez reessayer plutard.</string>
 
     // Arrays.
+
+    <string-array name="options_add">
+        <item>Livre</item>
+        <item>Classe</item>
+    </string-array>
     <string-array name="nursery_anglophone">
         <item>Nursery 2</item>
         <item>Nursery 1</item>
@@ -197,7 +268,7 @@
         <item>5ème</item>
         <item>6ème</item>
     </string-array>
-    <string-array name="class_groups">
+    <string-array name="cycles">
         <item>Nursery Anglophone</item>
         <item>Maternelle Francophone</item>
         <item>Primary Anglophone</item>

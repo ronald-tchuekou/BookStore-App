@@ -87,7 +87,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:background="@color/colorWhite"
-                                android:inputType="textEmailAddress" />
+                                android:inputType="textCapWords" />
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <com.google.android.material.textfield.TextInputLayout
@@ -107,11 +107,11 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:background="@color/colorWhite"
-                                android:inputType="textEmailAddress" />
+                                android:inputType="textCapWords" />
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <com.google.android.material.textfield.TextInputLayout
-                            android:id="@+id/layout_email"
+                            android:id="@+id/edit_email_layout"
                             style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -123,15 +123,34 @@
                             app:layout_constraintTop_toBottomOf="@+id/login_progress">
 
                             <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/edit_email"
+                                android:id="@+id/edit_login"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:background="@color/colorWhite"
                                 android:inputType="textEmailAddress" />
                         </com.google.android.material.textfield.TextInputLayout>
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/edit_phone_layout"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/prompt_phone"
+                            android:textColorHint="@color/colorPrimaryDark"
+                            app:errorEnabled="true"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/login_progress">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/edit_phone"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@color/colorWhite"
+                                android:inputType="phone" />
+                        </com.google.android.material.textfield.TextInputLayout>
 
                         <com.google.android.material.textfield.TextInputLayout
-                            android:id="@+id/layout_pass"
+                            android:id="@+id/edit_pass_layout"
                             style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -141,7 +160,7 @@
                             app:errorEnabled="true"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/layout_email">
+                            app:layout_constraintTop_toBottomOf="@+id/edit_email_layout">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/edit_pass"
@@ -162,7 +181,7 @@
                             app:errorEnabled="true"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/layout_email">
+                            app:layout_constraintTop_toBottomOf="@+id/edit_email_layout">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/edit_confirm_pass"
@@ -191,7 +210,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/materialCardView" />
 
                 <TextView
-                    android:id="@+id/textView3"
+                    android:id="@+id/forgot_pass"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
@@ -222,7 +241,7 @@
                     android:paddingBottom="25dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView3" />
+                    app:layout_constraintTop_toBottomOf="@+id/forgot_pass" />
 
                 <TextView
                     android:id="@+id/textView25"

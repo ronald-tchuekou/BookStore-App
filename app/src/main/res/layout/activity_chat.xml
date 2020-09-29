@@ -1,17 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.Chat">
 
-    <include
+    <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/include"
-        layout="@layout/general_toolbar"
+        android:layout_width="match_parent"
+        android:background="@color/colorPrimaryDark"
+        android:layout_height="?actionBarSize"
         app:layout_constraintEnd_toEndOf="@id/chat_recycler"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" >
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:background="@color/colorWhite"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:padding="0dp"
+            >
+            <ImageButton
+                android:id="@+id/back_home"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:scaleType="centerCrop"
+                android:background="?selectableItemBackgroundBorderless"
+                app:srcCompat="@drawable/ic_back_home" />
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/profile_image"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:scaleType="centerCrop"
+                android:layout_marginStart="3dp"
+                android:padding="3dp"
+                app:shapeAppearanceOverlay="@style/circleImageView"
+                app:srcCompat="@drawable/ic_account"
+                app:strokeColor="@color/colorPrimary"
+                app:strokeWidth="2dp"
+                app:tintMode="add" />
+            <TextView
+                android:id="@+id/user_name"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="Ronald Tchuekou"
+                android:textSize="18sp"
+                android:paddingStart="5dp"
+                android:layout_gravity="top"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:singleLine="true"
+                android:ellipsize="end"
+                />
+        </com.google.android.material.appbar.MaterialToolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chat_recycler"

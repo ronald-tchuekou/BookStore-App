@@ -14,11 +14,12 @@
     <color name="googleColor">#E33333</color>
     <color name="transparent">#00000000</color>
     <color name="colorSendMessage">#F4F4F4</color>
-    <color name="colorReceivedMessage">#E6E0FFFB</color>
+    <color name="colorReceivedMessage">#E0FFFB</color>
     <color name="colorTextMessage">#353535</color>
     <color name="dark">#575757</color>
     <color name="black">#363636</color>
     <color name="tabSelectedTextColor">#FFFFFF</color>
     <color name="tabTextColor">#92FFFFFF</color>
     <color name="twitterColor">#03A9F4</color>
+    <color name="bg_edit">#B0EC8D27</color>
 </resources>

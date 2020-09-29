@@ -10,6 +10,7 @@ import android.os.Parcelable;
  */
 public class ShippingAddress implements Parcelable {
     private String ref;
+    private String user_id;
     private String receiver_name;
     private String phone_number;
     private String district;
@@ -21,18 +22,20 @@ public class ShippingAddress implements Parcelable {
      * Default constructor of the class.
      */
     public ShippingAddress() {
-        ref = "F12";
-        receiver_name = "receiver_name";
-        phone_number = "phone_number";
-        district = "Yaoundé";
-        street = "street";
-        more_description = "more_description";
+        ref = "";
+        user_id = "";
+        receiver_name = "";
+        phone_number = "";
+        district = "";
+        street = "";
+        more_description = "";
         is_default = false;
     }
 
-    public ShippingAddress(String ref, String receiver_name, String phone_number, String district,
+    public ShippingAddress(String ref, String user_id, String receiver_name, String phone_number, String district,
                            String street, String more_description, boolean is_default) {
         setRef(ref);
+        setUser_id(user_id);
         setReceiver_name(receiver_name);
         setPhone_number(phone_number);
         setDistrict(district);
@@ -45,8 +48,16 @@ public class ShippingAddress implements Parcelable {
         return ref;
     }
 
-    public void setRef(String id) {
+    public void setRef(String ref) {
         this.ref = ref;
+    }
+
+    public String getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
     }
 
     public String getReceiver_name() {
@@ -99,6 +110,7 @@ public class ShippingAddress implements Parcelable {
 
     protected ShippingAddress(Parcel in) {
         ref = in.readString();
+        user_id = in.readString();
         receiver_name = in.readString();
         phone_number = in.readString();
         district = in.readString();
@@ -127,6 +139,7 @@ public class ShippingAddress implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(ref);
+        dest.writeString(user_id);
         dest.writeString(receiver_name);
         dest.writeString(phone_number);
         dest.writeString(district);

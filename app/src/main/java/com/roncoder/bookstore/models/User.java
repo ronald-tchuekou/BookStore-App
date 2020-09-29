@@ -6,25 +6,29 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 
 public class User implements Parcelable {
-    private int id;
+    private String id;
     private String name;
     private String surname;
     private String phone;
     private String login;
     private String password;
     private boolean is_admin;
+    private String token;
+    private String profile;
 
     public User () {
-        this.id = -1;
-        this.name = "name";
-        this.surname = "surname";
-        this.phone = "phone";
-        this.login = "login";
+        this.id = "";
+        this.name = "";
+        this.surname = "";
+        this.phone = "";
+        this.login = "";
         this.password = "";
         this.is_admin = false;
+        this.token = "";
+        this.profile = "";
     }
 
-    public User (int id, String name, String surname, String phone, String login, String password,
+    public User (String id, String name, String surname, String phone, String login, String password,
                  boolean is_admin) {
         setId(id);
         setName(name);
@@ -33,16 +37,20 @@ public class User implements Parcelable {
         setLogin(login);
         setPassword(password);
         setIs_admin(is_admin);
+        setToken("");
+        setProfile("");
     }
 
     protected User(Parcel in) {
-        id = in.readInt();
+        id = in.readString();
         name = in.readString();
         surname = in.readString();
         phone = in.readString();
         login = in.readString();
         password = in.readString();
         is_admin = in.readInt() != 0;
+        token = in.readString();
+        profile = in.readString();
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
@@ -57,8 +65,8 @@ public class User implements Parcelable {
         }
     };
 
-    public void setId(int id) { this.id = id; }
-    public int getId () { return id; }
+    public void setId(String id) { this.id = id; }
+    public String getId () { return id; }
     public String getName () { return name; }
     public void setName (String name) { this.name = name; }
     public String getSurname () { return surname; }
@@ -71,6 +79,10 @@ public class User implements Parcelable {
     public String getPassword () { return password; }
     public void setIs_admin (boolean is_admin) { this.is_admin = is_admin; }
     public boolean isIs_admin() { return is_admin; }
+    public void setToken (String token) { this.token = token; }
+    public String getToken () { return token; }
+    public void setProfile (String profile) { this.profile = profile; }
+    public String getProfile () { return profile; }
 
     @NonNull
     @Override
@@ -83,6 +95,8 @@ public class User implements Parcelable {
                 ", login='" + login + '\'' +
                 ", password='" + password + '\'' +
                 ", is_admin='" + is_admin + '\'' +
+                ", token='" + token + '\'' +
+                ", profile='" + profile + '\'' +
                 '}';
     }
 
@@ -93,12 +107,14 @@ public class User implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
+        dest.writeString(id);
         dest.writeString(name);
         dest.writeString(surname);
         dest.writeString(phone);
         dest.writeString(login);
         dest.writeString(password);
         dest.writeInt(is_admin ? 1 : 0);
+        dest.writeString(token);
+        dest.writeString(profile);
     }
 }

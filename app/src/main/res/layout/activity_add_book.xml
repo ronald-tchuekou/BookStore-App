@@ -1,10 +1,236 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.AddBook">
+    android:orientation="vertical"
+    tools:context=".administration.AddBook">
 
-  </android.support.constraint.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="10dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="20dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/front_image"
+                android:layout_width="150dp"
+                android:layout_height="200dp"
+                android:contentDescription="@string/book"
+                android:scaleType="centerCrop"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/bg_image" />
+
+            <ImageButton
+                android:id="@+id/pick_image"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="8dp"
+                android:background="?selectableItemBackgroundBorderless"
+                android:contentDescription="@string/ok"
+                app:layout_constraintBottom_toBottomOf="@+id/front_image"
+                app:layout_constraintStart_toEndOf="@+id/front_image"
+                app:layout_constraintTop_toBottomOf="@+id/front_image"
+                app:srcCompat="@drawable/edit_icon" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/label_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/baseTextSize"
+            android:textColor="@color/black"
+            android:layout_marginTop="5dp"
+            android:text="@string/title_" />
+
+        <EditText
+            android:id="@+id/edit_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="@string/title"
+            android:background="@drawable/bg_edit_text"
+            android:ems="10"
+            android:hint="@string/title"
+            android:inputType="textMultiLine|text"
+            android:textColor="@color/black"
+            android:textSize="@dimen/baseTextSize" />
+
+        <TextView
+            android:id="@+id/label_author"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/baseTextSize"
+            android:textColor="@color/black"
+            android:layout_marginTop="5dp"
+            android:text="@string/author" />
+
+        <EditText
+            android:id="@+id/edit_author"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="@string/author"
+            android:background="@drawable/bg_edit_text"
+            android:ems="10"
+            android:hint="@string/author"
+            android:inputType="textCapWords"
+            android:textColor="@color/black"
+            android:textSize="@dimen/baseTextSize" />
+
+        <TextView
+            android:id="@+id/label_editor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/baseTextSize"
+            android:textColor="@color/black"
+            android:layout_marginTop="5dp"
+            android:text="@string/edition" />
+
+        <EditText
+            android:id="@+id/edit_editor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="@string/edition"
+            android:background="@drawable/bg_edit_text"
+            android:ems="10"
+            android:hint="@string/edition"
+            android:inputType="textCapWords"
+            android:textSize="@dimen/baseTextSize" />
+
+        <TextView
+            android:id="@+id/label_state"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/baseTextSize"
+            android:textColor="@color/black"
+            android:layout_marginTop="5dp"
+            android:text="@string/state" />
+
+        <EditText
+            android:id="@+id/edit_state"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="@string/state"
+            android:background="@drawable/bg_edit_text"
+            android:ems="10"
+            android:hint="@string/state"
+            android:inputType="textCapWords"
+            android:textSize="@dimen/baseTextSize" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:hint="@string/classe"
+            app:errorEnabled="true"
+            app:helperTextEnabled="true">
+
+            <AutoCompleteTextView
+                android:id="@+id/edit_class"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/baseTextSize"
+                android:inputType="none"
+                tools:ignore="LabelFor" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/cycle"
+            app:errorEnabled="true"
+            app:helperTextEnabled="true">
+
+            <AutoCompleteTextView
+                android:id="@+id/edit_cycle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/baseTextSize"
+                android:inputType="none"
+                tools:ignore="LabelFor" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="3dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/label_prise"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/baseTextSize"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/prise" />
+
+                <EditText
+                    android:id="@+id/edit_prise"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="@string/prise"
+                    android:background="@drawable/bg_edit_text"
+                    android:ems="10"
+                    android:hint="@string/prise"
+                    android:inputType="number"
+                    android:textSize="@dimen/baseTextSize" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="3dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/label_quantity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/baseTextSize"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/quantity" />
+
+                <EditText
+                    android:id="@+id/edit_quantity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="@string/quantity"
+                    android:background="@drawable/bg_edit_text"
+                    android:ems="10"
+                    android:hint="@string/quantity"
+                    android:inputType="number"
+                    android:textSize="@dimen/baseTextSize" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/submit_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="10dp"
+            android:text="@string/validate"
+            android:textAllCaps="false"
+            android:textSize="@dimen/baseTextSize" />
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

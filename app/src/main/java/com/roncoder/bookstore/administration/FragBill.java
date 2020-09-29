@@ -3,29 +3,33 @@ package com.roncoder.bookstore.administration;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import com.google.firebase.FirebaseNetworkException;
 import com.roncoder.bookstore.R;
 import com.roncoder.bookstore.adapters.BillAdapter;
+import com.roncoder.bookstore.dbHelpers.BillHelper;
 import com.roncoder.bookstore.models.Bill;
+import com.roncoder.bookstore.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class FragBill extends Fragment {
 
+    public static final String TAG = "FragBill";
+
     public static final String EXTRA_BILL = "Bill";
-    List<Bill> bills;
-    private ListView listView;
+    private List<Bill> bills;
     private BillAdapter adapter;
-    private View root;
+    private View root, progress;
 
     public FragBill() {}
 
@@ -37,12 +41,13 @@ public class FragBill extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_frag_cmd, container, false);
+        progress = root.findViewById(R.id.progress);
 
-        listView = root.findViewById(R.id.list_cmd);
+        ListView listView = root.findViewById(R.id.list_cmd);
         View footer = LayoutInflater.from(requireContext()).inflate(R.layout.list_footer, listView, false);
         listView.addFooterView(footer);
+
         bills = new ArrayList<>();
-        setCommendList();
         adapter = new BillAdapter(bills);
         listView.setAdapter(adapter);
         adapter.setOnItemActionListener(new BillAdapter.OnItemActionsListener() {
@@ -55,26 +60,51 @@ public class FragBill extends Fragment {
 
             @Override
             public void onValidListener(int position, View view) {
-                // TODO Validate the commend.
-                ImageButton button = (ImageButton) view;
-                button.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_valid, null));
-//                adapter.notifyDataSetChanged();
+                BillHelper.validateBill(bills.get(position).getRef())
+                        .addOnCompleteListener(com -> {
+                            if (!com.isSuccessful()) {
+                                if (com.getException() instanceof FirebaseNetworkException)
+                                    Utils.setDialogMessage(requireActivity(), R.string.network_not_allowed);
+                                Log.e(TAG, "onValidListener: ", com.getException());
+                                return;
+                            }
+                            Utils.setToastMessage(requireContext(), getString(R.string.valid_successful));
+                        });
             }
         });
         return root;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setCommendList();
     }
 
     /**
      * Function to set the list of the commends.
      */
     private void setCommendList() {
-        bills.add(new Bill());
-        bills.add(new Bill());
-        bills.add(new Bill());
-        bills.add(new Bill());
-        bills.add(new Bill());
-        bills.add(new Bill());
-        bills.add(new Bill());
-        bills.add(new Bill());
+        progress.setVisibility(View.VISIBLE);
+        BillHelper.getBillByShippingType(Utils.SHIPPING_INSTANT)
+                .addSnapshotListener((value, error) -> {
+                    progress.setVisibility(View.GONE);
+                    if (error != null)  {
+                        Utils.setToastMessage(requireContext(), getString(R.string.error_has_provide));
+                        Log.e(TAG, "Error when get the standard commend list : ", error);
+                        return;
+                    }
+
+                    assert value != null;
+                    bills.clear();
+                    bills.addAll(value.toObjects(Bill.class));
+                    Log.w(TAG, "setCommendList => " + bills);
+                    if (bills.isEmpty()) {
+                        root.findViewById(R.id.empty).setVisibility(View.VISIBLE);
+                        ((TextView)root.findViewById(R.id.text_empty)).setText(R.string.empty_bill);
+                    } else
+                        root.findViewById(R.id.empty).setVisibility(View.GONE);
+                    adapter.notifyDataSetChanged();
+                });
     }
 }

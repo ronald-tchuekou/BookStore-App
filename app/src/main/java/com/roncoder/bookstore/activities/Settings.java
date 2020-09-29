@@ -6,10 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.google.android.material.appbar.MaterialToolbar;
-import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.roncoder.bookstore.R;
 
 public class Settings extends AppCompatActivity {
@@ -24,11 +22,10 @@ public class Settings extends AppCompatActivity {
             actionBar.setDisplayShowHomeEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        SwitchMaterial allow_notifications = findViewById(R.id.allow_notifications);
-        allow_notifications.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            // TODO managed the implementation.
-            Toast.makeText(this, "Value : " + isChecked, Toast.LENGTH_SHORT).show();
-        });
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_manager, new com.roncoder.bookstore.fragments.Settings(), "Settings")
+                .commit();
     }
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {

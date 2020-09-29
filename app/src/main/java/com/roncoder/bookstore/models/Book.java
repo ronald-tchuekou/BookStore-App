@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 
 public class Book extends Factory implements Parcelable {
-    private int id;
+    private String id;
     private String title;
     private String author;
     private String editor;
@@ -17,18 +17,18 @@ public class Book extends Factory implements Parcelable {
     private float unit_prise;
     private int stock_quantity;
     public Book () {
-        this.id = -1;
+        this.id = "";
         this.title = "";
         this.author = "";
         this.editor = "";
         this.image1_front = "";
         this.book_state = "";
-        this.classes = "null";
-        this.cycle = "null";
-        this.unit_prise = 500f;
+        this.classes = "";
+        this.cycle = "";
+        this.unit_prise = 0;
         this.stock_quantity = 0;
     }
-    public Book(int id, String title, String author, String editor, String image1_front,
+    public Book(String id, String title, String author, String editor, String image1_front,
                 String book_state, String classes, String cycle, float unit_prise, int stock_quantity) {
         setId(id);
         setTitle(title);
@@ -42,7 +42,7 @@ public class Book extends Factory implements Parcelable {
         setStock_quantity(stock_quantity);
     }
     protected Book(Parcel in) {
-        id = in.readInt();
+        id = in.readString();
         title = in.readString();
         author = in.readString();
         editor = in.readString();
@@ -66,11 +66,11 @@ public class Book extends Factory implements Parcelable {
         }
     };
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -170,7 +170,7 @@ public class Book extends Factory implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
+        dest.writeString(id);
         dest.writeString(title);
         dest.writeString(author);
         dest.writeString(editor);

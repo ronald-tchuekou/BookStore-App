@@ -27,15 +27,17 @@
             android:layout_width="match_parent"
             android:padding="15dp"
             android:orientation="vertical">
+
             <TextView
                 android:id="@+id/text_subscribed"
-                android:paddingVertical="15dp"
-                android:textAlignment="gravity"
-                android:gravity="center"
-                android:textSize="@dimen/baseTextSize"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/not_subscribed" />
+                android:gravity="center"
+                android:paddingVertical="15dp"
+                android:text="@string/not_subscribed"
+                android:textAlignment="gravity"
+                android:textSize="@dimen/baseTextSize" />
+
             <Button
                 android:id="@+id/button_account_sign"
                 android:layout_width="match_parent"
@@ -67,6 +69,7 @@
                 android:layout_height="wrap_content"
                 android:paddingVertical="15dp"
                 android:textSize="19sp"
+                android:visibility="gone"
                 android:clickable="true"
                 android:focusable="true"
                 android:background="?selectableItemBackground"

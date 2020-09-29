@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.annotation.NonNull;
@@ -16,13 +17,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.roncoder.bookstore.R;
 import com.roncoder.bookstore.adapters.PagerAdapter;
+import com.roncoder.bookstore.administration.AddBook;
+import com.roncoder.bookstore.administration.AddClass;
 import com.roncoder.bookstore.administration.AdminChat;
 
 public class Administration extends AppCompatActivity {
     private  TabLayout tabLayout;
     private ViewPager viewPager;
     private TextView message_badge;
-    int commend_count = 2;
+    int commend_count = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,24 +64,16 @@ public class Administration extends AppCompatActivity {
         setTabTitle(4, R.string.obsolete_bills);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
-            }
-
+            public void onTabSelected(TabLayout.Tab tab) { viewPager.setCurrentItem(tab.getPosition()); }
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
+            public void onTabUnselected(TabLayout.Tab tab) { }
             @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
+            public void onTabReselected(TabLayout.Tab tab) { }
         });
-        setTabBadge(0, 10);
-        setTabBadge(1, 11);
-        setTabBadge(2, 12);
-        setTabBadge(3, 10);
+        setTabBadge(0, 0);
+        setTabBadge(1, 0);
+        setTabBadge(2, 0);
+        setTabBadge(3, 0);
         setTabBadge(4, 0);
     }
 
@@ -137,7 +132,21 @@ public class Administration extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.message_option)
         startActivity(new Intent(this, AdminChat.class));
+        else {
+            new MaterialAlertDialogBuilder(this)
+                    .setCancelable(false)
+                    .setTitle(R.string.what_to_add)
+                    .setItems(R.array.options_add, (dialog, which) -> {
+                        if (which == 0)
+                            startActivity(new Intent(this, AddBook.class));
+                        else
+                            startActivity(new Intent(this, AddClass.class));
+                    })
+                    .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss())
+                    .show();
+        }
         return true;
     }
 

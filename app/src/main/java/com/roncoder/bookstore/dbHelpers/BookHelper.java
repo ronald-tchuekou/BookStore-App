@@ -1,24 +1,41 @@
 package com.roncoder.bookstore.dbHelpers;
 
-import com.roncoder.bookstore.api.APIClient;
-import com.roncoder.bookstore.api.APIRequest;
-import com.roncoder.bookstore.api.Result;
-
-import retrofit2.Call;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.roncoder.bookstore.models.Book;
 
 public class BookHelper {
 
-    public static APIRequest getService () { return APIClient.getInstance().create(APIRequest.class); }
+    public static final String COLLECTION = "Books";
 
-    public static Call<Result> getBooksByCycle(String cycle) {
-        return getService().getAllCycleBook(cycle);
+    public static CollectionReference getCollectionRef () { return FirebaseFirestore.getInstance().collection(COLLECTION); }
+
+    public static Query getBooksByCycle(String cycle) {
+        return getCollectionRef().whereEqualTo("cycle", cycle).whereGreaterThan("stock_quantity", 0);
     }
 
-    public static Call<Result> getClassBooks(String _class) {
-        return getService().getAllClassBook(_class);
+    public static Query getClassBooks(String _class) {
+        return getCollectionRef().whereEqualTo("classes", _class).whereGreaterThan("stock_quantity", 0);
     }
 
-    public static Call<Result> getQueryBooks(String query) {
-        return getService().getAllClassBook(query);
+    public static Query getAllBooks() {
+        return getCollectionRef().whereGreaterThan("stock_quantity", 0);
+    }
+
+    public static Task<DocumentReference> addBook(Book book) {
+        return getCollectionRef().add(book);
+    }
+
+    public static Task<DocumentSnapshot> getBookById(String book_id) {
+        return getCollectionRef().document(book_id).get();
+    }
+
+    public static Task<QuerySnapshot> getBookByTitle(String title) {
+        return getCollectionRef().whereEqualTo("title", title).get();
     }
 }

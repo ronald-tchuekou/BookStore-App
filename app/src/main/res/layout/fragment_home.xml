@@ -26,13 +26,13 @@
                 android:paddingHorizontal="5dp"
                 android:paddingVertical="3dp"
                 android:layout_marginHorizontal="10dp"
-                android:drawableStart="@drawable/ic_filter"
                 android:text="@string/section"
                 android:textAlignment="gravity"
                 android:gravity="center"
                 android:textAllCaps="false"
                 android:textColor="@color/colorPrimary"
-                android:textSize="14sp"/>
+                android:textSize="14sp"
+                app:drawableStartCompat="@drawable/ic_filter" />
         </com.google.android.material.appbar.MaterialToolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -42,17 +42,19 @@
         <LinearLayout
             android:orientation="vertical"
             android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            >
+            android:layout_width="match_parent">
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
+
                 <TextView
                     android:id="@+id/textView9"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:ellipsize="end"
                     android:padding="10dp"
+                    android:singleLine="true"
                     android:text="@string/primary_cycle"
                     android:textAllCaps="true"
                     android:textColor="@color/colorPrimaryDark"
@@ -83,7 +85,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="5dp"
                     android:orientation="horizontal"
-                    tools:listitem="@layout/item_first_cycle_book"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView9"
@@ -92,19 +93,51 @@
                     app:msrv_snap_count="1"
                     app:spanCount="1" />
 
+                <ImageView
+                    android:id="@+id/empty_first"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/empty_result"
+                    android:paddingVertical="10dp"
+                    android:src="@drawable/empty_box"
+                    android:visibility="invisible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView9" />
+
+                <ProgressBar
+                    android:id="@+id/progress_first"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="10dp"
+                    android:indeterminateBehavior="repeat"
+                    android:indeterminateDrawable="@drawable/progress_bar"
+                    android:indeterminateDuration="@android:integer/config_longAnimTime"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
                 <TextView
                     android:id="@+id/textView10"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:ellipsize="end"
                     android:padding="10dp"
+                    android:singleLine="true"
                     android:text="@string/first_cycle"
                     android:textAllCaps="true"
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="20sp"
+                    app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/all_first_cycle"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/first_cycle_recyclerView" />
-
+                    app:layout_constraintStart_toStartOf="parent" />
                 <TextView
                     android:id="@+id/all_first_cycle"
                     android:layout_width="wrap_content"
@@ -118,11 +151,12 @@
                     android:textSize="@dimen/baseTextSize"
                     app:layout_constraintBottom_toBottomOf="@+id/textView10"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/textView10" />
+                    app:layout_constraintTop_toTopOf="@+id/textView10"
+                    app:layout_constraintVertical_bias="1.0" />
 
                 <com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView
                     android:id="@+id/second_cycle_recyclerView"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="5dp"
                     android:orientation="horizontal"
@@ -134,19 +168,50 @@
                     app:msrv_snap_count="2"
                     app:spanCount="1" />
 
+                <ImageView
+                    android:id="@+id/empty_second"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/empty_result"
+                    android:paddingVertical="10dp"
+                    android:src="@drawable/empty_box"
+                    android:visibility="invisible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView10" />
+
+                <ProgressBar
+                    android:id="@+id/progress_second"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="10dp"
+                    android:indeterminateBehavior="repeat"
+                    android:indeterminateDrawable="@drawable/progress_bar"
+                    android:indeterminateDuration="@android:integer/config_longAnimTime"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
                 <TextView
                     android:id="@+id/textView11"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:ellipsize="end"
                     android:padding="10dp"
+                    android:singleLine="true"
                     android:text="@string/second_cycle"
                     android:textAllCaps="true"
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="20sp"
                     app:layout_constraintEnd_toStartOf="@+id/all_second_cycle"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/second_cycle_recyclerView" />
-
+                    app:layout_constraintTop_toTopOf="parent" />
                 <TextView
                     android:id="@+id/all_second_cycle"
                     android:layout_width="wrap_content"
@@ -164,7 +229,7 @@
 
                 <com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView
                     android:id="@+id/third_cycle_recyclerView"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="5dp"
                     android:orientation="horizontal"
@@ -176,26 +241,58 @@
                     app:msrv_snap_count="2"
                     app:spanCount="1" />
 
+                <ImageView
+                    android:id="@+id/empty_third"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/empty_result"
+                    android:paddingVertical="10dp"
+                    android:src="@drawable/empty_box"
+                    android:visibility="invisible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView11" />
+
+                <ProgressBar
+                    android:id="@+id/progress_third"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="10dp"
+                    android:indeterminateBehavior="repeat"
+                    android:indeterminateDrawable="@drawable/progress_bar"
+                    android:indeterminateDuration="@android:integer/config_longAnimTime"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
                 <TextView
                     android:id="@+id/textView12"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:ellipsize="end"
                     android:padding="10dp"
+                    android:singleLine="true"
                     android:text="@string/classes"
                     android:textAllCaps="true"
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="20sp"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/third_cycle_recyclerView" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView
                     android:id="@+id/classes_recyclerView"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="5dp"
-                    android:layout_marginBottom="32dp"
                     android:orientation="horizontal"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView12"
@@ -203,6 +300,32 @@
                     app:msrv_ms_per_inch="100"
                     app:msrv_snap_count="2"
                     app:spanCount="1" />
+
+                <ImageView
+                    android:id="@+id/empty_class"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/empty_result"
+                    android:paddingVertical="10dp"
+                    android:src="@drawable/empty_box"
+                    android:visibility="invisible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView12" />
+
+                <ProgressBar
+                    android:id="@+id/progress_class"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="10dp"
+                    android:indeterminateBehavior="repeat"
+                    android:indeterminateDrawable="@drawable/progress_bar"
+                    android:indeterminateDuration="@android:integer/config_longAnimTime"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
     </ScrollView>

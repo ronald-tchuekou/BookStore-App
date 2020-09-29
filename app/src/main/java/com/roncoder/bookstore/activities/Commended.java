@@ -11,17 +11,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseNetworkException;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.roncoder.bookstore.R;
-import com.roncoder.bookstore.api.Result;
+import com.roncoder.bookstore.dbHelpers.CommendHelper;
 import com.roncoder.bookstore.models.Book;
 import com.roncoder.bookstore.models.Commend;
 import com.roncoder.bookstore.utils.Utils;
 
 import java.util.Calendar;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import java.util.Objects;
 
 public class Commended extends AppCompatActivity {
     private static final String TAG = "Commended";
@@ -30,7 +31,9 @@ public class Commended extends AppCompatActivity {
     ImageView front_image;
     ImageButton remove_quantity, add_quantity;
     Button finish;
-    private int number = 1;
+    private int quantity = 1;
+    double total_unit_prise = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,46 +46,46 @@ public class Commended extends AppCompatActivity {
         add_quantity.setOnClickListener(v -> addQuantity(1));
         remove_quantity.setOnClickListener(v -> addQuantity(-1));
     }
-    private void updateTotalPrise (){
-        book_quantity.setText(String.valueOf(number));
-        double totalPrise = number * book.getUnit_prise();
-        total_prise.setText(Utils.formatPrise(totalPrise));
+    private void updateTotalPrise () {
+        book_quantity.setText(String.valueOf(quantity));
+        total_unit_prise = quantity * book.getUnit_prise();
+        total_prise.setText(Utils.formatPrise(total_unit_prise));
     }
     private void setTheCommend() {
-        Utils.addToCart(this, new Commend(0, book, Integer.parseInt(book_quantity.getText().toString()),
-                Calendar.getInstance().getTime(), false, false)).enqueue(new Callback<Result>() {
-            @Override
-            public void onResponse(Call<Result> call, Response<Result> response) {
-
-                Result result = response.body();
-
-                if (result == null)
+        int quantity = Integer.parseInt(book_quantity.getText().toString());
+        Commend commend = new Commend(book.getId(), FirebaseAuth.getInstance().getUid(), quantity,
+                Calendar.getInstance().getTime(), book.getUnit_prise() * quantity);
+        Utils.setProgressDialog(this, getString(R.string.wait_a_moment));
+        Task<DocumentReference> task = Utils.addToCart(this, commend);
+        if (task != null)
+            task.addOnCompleteListener(com -> {
+                if (!com.isSuccessful()) {
+                    Utils.dismissDialog();
+                    if (com.getException() instanceof FirebaseNetworkException)
+                        Utils.setDialogMessage(this, R.string.network_not_allowed);
+                    Log.e(TAG, "Error where add commend to cart", com.getException());
                     return;
-
-                if (result.getError()) {
-                    Utils.setDialogMessage(Commended.this, result.getMessage());
-                    Log.e(TAG, "Error process : " + result.getMessage(), null);
                 }
-                else if (result.getSuccess()) {
-                    Utils.setToastMessage(Commended.this, getString(R.string.add_successful));
+                String id = Objects.requireNonNull(com.getResult()).getId();
+                CommendHelper.getCollectionRef().document(id).update("id", id).addOnCompleteListener(command -> {
+                    if (!command.isSuccessful()){
+                        Utils.setToastMessage(this, getString(R.string.error_has_provide));
+                        return;
+                    }
+                    Utils.dismissDialog();
+                    Utils.setCmdCountBroadcast(1, false, this);
+                    Utils.setToastMessage(this, getString(R.string.add_successful));
                     onBackPressed();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Result> call, Throwable t) {
-                Utils.setDialogMessage(Commended.this, t.getMessage());
-                Log.e(TAG, "onFailure: " + call, t);
-            }
-        });
+                });
+            });
     }
 
     private void addQuantity(int number) {
-        this.number += number;
-        if (this.number < 1)
-            this.number = 1;
-        else if (this.number > book.getStock_quantity())
-            this.number = book.getStock_quantity();
+        this.quantity += number;
+        if (this.quantity < 1)
+            this.quantity = 1;
+        else if (this.quantity > book.getStock_quantity())
+            this.quantity = book.getStock_quantity();
 
         updateTotalPrise();
     }
@@ -93,8 +96,6 @@ public class Commended extends AppCompatActivity {
         book_author.setText(book.getAuthor());
         book_edition.setText(edition);
         book_prise.setText(Utils.formatPrise(book.getUnit_prise()));
-//        book_quantity.setText(String.valueOf(0));
-//        total_prise.setText(Utils.formatPrise(totalPrise));
         updateTotalPrise();
         Glide.with(this)
                 .load(book.getImage1_front())

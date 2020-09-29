@@ -13,6 +13,7 @@
     tools:openDrawer="start"
     tools:context=".fragments.Search">
 
+
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/action_bar"
         android:layout_width="match_parent"
@@ -27,29 +28,40 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:background="@color/googleColor"
+            android:padding="0dp"
             android:layout_height="@dimen/actionBarSize">
-
-            <ImageButton
-                android:id="@+id/btn_drawer"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:scaleType="centerCrop"
-                app:srcCompat="@drawable/ic_menu"
-                android:clickable="true"
-                android:focusable="true"
-                android:layout_marginEnd="10dp"
-                android:background="?selectableItemBackgroundBorderless"
-                android:contentDescription="@string/second_cycle" />
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_height="match_parent"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginBottom="10dp"
-                android:background="@color/colorWhite"
-                app:cardCornerRadius="10dp">
+                android:layout_width="match_parent">
+
+                <ImageButton
+                    android:id="@+id/btn_drawer"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:background="?selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:contentDescription="@string/second_cycle"
+                    android:focusable="true"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_menu" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/materialCardView4"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="3dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@color/colorWhite"
+                    app:cardCornerRadius="10dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/btn_search"
+                    app:layout_constraintStart_toEndOf="@+id/btn_drawer"
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <EditText
                         android:id="@+id/editText_search"
@@ -60,13 +72,31 @@
                         android:drawableStart="@drawable/ic_search"
                         android:drawableTint="@color/googleColor"
                         android:drawableTintMode="multiply"
-                        android:hint="@string/book_name"
-                        android:singleLine="true"
                         android:ellipsize="end"
+                        android:enabled="true"
+                        android:hint="@string/book_name"
                         android:inputType="text"
+                        android:singleLine="true"
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="@dimen/baseTextSize" />
-            </com.google.android.material.card.MaterialCardView>
+                </com.google.android.material.card.MaterialCardView>
+
+                <ImageButton
+                    android:id="@+id/btn_search"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="?selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:contentDescription="@string/second_cycle"
+                    android:focusable="true"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_find" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
         </com.google.android.material.appbar.MaterialToolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -82,13 +112,27 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/action_bar"
         tools:ignore="UnusedAttribute"
-        tools:listitem="@layout/item_search" />
+        tools:listitem="@layout/item_search"/>
+
+    <ImageView
+        android:id="@+id/init_view_search"
+        android:layout_width="200dp"
+        android:layout_height="250dp"
+        android:src="@drawable/book_search"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ProgressBar
         android:id="@+id/progress_indicator"
+        style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="132dp"
+        android:layout_marginTop="150dp"
+        android:indeterminateBehavior="repeat"
+        android:indeterminateDrawable="@drawable/progress_bar"
+        android:indeterminateDuration="@android:integer/config_longAnimTime"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

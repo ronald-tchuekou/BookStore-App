@@ -47,6 +47,67 @@
             android:orientation="vertical"
             android:padding="5dp">
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/image_book"
+                    android:layout_width="100dp"
+                    android:layout_height="150dp"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/bg_image" />
+
+                <TextView
+                    android:id="@+id/book_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="Book title"
+                    android:textSize="@dimen/baseTextSize"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/image_book"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/quantity"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="Quantity : 10"
+                    android:textSize="@dimen/baseTextSize"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/image_book"
+                    app:layout_constraintTop_toBottomOf="@+id/book_title" />
+
+                <TextView
+                    android:id="@+id/total_prise"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="Total prise : 5000 FCFA"
+                    android:textSize="@dimen/baseTextSize"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/image_book"
+                    app:layout_constraintTop_toBottomOf="@+id/quantity" />
+
+                <View
+                    android:id="@+id/view1"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="3dp"
+                    android:background="@color/colorPrimary"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/image_book" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
             <TextView
                 android:id="@+id/date_message"
                 android:layout_width="wrap_content"
@@ -63,10 +124,10 @@
                 android:layout_gravity="end"
                 android:layout_marginStart="7dp"
                 android:layout_marginEnd="8dp"
-                android:paddingVertical="6dp"
                 android:autoLink="all"
+                android:gravity="end"
                 android:textColorLink="@color/colorPrimary"
-                android:text="would look much nicer if we could show the real item used in our ronaldtchuekou@gmail.com"
+                android:text="like a real application The only problem is that our application in horizontal orientation has goole.com"
                 android:textColor="@color/colorTextMessage"
                 android:textSize="@dimen/baseTextSize" />
 

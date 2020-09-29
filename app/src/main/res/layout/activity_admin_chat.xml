@@ -16,4 +16,6 @@
         android:scrollbarStyle="outsideOverlay"
         />
 
+    <include layout="@layout/layout_empty_element"/>
+
 </LinearLayout>

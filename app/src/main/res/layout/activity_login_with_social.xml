@@ -105,7 +105,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="16dp"
-                android:drawableEnd="@drawable/instagram"
+                android:drawableEnd="@drawable/twitter"
                 android:paddingVertical="8dp"
                 android:text="@string/sign_in_with_twitter"
                 android:textAllCaps="false"

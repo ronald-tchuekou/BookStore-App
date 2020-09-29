@@ -9,15 +9,24 @@ import android.view.MenuItem;
 
 import com.roncoder.bookstore.R;
 
+import java.util.Objects;
+
 public class Help extends AppCompatActivity {
+
+    public static final String EXTRA_TYPE = "Extra_type";
+    public static final String HELP = "Help_type";
+    public static final String CGU = "CGU_type";
+
+    private boolean is_help = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_help);
+        is_help = Objects.equals(getIntent().getStringExtra(EXTRA_TYPE), HELP);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setTitle(R.string.help);
+            actionBar.setTitle(is_help ? R.string.help : R.string.cgu);
             actionBar.setDisplayShowHomeEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }

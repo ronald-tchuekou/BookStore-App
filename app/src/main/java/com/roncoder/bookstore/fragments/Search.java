@@ -14,14 +14,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
+import com.google.firebase.firestore.Query;
 import com.roncoder.bookstore.R;
 import com.roncoder.bookstore.adapters.SearchAdapter;
-import com.roncoder.bookstore.api.Result;
 import com.roncoder.bookstore.dbHelpers.BookHelper;
 import com.roncoder.bookstore.models.Book;
 import com.roncoder.bookstore.utils.Utils;
@@ -29,24 +26,27 @@ import com.roncoder.bookstore.utils.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class Search extends Fragment {
+
     private static final String TAG = "Search";
     @SuppressLint("StaticFieldLeak")
     private static Search instance = null;
     private OnSearchFocusListener listener;
     public static final String EMPTY_BOOK = "Empty element";
+    EditText searchView;
+    ImageView init_view_search;
     SearchAdapter searchAdapter;
-    View progress_indicator;
+    View progress_indicator, btn_search;
     View.OnClickListener clickListener;
+
     List<Book> searchBooks = new ArrayList<>();
     RecyclerView recyclerSearch;
+    String query = "";
+
     public interface OnSearchFocusListener {
         void onSearchFocus(boolean hasFocus);
     }
+
     public void setOnSearchFocus (OnSearchFocusListener listener){
         this.listener = listener;
     }
@@ -56,6 +56,8 @@ public class Search extends Fragment {
             instance = new Search();
         return instance;
     }
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,8 +69,11 @@ public class Search extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_search, container, false);
+        init_view_search = root.findViewById(R.id.init_view_search);
+        btn_search = root.findViewById(R.id.btn_search);
         root.findViewById(R.id.btn_drawer).setOnClickListener(clickListener);
-        EditText searchView = root.findViewById(R.id.editText_search);
+        btn_search.setOnClickListener(v -> setSearchList(query));
+        searchView = root.findViewById(R.id.editText_search);
         progress_indicator = root.findViewById(R.id.progress_indicator);
         searchView.addTextChangedListener(searchWatcher);
         searchView.setOnFocusChangeListener((v, hasFocus) -> this.listener.onSearchFocus(hasFocus));
@@ -76,6 +81,15 @@ public class Search extends Fragment {
         adaptedListViews();
         return root;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        searchView.getEditableText().clear();
+        searchBooks.clear();
+        searchAdapter.notifyDataSetChanged();
+    }
+
     /**
      * Function to adapted all recycler view.
      */
@@ -112,20 +126,11 @@ public class Search extends Fragment {
      */
     private TextWatcher searchWatcher = new TextWatcher() {
         @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
         @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            progress_indicator.setVisibility(View.VISIBLE);
-            setSearchList(s.toString().trim());
-        }
-
+        public void onTextChanged(CharSequence s, int start, int before, int count) { query = s.toString().trim(); }
         @Override
-        public void afterTextChanged(Editable s) {
-            progress_indicator.setVisibility(View.GONE);
-        }
+        public void afterTextChanged(Editable s) { }
     };
 
     private void setSearchList(String result) {
@@ -133,54 +138,40 @@ public class Search extends Fragment {
             recyclerSearch.setVisibility(View.GONE);
             return ;
         }
+        init_view_search.setVisibility(View.GONE);
         recyclerSearch.setVisibility(View.VISIBLE);
         searchBooks.clear();
         getNewBookList(result);
     }
 
     private void getNewBookList(String query) {
-        BookHelper.getQueryBooks(query).enqueue(new Callback<Result>() {
-            @Override
-            public void onResponse(Call<Result> call, Response<Result> response) {
+        Query queries = BookHelper.getAllBooks();
+        progress_indicator.setVisibility(View.VISIBLE);
 
-                Result result = response.body();
-
-                if (result == null)
+            queries.addSnapshotListener((value, error) -> {
+                Utils.dismissDialog();
+                if (error != null) {
+                    Log.e(TAG, "getNewBookList: ", error);
                     return;
-
-                if (result.getError()) {
-                    Utils.setDialogMessage(requireActivity(), result.getMessage());
-                    Log.e(TAG, "Error process : " + result.getMessage(), null);
                 }
-                else if (result.getSuccess()) {
-                    String value = result.getValue();
-                    Log.i(TAG, "Success process : " + value);
-                    Gson gson = new Gson();
-                    JsonArray bookArray = (JsonArray) JsonParser.parseString(value);
-                    for (JsonElement element : bookArray) {
-                        searchBooks.add(gson.fromJson(element, Book.class));
+                if (value != null) {
+                    searchBooks.clear();
+                    List<Book> books = value.toObjects(Book.class);
+                    for (Book b : books) {
+                        if (b.getTitle().contains(query) || b.getAuthor().contains(query) || b.getEditor().contains(query))
+                            searchBooks.add(b);
                     }
-
                     /* If the content list is empty */
-                    if (searchBooks.isEmpty()){
+                    if (searchBooks.isEmpty()) {
                         Book empty_book = new Book();
                         empty_book.setTitle(EMPTY_BOOK);
                         empty_book.setAuthor(query);
                         searchBooks.add(empty_book);
                     }
-
                     searchAdapter.notifyDataSetChanged();
+                    progress_indicator.setVisibility(View.GONE);
+
                 }
-                progress_indicator.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onFailure(Call<Result> call, Throwable t) {
-                Utils.setDialogMessage(requireActivity(), t.getMessage());
-                Log.e(TAG, "onFailure: " + call, t);
-                progress_indicator.setVisibility(View.GONE);
-            }
-        });
+            });
     }
-
 }

@@ -57,15 +57,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
+            android:autoLink="email"
             android:drawableEnd="@drawable/ic_email"
-            android:padding="10dp"
-            android:onClick="contactEmail"
             android:drawableTint="@color/colorPrimary"
+            android:linksClickable="true"
+            android:onClick="contactEmail"
+            android:padding="10dp"
             android:text="ephraim.tsague@gmail.com"
             android:textAllCaps="false"
+            android:textColorLink="@color/colorPrimary"
             android:textSize="@dimen/baseTextSize"
             app:strokeColor="@color/colorPrimary"
             app:strokeWidth="3dp"
             tools:ignore="HardcodedText,UnusedAttribute" />
+
+        <include
+            layout="@layout/copyright"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
     </LinearLayout>
 </LinearLayout>

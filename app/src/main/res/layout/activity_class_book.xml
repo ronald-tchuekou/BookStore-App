@@ -8,20 +8,6 @@
 
     <include layout="@layout/general_toolbar"/>
 
-    <GridView
-        android:id="@+id/grid"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:columnWidth="150dp"
-        android:drawSelectorOnTop="true"
-        android:numColumns="auto_fit"
-        android:padding="@dimen/grid_spacing"
-        android:scrollbars="vertical"
-        android:scrollbarSize="6dp"
-        android:scrollbarStyle="outsideOverlay"
-        tools:listitem="@layout/grid_item"
-        android:horizontalSpacing="@dimen/grid_spacing"
-        android:verticalSpacing="@dimen/grid_spacing" />
+    <include layout="@layout/grid_layout"/>
 
 </LinearLayout>

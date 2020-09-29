@@ -8,9 +8,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class APIClient {
 
-    // TODO set the server connection to the base url.
-
-    public static final String BASE_URL = "http://bookstore.com";
+//    public static final String BASE_URL = "http://bookstore.com";
+    public static final String BASE_URL = "http://frnlzcr.cluster023.hosting.ovh.net";
     private static Retrofit retrofit = null;
 
     public static Retrofit getInstance () {

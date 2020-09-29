@@ -22,14 +22,17 @@ import android.widget.ExpandableListView;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.transition.MaterialFadeThrough;
+import com.google.firebase.auth.FirebaseAuth;
 import com.roncoder.bookstore.R;
 import com.roncoder.bookstore.adapters.NavAdapter;
+import com.roncoder.bookstore.dbHelpers.CommendHelper;
 import com.roncoder.bookstore.fragments.Account;
 import com.roncoder.bookstore.fragments.Cart;
 import com.roncoder.bookstore.fragments.Home;
 import com.roncoder.bookstore.fragments.MessageChat;
 import com.roncoder.bookstore.fragments.Search;
 import com.roncoder.bookstore.models.Classes;
+import com.roncoder.bookstore.models.Commend;
 import com.roncoder.bookstore.utils.Utils;
 
 import java.util.ArrayList;
@@ -48,19 +51,21 @@ public class MainActivity extends AppCompatActivity {
     public static final String EXTRA_CMD_COUNT = "Cmd_count";
     public static final String EXTRA_CMD_REPLACE = "Cmd_count_replace";
     public static final String CMD_COUNT_ACTION = "Cmd_count_action";
+    private static final String TAG = "MainActivity";
     public static int commend_count = 0;
     private DrawerLayout drawerLayout;
     private NavAdapter adapter;
     private ExpandableListView listView;
-    private List<String> groups;
-    private Map<String, List<String>> child;
-    @IdRes int currentItem;
+    private List<String> groups ;
+    private Map<String, List<String>> child ;
+    private FirebaseAuth auth = FirebaseAuth.getInstance();
+    static @IdRes int currentItem;
     static {
-        LAYOUT_RES_MAP.append(R.id.action_home, new Home());
+        LAYOUT_RES_MAP.append(R.id.action_home, Home.getInstance());
         LAYOUT_RES_MAP.append(R.id.action_search, Search.getInstance());
-        LAYOUT_RES_MAP.append(R.id.action_kilt, new Cart());
-        LAYOUT_RES_MAP.append(R.id.action_message, new MessageChat());
-        LAYOUT_RES_MAP.append(R.id.action_account, new Account());
+        LAYOUT_RES_MAP.append(R.id.action_kilt, Cart.getInstance());
+        LAYOUT_RES_MAP.append(R.id.action_message, MessageChat.getInstance());
+        LAYOUT_RES_MAP.append(R.id.action_account, Account.getInstance());
     }
     private BottomNavigationView bottomNavigationView;
     public static int not_read_msg_count = 0;
@@ -81,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        registerReceiver(receiver, new IntentFilter(CMD_COUNT_ACTION));
         setLists();
         adapter = new NavAdapter(groups, child);
         listView = findViewById(R.id.nav_list);
@@ -103,18 +108,27 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        replaceFragment(currentItem);
         registerReceiver(receiver, new IntentFilter(CMD_COUNT_ACTION));
+        setBadgeNumber();
+    }
+
+    private void setBadgeNumber() {
+        // Commends.
+        CommendHelper.getAllClientCmd(auth.getUid()).addSnapshotListener((value, error) -> {
+            if (error != null) {
+                Utils.setToastMessage(this, getString(R.string.error_has_provide));
+                Log.e(TAG, "setBadgeNumber: ", error);
+                return;
+            }
+            commend_count = Objects.requireNonNull(value).toObjects(Commend.class).size();
+            updateNumberCartBadge(R.id.action_kilt, commend_count);
+        });
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        unregisterReceiver(receiver);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
         unregisterReceiver(receiver);
     }
 
@@ -129,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
             String class_name = Objects.requireNonNull(child.get(groups.get(groupPosition))).get(childPosition);
 
             Intent intent = new Intent(this, ClassBook.class);
-            intent.putExtra(EXTRA_CLASS, new Classes(0, class_name, "", ""));
+            intent.putExtra(EXTRA_CLASS, new Classes("", class_name, "", ""));
             startActivity(intent);
 
             drawerLayout.closeDrawer(GravityCompat.START);
@@ -138,8 +152,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setLists() {
-        groups = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.class_groups)));
-
+        groups = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.cycles)));
         child = new TreeMap<>();
         child.put(groups.get(0), Arrays.asList(getResources().getStringArray(R.array.nursery_anglophone)));
         child.put(groups.get(1),  Arrays.asList(getResources().getStringArray(R.array.maternelle_francophone)));

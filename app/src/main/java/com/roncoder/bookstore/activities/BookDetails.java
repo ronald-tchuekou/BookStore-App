@@ -10,19 +10,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseNetworkException;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.roncoder.bookstore.PopupQuantity;
 import com.roncoder.bookstore.R;
-import com.roncoder.bookstore.api.Result;
 import com.roncoder.bookstore.dbHelpers.CommendHelper;
 import com.roncoder.bookstore.models.Book;
 import com.roncoder.bookstore.models.Commend;
 import com.roncoder.bookstore.utils.Utils;
 
 import java.util.Calendar;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import java.util.Objects;
 
 public class BookDetails extends AppCompatActivity {
     public static final String TAG = "BookDetails";
@@ -30,10 +31,13 @@ public class BookDetails extends AppCompatActivity {
     TextView title, book_author, book_edition, book_state, book_prise, book_quantity;
     Button commended_btn, add_to_kilt;
     private Book book;
+    FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_details);
+        // initialisation of views.
         initViews();
         book = getIntent().getParcelableExtra(Utils.EXTRA_BOOK);
         Log.i(TAG, "Book : " + book);
@@ -44,64 +48,36 @@ public class BookDetails extends AppCompatActivity {
             finish();
         });
 
-        CommendHelper.userHasCommendThis(Utils.getCurrentUser().getId(), book.getId())
-                .enqueue(new Callback<Result>() {
-            @Override
-            public void onResponse(Call<Result> call, Response<Result> response) {
-
-                Result result = response.body();
-
-                if (result == null)
-                    return;
-
-                if (result.getError()) {
-                    Utils.setDialogMessage(BookDetails.this, result.getMessage());
-                    Log.e(TAG, "Error process : " + result.getMessage(), null);
-                }
-                else if (result.getSuccess()) {
-                    boolean state = Boolean.parseBoolean(result.getValue());
-                    if (state){
-                        commended_btn.setEnabled(false);
-                        add_to_kilt.setEnabled(false);
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Result> call, Throwable t) {
-                Utils.setDialogMessage(BookDetails.this, t.getMessage());
-                Log.e(TAG, "onFailure: " + call, t);
-            }
-        });
         add_to_kilt.setOnClickListener(viewClick -> addToCart());
     }
 
     private void addToCart() {
         PopupQuantity popupQuantity = new PopupQuantity(this,
                 R.style.Theme_MaterialComponents_Light_BottomSheetDialog, book);
-        popupQuantity.setOnSubmitListener((quantity, dialog) -> Utils.addToCart(this,
-                new Commend(0, book, quantity, Calendar.getInstance().getTime(),
-                false, false)).enqueue(new Callback<Result>() {
-            @Override
-            public void onResponse(Call<Result> call, Response<Result> response) {
-
-                Result result = response.body();
-                if (result.getError()) {
-                    Utils.setDialogMessage(BookDetails.this, result.getMessage());
-                    Log.e(TAG, "Error process : " + result.getMessage(), null);
+        popupQuantity.setOnSubmitListener((quantity, dialog) -> {
+            Utils.setProgressDialog(this, getString(R.string.saver_data));
+            Task<DocumentReference> task = Utils.addToCart(this, new Commend(book.getId(), firebaseUser.getUid(),
+                    quantity, Calendar.getInstance().getTime(), quantity * book.getUnit_prise()));
+            if (task != null)
+                task.addOnCompleteListener(com -> {
+                        if (com.isSuccessful()) {
+                            String id = Objects.requireNonNull(com.getResult()).getId();
+                            CommendHelper.getCollectionRef().document(id).update("id", id).addOnCompleteListener(command -> {
+                                Utils.dismissDialog();
+                                Utils.setCmdCountBroadcast(1, false, this);
+                                Utils.setToastMessage(BookDetails.this, getString(R.string.add_successful));
+                                finish();
+                            });
+                        } else {
+                            if (com.getException() instanceof FirebaseNetworkException)
+                                Utils.setDialogMessage(this, R.string.network_not_allowed);
+                            else
+                                Utils.setToastMessage(this, getString(R.string.error_has_provide));
+                            Log.e(TAG, "Error where add commend to cart", com.getException());
+                        }
+                    });
                 }
-                else if (result.getSuccess()) {
-                    Utils.setToastMessage(BookDetails.this, getString(R.string.add_successful));
-                    finish();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Result> call, Throwable t) {
-                Utils.setDialogMessage(BookDetails.this, t.getMessage());
-                Log.e(TAG, "onFailure: " + call, t);
-            }
-        }));
+        );
         popupQuantity.show();
     }
 
@@ -136,6 +112,5 @@ public class BookDetails extends AppCompatActivity {
     public void comeback(View view) {
         onBackPressed();
     }
-
 
 }

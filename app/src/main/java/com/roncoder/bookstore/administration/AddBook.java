@@ -1,4 +1,4 @@
-package com.roncoder.bookstore.activities;
+package com.roncoder.bookstore.administration;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -106,8 +106,7 @@ public class AddBook extends AppCompatActivity {
 
     private void submitForm() {
 
-        boolean title_ok = true, author_ok = true, editor_ok = true, state_ok = true, class_ok = true,
-                cycle_ok = true, prise_ok = true, quantity_ok = true;
+        boolean all_is_valid = true;
 
         String title = Objects.requireNonNull(edit_title.getText()).toString().trim();
         String author = Objects.requireNonNull(edit_author.getText()).toString().trim();
@@ -124,68 +123,82 @@ public class AddBook extends AppCompatActivity {
         // Check validation of title
         if (title.equals("")) {
             edit_title.setError(getString(R.string.error_this_field_can_be_empty));
-            title_ok = false;
-        } else
-            edit_title.setError(null);
+            all_is_valid = false;
+        }
 
         // Check validation of author
         if (author.equals("")) {
             edit_author.setError(getString(R.string.error_this_field_can_be_empty));
-            author_ok = false;
-        } else
-            edit_author.setError(null);
+            all_is_valid = false;
+        }
 
         // Check validation of editor
         if (editor.equals("")) {
             edit_editor.setError(getString(R.string.error_this_field_can_be_empty));
-            editor_ok = false;
-        } else
-            edit_editor.setError(null);
+            all_is_valid = false;
+        }
 
         // Check validation of state
         if (state.equals("")) {
             edit_state.setError(getString(R.string.error_this_field_can_be_empty));
-            state_ok = false;
-        } else
-            edit_state.setError(null);
+            all_is_valid = false;
+        }
 
         // Check validation of class
         if (classes.equals("")) {
             edit_class.setError(getString(R.string.error_this_field_can_be_empty));
-            class_ok = false;
-        } else
-            edit_class.setError(null);
+            all_is_valid = false;
+        }
 
         // Check validation of cycle
         if (cycle.equals("")) {
             edit_cycle.setError(getString(R.string.error_this_field_can_be_empty));
-            cycle_ok = false;
-        } else
-            edit_cycle.setError(null);
+            all_is_valid = false;
+        }
 
         // Check validation of prise
         if (prise.equals("")) {
             edit_prise.setError(getString(R.string.error_this_field_can_be_empty));
-            prise_ok = false;
-        } else
-            edit_prise.setError(null);
+            all_is_valid = false;
+        }
 
         // Check validation of quantity
         if (quantity.equals("")) {
             edit_quantity.setError(getString(R.string.error_this_field_can_be_empty));
-            quantity_ok = false;
-        } else
-            edit_quantity.setError(null);
-
-        // Save if all is validate
-        if (title_ok && author_ok && editor_ok && state_ok && class_ok && cycle_ok && prise_ok && quantity_ok) {
-            if (imageUri == null) {
-                Utils.setProgressDialog(this, getString(R.string.saver_data));
-                addBook(book);
-            } else
-                uploadBookImage(book);
+            all_is_valid = false;
         }
 
+        // Save if all is validate
+        if (all_is_valid) {
+            Utils.setProgressDialog(this, getString(R.string.wait_a_moment));
+            BookHelper.getBookByTitle (book.getTitle()).addOnCompleteListener(com -> {
+               if (!com.isSuccessful()) {
+                   Utils.dismissDialog();
+                   if (com.getException() instanceof FirebaseNetworkException)
+                       Utils.setDialogMessage(this, R.string.network_not_allowed);
+                   else
+                       Utils.setToastMessage(this, getString(R.string.failled));
+                   return;
+               }
+               if (!is_uniqueTitle(title, Objects.requireNonNull(com.getResult()).toObjects(Book.class))) {
+                   if (imageUri == null) {
+                       Utils.updateDialogMessage(getString(R.string.saver_data));
+                       addBook(book);
+                   } else
+                       uploadBookImage(book);
+               } else{
+                   Utils.dismissDialog();
+                   Utils.setToastMessage(this, getString(R.string.book_allready_exist));
+               }
+            });
+        }
+    }
+
+    private boolean is_uniqueTitle(String title, List<Book> books) {
+        for (Book b : books)
+            if (b.getTitle().contains(title))
+                return true;
+        return false;
     }
 
     private void uploadBookImage(Book book) {
@@ -193,7 +206,7 @@ public class AddBook extends AppCompatActivity {
             String imagePath = System.currentTimeMillis() + Utils.getFileExtension(imageUri, this);
             StorageReference fileReference = storage.child(imagePath);
             UploadTask uploadTask = fileReference.putFile(imageUri);
-            Utils.setProgressDialog(this, getString(R.string.saver_image_profile));
+            Utils.updateDialogMessage(getString(R.string.saver_image_profile));
             uploadTask.addOnFailureListener(e -> {
                 Utils.dismissDialog();
                 if (e instanceof FirebaseNetworkException)
@@ -206,6 +219,7 @@ public class AddBook extends AppCompatActivity {
                         book.setImage1_front(uri.toString());
                         addBook(book);
                     }).addOnFailureListener(e -> {
+                        Utils.dismissDialog();
                         if (e instanceof FirebaseNetworkException)
                             Utils.setDialogMessage(this, R.string.network_not_allowed);
                         else
@@ -217,6 +231,7 @@ public class AddBook extends AppCompatActivity {
     private void addBook(Book book) {
         BookHelper.addBook (book).addOnCompleteListener(com -> {
             if (!com.isSuccessful()) { // When this request is success happen.
+                Utils.dismissDialog();
                 if (com.getException() instanceof FirebaseNetworkException)
                     Utils.setDialogMessage(this, R.string.network_not_allowed);
                 else
@@ -244,7 +259,8 @@ public class AddBook extends AppCompatActivity {
         super.onResume();
         ClassHelper.getAllClass().addSnapshotListener((value, error) -> {
             if (error != null) {
-                    Log.e(TAG, "Error: ", error);
+                Utils.setToastMessage(this, getString(R.string.failled));
+                Log.e(TAG, "Error: ", error);
                 return;
             }
             if (value != null) {

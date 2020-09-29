@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="?selectableItemBackground"
     app:cardElevation="6dp"
@@ -13,56 +14,56 @@
     android:layout_marginTop="5dp"
     app:cardCornerRadius="5dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <LinearLayout
+  <LinearLayout
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      >
+
+    <ImageView
+        android:id="@+id/book_image"
+        android:layout_width="150dp"
+        android:layout_height="200dp"
+        android:transitionName="bookImage"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/bg_image"
+        tools:ignore="UnusedAttribute" />
+
+    <TextView
+        android:id="@+id/book_title"
+        android:textSize="@dimen/baseTextSize"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        >
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:paddingVertical="6dp"
+        android:paddingHorizontal="8dp"
+        android:paddingTop="4dp"
+        android:layout_height="wrap_content"
+        android:text="Ronald Tchuekou : Informatiques, dans l'esemble" />
 
-        <ImageView
-            android:id="@+id/book_image"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:transitionName="bookImage"
-            android:scaleType="centerCrop"
-            app:srcCompat="@drawable/bg_image"
-            tools:ignore="UnusedAttribute" />
+<!--    <TextView-->
+<!--        android:id="@+id/book_prise"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:textSize="@dimen/baseTextSize"-->
+<!--        android:textColor="@color/colorPrimary"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:singleLine="true"-->
+<!--        android:ellipsize="end"-->
+<!--        android:paddingHorizontal="8dp"-->
+<!--        android:textStyle="bold"-->
+<!--        android:text="5000 f" />-->
 
-        <TextView
-            android:id="@+id/book_title"
-            android:textSize="@dimen/baseTextSize"
-            android:layout_width="match_parent"
-            android:singleLine="true"
-            android:ellipsize="end"
-            android:paddingVertical="6dp"
-            android:paddingHorizontal="8dp"
-            android:paddingTop="4dp"
-            android:layout_height="wrap_content"
-            android:text="Ronald Tchuekou : Informatiques, dans l'esemble" />
-
-        <TextView
-            android:id="@+id/book_prise"
-            android:layout_width="match_parent"
-            android:textSize="@dimen/baseTextSize"
-            android:textColor="@color/colorPrimary"
-            android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:ellipsize="end"
-            android:paddingHorizontal="8dp"
-            android:textStyle="bold"
-            android:text="5000 f" />
-
-        <Button
-            android:id="@+id/buy_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginEnd="8dp"
-            android:textAllCaps="false"
-            android:backgroundTint="@color/colorAccent"
-            android:text="@string/commended"
-            android:textColor="@color/colorWhite"
-            tools:ignore="UnusedAttribute" />
-        </LinearLayout>
+<!--    <Button-->
+<!--        android:id="@+id/buy_button"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="end"-->
+<!--        android:layout_marginEnd="8dp"-->
+<!--        android:textAllCaps="false"-->
+<!--        android:backgroundTint="@color/colorAccent"-->
+<!--        android:text="@string/commended"-->
+<!--        android:textColor="@color/colorWhite"-->
+<!--        tools:ignore="UnusedAttribute" />-->
+  </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>

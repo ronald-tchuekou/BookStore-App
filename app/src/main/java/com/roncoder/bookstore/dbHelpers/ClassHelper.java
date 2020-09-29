@@ -1,17 +1,33 @@
 package com.roncoder.bookstore.dbHelpers;
 
-import com.roncoder.bookstore.api.APIClient;
-import com.roncoder.bookstore.api.APIRequest;
-import com.roncoder.bookstore.api.Result;
-
-import retrofit2.Call;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.roncoder.bookstore.models.Classes;
 
 public class ClassHelper {
 
-    public static APIRequest getService () {
-        return APIClient.getInstance().create(APIRequest.class);
+    public static final String COLLECTION = "Classes";
+
+    public static CollectionReference getCollectionRef () {
+        return FirebaseFirestore.getInstance().collection(COLLECTION);
     }
-    public static Call<Result> getClassesByCycle(String cycle) {
-        return getService().getCycleClasses(cycle);
+    public static Query getClassesByCycle(String cycle) {
+        return getCollectionRef().orderBy("cycle").startAt(cycle).endAt(cycle+'\uf8ff');
+    }
+
+    public static Query getAllClass() {
+        return getCollectionRef().orderBy("name");
+    }
+
+    public static Task<DocumentReference> addClass(Classes classes) {
+        return getCollectionRef().add(classes);
+    }
+
+    public static Task<QuerySnapshot> getClassByName(String name) {
+        return getCollectionRef().whereEqualTo("name", name).get();
     }
 }

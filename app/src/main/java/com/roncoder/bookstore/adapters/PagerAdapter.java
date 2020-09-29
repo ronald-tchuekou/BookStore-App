@@ -8,7 +8,7 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import com.roncoder.bookstore.administration.FragBill;
 import com.roncoder.bookstore.administration.FragBillExpress;
 import com.roncoder.bookstore.administration.FragBillObsoleted;
-import com.roncoder.bookstore.administration.FragBillShipping;
+import com.roncoder.bookstore.administration.FragBillDelivered;
 import com.roncoder.bookstore.administration.FragBillStandard;
 
 public class PagerAdapter extends FragmentStatePagerAdapter {
@@ -31,7 +31,7 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
          case 2:
             return new FragBillExpress();
          case 3:
-            return new FragBillShipping();
+            return new FragBillDelivered();
          default:
             return new FragBillObsoleted();
       }

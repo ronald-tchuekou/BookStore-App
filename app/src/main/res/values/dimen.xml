@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="baseTextSize">18sp</dimen>
+    <dimen name="baseTextSize">16sp</dimen>
     <dimen name="actionBarSize">56dp</dimen>
 </resources>

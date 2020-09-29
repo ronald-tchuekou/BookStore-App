@@ -12,19 +12,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.appbar.MaterialToolbar;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import com.roncoder.bookstore.R;
-import com.roncoder.bookstore.api.Result;
 import com.roncoder.bookstore.dbHelpers.BookHelper;
 import com.roncoder.bookstore.fragments.Home;
 import com.roncoder.bookstore.models.Book;
@@ -33,10 +28,6 @@ import com.roncoder.bookstore.utils.Utils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import static com.roncoder.bookstore.utils.Utils.ListTypes.FIRST_CYCLE;
 import static com.roncoder.bookstore.utils.Utils.ListTypes.PRIMARY_CYCLE;
@@ -47,10 +38,13 @@ public class AllCycleBook extends AppCompatActivity {
     int commend_count = 0;
     TextView cart_badge;
     GridView layout_grid;
+    ImageView empty;
+    ProgressBar progress;
     private Utils.ListTypes types;
     private boolean is_francophone;
     private GridAdapter adapter;
     private List<Book> books;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,9 +58,10 @@ public class AllCycleBook extends AppCompatActivity {
         // Adapted the grid_layout vew.
         books = new ArrayList<>();
         layout_grid = findViewById(R.id.grid);
+        progress = findViewById(R.id.progress);
+        empty = findViewById(R.id.empty);
         adapter = new GridAdapter();
         layout_grid.setAdapter(adapter);
-        setBookContent();
         managedActionbar();
     }
 
@@ -92,43 +87,30 @@ public class AllCycleBook extends AppCompatActivity {
                 cycle = Utils.SECONDARY_A;
         }
 
-        BookHelper.getBooksByCycle(cycle).enqueue(new Callback<Result>() {
-            @Override
-            public void onResponse(Call<Result> call, Response<Result> response) {
-
-                Result result = response.body();
-
-                if (result == null)
-                    return;
-
-                if (result.getError()) {
-                    Utils.setDialogMessage(AllCycleBook.this, result.getMessage());
-                    Log.e(TAG, "Error process : " + result.getMessage(), null);
-                }
-                else if (result.getSuccess()) {
-                    String value = result.getValue();
-                    Log.i(TAG, "Success process : " + value);
-                    Gson gson = new Gson();
-                    JsonArray bookArray = (JsonArray) JsonParser.parseString(value);
-                    for (JsonElement element : bookArray) {
-                        books.add(gson.fromJson(element, Book.class));
+        progress.setVisibility(View.VISIBLE);
+        BookHelper.getBooksByCycle(cycle)
+                .addSnapshotListener((value, error) -> {
+                    progress.setVisibility(View.GONE);
+                    if (error != null) {
+                        Log.e(TAG, "setNurseryContent: ", error);
+                        return;
                     }
-                    adapter.notifyDataSetChanged();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Result> call, Throwable t) {
-                Utils.setDialogMessage(AllCycleBook.this, t.getMessage());
-                Log.e(TAG, "onFailure: " + call, t);
-            }
-        });
+                    if (value != null) {
+                        books.clear();
+                        books.addAll(value.toObjects(Book.class));
+                        if (books.isEmpty())
+                            empty.setVisibility(View.VISIBLE);
+                        else
+                            empty.setVisibility(View.GONE);
+                        adapter.notifyDataSetChanged();
+                    }
+                });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        recreate();
+        setBookContent();
     }
 
     /**
@@ -151,7 +133,7 @@ public class AllCycleBook extends AppCompatActivity {
      * @return Value.
      */
     private String getCorrespondCycle () {
-        String[] class_group = getResources().getStringArray(R.array.class_groups);
+        String[] class_group = getResources().getStringArray(R.array.cycles);
         String value;
         if (is_francophone)
             if (types == PRIMARY_CYCLE) value = class_group[1];
@@ -231,7 +213,7 @@ public class AllCycleBook extends AppCompatActivity {
 
         @Override
         public long getItemId(int position) {
-            return getItem(position).getId();
+            return position;
         }
 
         @Override
@@ -242,11 +224,11 @@ public class AllCycleBook extends AppCompatActivity {
 
             ImageView book_image = itemView.findViewById(R.id.book_image);
             TextView book_title = itemView.findViewById(R.id.book_title);
-            TextView book_prise = itemView.findViewById(R.id.book_prise);
+//            TextView book_prise = itemView.findViewById(R.id.book_prise);
 
             Book book = books.get(position);
             String title = book.getAuthor() + " : " + book.getTitle();
-            book_prise.setText(Utils.formatPrise(book.getUnit_prise()));
+//            book_prise.setText(Utils.formatPrise(book.getUnit_prise()));
             book_title.setText(title);
             Glide.with(AllCycleBook.this)
                     .load(book.getImage1_front())
@@ -254,8 +236,8 @@ public class AllCycleBook extends AppCompatActivity {
                     .error(R.drawable.excellence_en_svteehb_3e)
                     .into(book_image);
 
-            Button buy = itemView.findViewById(R.id.buy_button);
-            buy.setOnClickListener(view -> Utils.commendActivity(AllCycleBook.this, book));
+//            Button buy = itemView.findViewById(R.id.buy_button);
+//            buy.setOnClickListener(view -> Utils.commendActivity(AllCycleBook.this, book));
             itemView.setOnClickListener(view -> Utils.bookDetail(AllCycleBook.this, books.get(position),
                     book_image, Home.TRANSITION_IMAGE_NAME));
             return itemView;

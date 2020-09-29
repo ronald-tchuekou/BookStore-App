@@ -1,4 +1,4 @@
-package com.roncoder.bookstore.activities;
+package com.roncoder.bookstore.administration;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -18,6 +18,7 @@ import com.roncoder.bookstore.dbHelpers.ClassHelper;
 import com.roncoder.bookstore.models.Classes;
 import com.roncoder.bookstore.utils.Utils;
 
+import java.util.List;
 import java.util.Objects;
 
 public class AddClass extends AppCompatActivity {
@@ -78,21 +79,52 @@ public class AddClass extends AppCompatActivity {
 
     private void addClass(Classes classes) {
         Utils.setProgressDialog(this, getString(R.string.wait_a_moment));
-        ClassHelper.addClass(classes).addOnCompleteListener(com -> {
-            Utils.dismissDialog();
-            if (!com.isSuccessful()) {
-                String id = Objects.requireNonNull(com.getResult()).getId();
-                ClassHelper.getCollectionRef().document(id).update("id", id);
-                if (com.getException() instanceof FirebaseNetworkException)
+        ClassHelper.getClassByName (classes.getName()).addOnCompleteListener(com1 -> { // Check existance.
+            if (!com1.isSuccessful()) {
+                Utils.dismissDialog();
+                if (com1.getException() instanceof FirebaseNetworkException)
                     Utils.setDialogMessage(this, R.string.network_not_allowed);
                 else
-                    Log.e(TAG, "Error: ", com.getException());
+                    Log.e(TAG, "Error: ", com1.getException());
                 return;
             }
-            Utils.setToastMessage(this, getString(R.string.add_successful));
+            if (!is_uniqueTitle(classes.getName(), Objects.requireNonNull(com1.getResult()).toObjects(Classes.class))) {
+                ClassHelper.addClass(classes).addOnCompleteListener(com -> { // Addition.
+                    if (!com.isSuccessful()) {
+                        Utils.dismissDialog();
+                        if (com.getException() instanceof FirebaseNetworkException)
+                            Utils.setDialogMessage(this, R.string.network_not_allowed);
+                        else
+                            Log.e(TAG, "Error: ", com.getException());
+                        return;
+                    }
+                    String id = Objects.requireNonNull(com.getResult()).getId();
+                    ClassHelper.getCollectionRef().document(id).update("id", id)
+                            .addOnSuccessListener(s -> {
+                                Utils.dismissDialog();
+                                Utils.setToastMessage(this, getString(R.string.add_successful));
+                            })
+                            .addOnFailureListener(f -> {
+                                Utils.dismissDialog();
+                                if (f instanceof FirebaseNetworkException)
+                                    Utils.setDialogMessage(this, R.string.network_not_allowed);
+                                else
+                                    Log.e(TAG, "Error: ", f);
+                            });
+                });
+            } else{
+                Utils.dismissDialog();
+                Utils.setToastMessage(this, getString(R.string.class_allready_exist));
+            }
         });
     }
 
+    private boolean is_uniqueTitle(String name, List<Classes> classes) {
+        for (Classes c : classes)
+            if (c.getName().contains(name))
+                return true;
+        return false;
+    }
 
     private void initViews() {
 

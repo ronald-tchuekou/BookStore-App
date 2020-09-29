@@ -1,39 +1,42 @@
 package com.roncoder.bookstore.activities;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
-import com.google.android.material.appbar.MaterialToolbar;
+import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.imageview.ShapeableImageView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.roncoder.bookstore.R;
 import com.roncoder.bookstore.adapters.MessageAdapter;
+import com.roncoder.bookstore.dbHelpers.MessageHelper;
+import com.roncoder.bookstore.dbHelpers.UserHelper;
 import com.roncoder.bookstore.fragments.MessageChat;
-import com.roncoder.bookstore.models.Commend;
 import com.roncoder.bookstore.models.ContactMessage;
 import com.roncoder.bookstore.models.Message;
+import com.roncoder.bookstore.models.User;
 import com.roncoder.bookstore.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.roncoder.bookstore.utils.Utils.EXTRA_COMMEND;
+import java.util.Objects;
 
 public class Chat extends AppCompatActivity {
 
     private static final String TAG = "Chat";
-    private ArrayList<Parcelable> parcelablesCommends;
+    private FirebaseAuth auth;
     private ContactMessage contactMessage;
     private RecyclerView chat_recycler;
     private MessageAdapter adapter;
@@ -41,41 +44,75 @@ public class Chat extends AppCompatActivity {
     private FloatingActionButton send_btn;
     private EditText text_message;
     private View load_indicator;
-
+    private ImageButton back_home;
+    private ShapeableImageView profile_image;
+    private TextView sender_name;
+    private User user;
     private String message;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+
+        auth = FirebaseAuth.getInstance();
+
         contactMessage = getIntent().getParcelableExtra(MessageChat.CONTACT_MESSAGE_EXTRA);
-        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+        initViews();
+
+        Log.i(TAG, "onCreate: Contact Message => " + contactMessage);
+
+        adaptRecycler();
+        setMessageList();
+        managedListeners();
+
+        // Recycler scrolling listener.
+        chat_recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                Utils.setToastMessage(Chat.this, "POSITION : " + newState);
+            }
+        });
+
+        back_home.setOnClickListener(v-> onBackPressed());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        UserHelper.getUserById(auth.getUid()).addOnCompleteListener(com-> {
+            if (!com.isSuccessful()) {
+                Log.e(TAG, "managedMessage: ", com.getException());
+                return;
+            }
+            user = Objects.requireNonNull(com.getResult()).toObject(User.class);
+
+            // Set info.
+            sender_name.setText(user.getSurname() + " " + user.getName());
+            Glide.with(this)
+                    .load(user.getProfile())
+                    .placeholder(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_account, null))
+                    .placeholder(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_account, null))
+                    .into(profile_image);
+
+        });
+    }
+
+    private void initViews() {
         chat_recycler = findViewById(R.id.chat_recycler);
         text_message = findViewById(R.id.text_message);
         send_btn = findViewById(R.id.btn_send);
         load_indicator = findViewById(R.id.load_indicator);
-        parcelablesCommends = getIntent().getParcelableArrayListExtra(EXTRA_COMMEND);
-        if (parcelablesCommends != null) setCommends();
-        adaptRecycler();
-        setSupportActionBar(toolbar);
-        managedActionBar();
-        setMessageList();
-        managedMessage();
+        back_home = findViewById(R.id.back_home);
+        profile_image = findViewById(R.id.profile_image);
+        sender_name = findViewById(R.id.user_name);
     }
 
-    /**
-     * Function to get all the commend set by the intent.
-     */
-    private void setCommends () {
-        for(Parcelable parcel : parcelablesCommends) {
-            Commend commend = (Commend) parcel;
-            Log.i(TAG, "setCommends: Commends : " + commend);
-        }
-    }
-
-    private void managedMessage() {
+    private void managedListeners() {
         send_btn.setEnabled(false);
         send_btn.setClickable(false);
+        // Text changer.
         text_message.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -99,9 +136,28 @@ public class Chat extends AppCompatActivity {
 
             }
         });
+        //  Send the message.
         send_btn.setOnClickListener(v -> {
-            // TODO implement the send of message.
-            messages.add(new Message(1, "send", Utils.now(), message));
+            Message message = new Message(Utils.SMS_SEND, Utils.now(), this.message, contactMessage.getId());
+            MessageHelper.sendMessage(message).addOnCompleteListener(com-> {
+                if (!com.isSuccessful()) {
+                    Log.e(TAG, "managedMessage: ", com.getException());
+                    return;
+                }
+                if (com.getResult() != null) {
+                    String id = com.getResult().getId();
+                    // Update id.
+                    MessageHelper.getCollectionRef().document(id).update("id", id).addOnCompleteListener(com1-> {
+                        if (!com1.isSuccessful()) {
+                            Log.e(TAG, "managedMessage: ", com1.getException());
+                            return;
+                        }
+                        // TODO
+                        Log.i(TAG, "managedMessage: Message is sent.");
+                    });
+                }
+            });
+            messages.add(message);
             chat_recycler.scrollToPosition(messages.size()-1);
             adapter.notifyItemInserted(messages.size()-1);
             text_message.getText().clear();
@@ -119,34 +175,25 @@ public class Chat extends AppCompatActivity {
         chat_recycler.setAdapter(adapter);
     }
 
-    private void managedActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setTitle(contactMessage.getSender());
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setDisplayShowHomeEnabled(true);
-        }
-    }
-
     private void setMessageList() {
-        load_indicator.setVisibility(View.VISIBLE);
-        messages.add(new Message(2, "received", Utils.now(), getString(R.string.loerm)));
-        messages.add(new Message(1, "send", Utils.now(), getString(R.string.loerm)));
-        messages.add(new Message(1, "send", Utils.now(), getString(R.string.loerm)));
-        messages.add(new Message(2, "received", Utils.now(), getString(R.string.loerm)));
-        messages.add(new Message(1, "send", Utils.now(), getString(R.string.loerm)));
-        messages.add(new Message(2, "received", Utils.now(), getString(R.string.loerm)));
-        messages.add(new Message(2, "received", Utils.now(), getString(R.string.loerm)));
-        messages.add(new Message(2, "received", Utils.now(), getString(R.string.loerm)));
-        adapter.notifyDataSetChanged();
-        chat_recycler.scrollToPosition(messages.size() - contactMessage.getNot_read_count());
-        load_indicator.setVisibility(View.GONE);
-    }
+        if (contactMessage == null)
+            return;
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        onBackPressed();
-        return true;
+        load_indicator.setVisibility(View.VISIBLE);
+        MessageHelper.getMessages(contactMessage.getId()).addSnapshotListener((value, error) -> {
+            if (error != null) {
+                Log.e(TAG, "setMessageList: ", error);
+                load_indicator.setVisibility(View.GONE);
+                return;
+            }
+            if (value != null) {
+                messages.clear();
+                messages.addAll(value.toObjects(Message.class));
+                adapter.notifyDataSetChanged();
+                chat_recycler.scrollToPosition(messages.size() - contactMessage.getNot_read_count());
+                load_indicator.setVisibility(View.GONE);
+            }
+        });
     }
 
     @Override
