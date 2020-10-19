@@ -33,7 +33,7 @@ import com.roncoder.bookstore.fragments.MessageChat;
 import com.roncoder.bookstore.fragments.Search;
 import com.roncoder.bookstore.models.Classes;
 import com.roncoder.bookstore.models.Commend;
-import com.roncoder.bookstore.utils.Utils;
+import com.roncoder.bookstore.util.Utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;

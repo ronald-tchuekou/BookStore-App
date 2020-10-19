@@ -17,7 +17,7 @@ import com.roncoder.bookstore.R;
 import com.roncoder.bookstore.adapters.BillAdapter;
 import com.roncoder.bookstore.dbHelpers.BillHelper;
 import com.roncoder.bookstore.models.Bill;
-import com.roncoder.bookstore.utils.Utils;
+import com.roncoder.bookstore.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;

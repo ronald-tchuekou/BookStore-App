@@ -28,7 +28,7 @@ import com.roncoder.bookstore.dbHelpers.ClassHelper;
 import com.roncoder.bookstore.models.Book;
 import com.roncoder.bookstore.models.Classes;
 import com.roncoder.bookstore.models.Factory;
-import com.roncoder.bookstore.utils.Utils;
+import com.roncoder.bookstore.util.Utils;
 import com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView;
 
 import java.util.ArrayList;
@@ -45,13 +45,15 @@ public class Home extends Fragment implements View.OnClickListener {
     @SuppressLint("StaticFieldLeak")
     private static Home instance = null;
     private String[] class_group;
-    private ProgressBar progress_first, progress_second, progress_third, progress_class;
-    private ImageView empty_first, empty_second, empty_third, empty_class;
-    private TextView all_primary_cycle, all_first_cycle, all_second_cycle, nursery_text, primary_text, secondary_text, class_text;
-    private MultiSnapRecyclerView nursery_cycle_recyclerView, primary_cycle_recyclerView, secondary_cycle_recyclerView, classes_recyclerView;
-    private List<Factory> nursery_cycleBooks, primary_cycleBooks, secondary_cycleBooks, classesList;
-    private HomeAdapter nursery_cycleBookAdapter, primary_cycleBookAdapter, second_cycleBookAdapter, classesAdapter;
-    Query nurseryQuery, primaryQuery, secondaryQuery, classQuery;
+    private ProgressBar progress_first, progress_second, progress_third, progress_class, progress_dictionary;
+    private ImageView empty_first, empty_second, empty_third, empty_class, empty_dictionary;
+    private TextView all_primary_cycle, all_first_cycle, all_second_cycle, all_dictionary,
+            nursery_text, primary_text, secondary_text, class_text, dictionary_text;
+    private MultiSnapRecyclerView nursery_cycle_recyclerView, primary_cycle_recyclerView,
+            secondary_cycle_recyclerView, classes_recyclerView, dictionary_recyclerView;
+    private List<Factory> nursery_cycleBooks, primary_cycleBooks, secondary_cycleBooks, classesList, dictionariesList;
+    private HomeAdapter nursery_cycleBookAdapter, primary_cycleBookAdapter, second_cycleBookAdapter, classesAdapter, dictionaryAdapter;
+    Query nurseryQuery, primaryQuery, secondaryQuery, classQuery, dictionaryQuery;
 
     public Home() { }
 
@@ -84,22 +86,27 @@ public class Home extends Fragment implements View.OnClickListener {
         all_primary_cycle = root.findViewById(R.id.all_primary_cycle);
         all_first_cycle = root.findViewById(R.id.all_first_cycle);
         all_second_cycle = root.findViewById(R.id.all_second_cycle);
+        all_dictionary = root.findViewById(R.id.all_dictionary);
         nursery_cycle_recyclerView = root.findViewById(R.id.first_cycle_recyclerView);
         primary_cycle_recyclerView = root.findViewById(R.id.second_cycle_recyclerView);
         secondary_cycle_recyclerView = root.findViewById(R.id.third_cycle_recyclerView);
         classes_recyclerView = root.findViewById(R.id.classes_recyclerView);
+        dictionary_recyclerView = root.findViewById(R.id.dictionary_recyclerView);
         nursery_text = root.findViewById(R.id.textView9);
         primary_text = root.findViewById(R.id.textView10);
         secondary_text = root.findViewById(R.id.textView11);
         class_text = root.findViewById(R.id.textView12);
+        dictionary_text = root.findViewById(R.id.textView14);
         progress_class = root.findViewById(R.id.progress_class);
         progress_first = root.findViewById(R.id.progress_first);
         progress_second = root.findViewById(R.id.progress_second);
         progress_third = root.findViewById(R.id.progress_third);
+        progress_dictionary = root.findViewById(R.id.progress_dictionary);
         empty_class = root.findViewById(R.id.empty_class);
         empty_first = root.findViewById(R.id.empty_first);
         empty_second = root.findViewById(R.id.empty_second);
         empty_third = root.findViewById(R.id.empty_third);
+        empty_dictionary = root.findViewById(R.id.empty_dictionary);
     }
 
     /**
@@ -109,6 +116,7 @@ public class Home extends Fragment implements View.OnClickListener {
         nursery_cycleBookAdapter.setOnCycleItemBookListener((position, view) -> startBookDetailActivity((Book) nursery_cycleBooks.get(position), view));
         primary_cycleBookAdapter.setOnCycleItemBookListener((position, view) -> startBookDetailActivity((Book) primary_cycleBooks.get(position), view));
         second_cycleBookAdapter.setOnCycleItemBookListener((position, view) -> startBookDetailActivity((Book) secondary_cycleBooks.get(position), view));
+        dictionaryAdapter.setOnCycleItemBookListener((position, view) -> startBookDetailActivity((Book) dictionariesList.get(position), view));
         classesAdapter.setOnClassItemClickListener(position -> {
             Intent classIntent = new Intent(requireContext(), ClassBook.class);
             classIntent.putExtra(EXTRA_CLASS, (Classes) classesList.get(position));
@@ -128,27 +136,28 @@ public class Home extends Fragment implements View.OnClickListener {
         all_primary_cycle.setOnClickListener(this);
         all_first_cycle.setOnClickListener(this);
         all_second_cycle.setOnClickListener(this);
+        all_dictionary.setOnClickListener(this);
     }
 
     private void initRecyclerViews() {
         adapter_nursery_cycleBooks();
         adapter_primary_cycleBooks();
         adapt_secondary_cycleBooks();
+        adapt_dictionaries();
         adaptClassesBooks();
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.all_primary_cycle:
-                setToAllBook(Utils.ListTypes.PRIMARY_CYCLE);
-                break;
-            case R.id.all_first_cycle:
-                setToAllBook(Utils.ListTypes.FIRST_CYCLE);
-                break;
-            case R.id.all_second_cycle:
-                setToAllBook(Utils.ListTypes.SECOND_CYCLE);
-                break;
+        int id = v.getId();
+        if (id == R.id.all_primary_cycle) {
+            setToAllBook(Utils.ListTypes.PRIMARY_CYCLE);
+        } else if (id == R.id.all_first_cycle) {
+            setToAllBook(Utils.ListTypes.FIRST_CYCLE);
+        } else if (id == R.id.all_second_cycle) {
+            setToAllBook(Utils.ListTypes.SECOND_CYCLE);
+        } else if (id == R.id.all_dictionary) {
+            setToAllBook(Utils.ListTypes.DICTIONARY);
         }
     }
 
@@ -156,10 +165,12 @@ public class Home extends Fragment implements View.OnClickListener {
         empty_first.setVisibility(View.INVISIBLE);
         empty_second.setVisibility(View.INVISIBLE);
         empty_third.setVisibility(View.INVISIBLE);
+        empty_dictionary.setVisibility(View.INVISIBLE);
         empty_class.setVisibility(View.INVISIBLE);
         setNurseryContent();
         setPrimaryContent();
         setSecondaryContent();
+        setDictionaryContent();
         setClassContent();
     }
 
@@ -313,6 +324,48 @@ public class Home extends Fragment implements View.OnClickListener {
                 second_cycleBookAdapter.notifyDataSetChanged();
             }
         });
+
+    }
+
+    private void adapt_dictionaries () {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL,
+                false);
+        dictionary_recyclerView.setHasFixedSize(true);
+        dictionary_recyclerView.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+        dictionary_recyclerView.setLayoutManager(layoutManager);
+        // initialisation of the adapter.
+        if (dictionariesList == null)
+            dictionariesList = new ArrayList<>();
+        else
+            dictionariesList.clear();
+        dictionaryAdapter = new HomeAdapter(dictionariesList, Utils.ListTypes.SECOND_CYCLE);
+        dictionary_recyclerView.setAdapter(dictionaryAdapter);
+    }
+
+    private void setDictionaryContent () {
+        dictionaryQuery = BookHelper.getDictionaries ();
+        progress_dictionary.setVisibility(View.VISIBLE);
+        dictionaryQuery.addSnapshotListener((value, error) -> {
+            progress_dictionary.setVisibility(View.GONE);
+            if (error != null) {
+                Log.e(TAG, "setSecondaryContent: ", error);
+                return;
+            }
+            if (value != null) {
+                dictionariesList.clear();
+                List<Book> books = value.toObjects(Book.class);
+                dictionariesList.addAll(books);
+                if (books.isEmpty())
+                    empty_dictionary.setVisibility(View.VISIBLE);
+                else
+                    empty_dictionary.setVisibility(View.INVISIBLE);
+
+                Log.i(TAG, "setDictionaryContent List : " + dictionariesList);
+
+                dictionaryAdapter.notifyDataSetChanged();
+            }
+        });
+
     }
 
     private void adaptClassesBooks() {
@@ -376,13 +429,11 @@ public class Home extends Fragment implements View.OnClickListener {
         PopupMenu popupMenu = new PopupMenu(requireActivity(), view);
         popupMenu.inflate(R.menu.menu_section);
         popupMenu.setOnMenuItemClickListener(item -> {
-            switch (item.getItemId()) {
-                case R.id.franco_option:
-                    setToFrancoPhoneSection();
-                    break;
-                case R.id.anglo_option:
-                    setToAngloPhoneSection();
-                    break;
+            int itemId = item.getItemId();
+            if (itemId == R.id.franco_option) {
+                setToFrancoPhoneSection();
+            } else if (itemId == R.id.anglo_option) {
+                setToAngloPhoneSection();
             }
             updateContentList();
             return true;
@@ -399,6 +450,7 @@ public class Home extends Fragment implements View.OnClickListener {
         changeTextView(primary_text, class_group[3]);
         changeTextView(secondary_text, class_group[5]);
         changeTextView(class_text, getString(R.string.classes));
+        changeTextView(dictionary_text, getString(R.string.dictionaries));
     }
 
     /**
@@ -410,6 +462,7 @@ public class Home extends Fragment implements View.OnClickListener {
         changeTextView(primary_text, class_group[2]);
         changeTextView(secondary_text, class_group[4]);
         changeTextView(class_text, getString(R.string.classes));
+        changeTextView(dictionary_text, getString(R.string.dictionaries));
     }
     /**
      * Function that change the text of the textView.

@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.Patterns;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
@@ -23,7 +22,7 @@ import com.google.firebase.storage.UploadTask;
 import com.roncoder.bookstore.R;
 import com.roncoder.bookstore.dbHelpers.UserHelper;
 import com.roncoder.bookstore.models.User;
-import com.roncoder.bookstore.utils.Utils;
+import com.roncoder.bookstore.util.Utils;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -35,7 +34,8 @@ public class UserMoreInfo extends AppCompatActivity {
 
     private static final String TAG = "UserMoreInfo";
     private ImageView profile_image;
-    private TextInputLayout layout_name, layout_mail, layout_surname;
+    private TextInputLayout layout_name;
+    private TextInputLayout layout_surname;
     private TextInputEditText edit_name, edit_surname, edit_mail;
     private String name, surname, mail;
     private Uri imageUri;
@@ -52,7 +52,6 @@ public class UserMoreInfo extends AppCompatActivity {
         edit_mail = findViewById(R.id.edit_email);
         edit_name = findViewById(R.id.edit_name);
         edit_surname = findViewById(R.id.edit_surname);
-        layout_mail = findViewById(R.id.edit_email_layout);
         layout_name = findViewById(R.id.edit_name_layout);
         layout_surname = findViewById(R.id.edit_surname_layout);
 
@@ -62,7 +61,7 @@ public class UserMoreInfo extends AppCompatActivity {
     }
 
     private void submitForm() {
-        boolean name_ok = true, surname_ok = true, email_ok = true;
+        boolean name_ok = true, surname_ok = true;
         name = Objects.requireNonNull(edit_name.getText()).toString().trim();
         mail = Objects.requireNonNull(edit_mail.getText()).toString().trim();
         surname = Objects.requireNonNull(edit_surname.getText()).toString().trim();
@@ -78,15 +77,9 @@ public class UserMoreInfo extends AppCompatActivity {
             surname_ok = false;
         } else
             layout_surname.setError(null);
-        // Check validation of mail
-        if (mail.equals("")  || !Patterns.EMAIL_ADDRESS.matcher(mail).matches()) {
-            layout_mail.setError(getString(R.string.error_mail));
-            email_ok = false;
-        } else
-            layout_mail.setError(null);
 
         // Save if all is validate
-        if (name_ok && surname_ok && email_ok) {
+        if (name_ok && surname_ok) {
             if (imageUri == null) {
                 Utils.setProgressDialog(this, getString(R.string.saver_data));
                 addUser(null);

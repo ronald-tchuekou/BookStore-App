@@ -16,18 +16,21 @@
         android:roundIcon="@drawable/bookstore_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
+        <activity android:name=".activities.Login"></activity>
+        <activity android:name=".activities.PhoneConfirm" />
+        <activity android:name=".activities.LoginPhone" />
         <activity
-            android:label="@string/add_class"
             android:name=".administration.AddClass"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/add_class"
             android:screenOrientation="nosensor"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
         <activity
-            android:label="@string/add_book"
             android:name=".administration.AddBook"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/add_book"
             android:screenOrientation="nosensor"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".administration.AdminBillDetail"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -39,10 +42,10 @@
             android:screenOrientation="nosensor" />
         <activity
             android:name=".administration.AdminChat"
-            android:label="@string/chat_message"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@style/AppTheme"
-            android:screenOrientation="nosensor" />
+            android:label="@string/chat_message"
+            android:screenOrientation="nosensor"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.Administration"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -134,6 +137,7 @@
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
+
         <meta-data
             android:name="com.facebook.sdk.AutoLogAppEventsEnabled"
             android:value="true" />

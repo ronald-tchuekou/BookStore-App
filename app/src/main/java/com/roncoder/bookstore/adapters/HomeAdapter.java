@@ -15,7 +15,7 @@ import com.roncoder.bookstore.R;
 import com.roncoder.bookstore.models.Book;
 import com.roncoder.bookstore.models.Classes;
 import com.roncoder.bookstore.models.Factory;
-import com.roncoder.bookstore.utils.Utils;
+import com.roncoder.bookstore.util.Utils;
 
 import java.util.List;
 

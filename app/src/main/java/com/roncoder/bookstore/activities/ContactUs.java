@@ -18,7 +18,7 @@ import android.view.View;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.roncoder.bookstore.R;
-import com.roncoder.bookstore.utils.Utils;
+import com.roncoder.bookstore.util.Utils;
 
 import static androidx.core.content.PermissionChecker.PERMISSION_GRANTED;
 

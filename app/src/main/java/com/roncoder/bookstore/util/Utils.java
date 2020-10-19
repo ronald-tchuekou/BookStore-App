@@ -1,4 +1,4 @@
-package com.roncoder.bookstore.utils;
+package com.roncoder.bookstore.util;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -20,7 +19,6 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.core.app.ActivityOptionsCompat;
-import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -29,8 +27,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.roncoder.bookstore.R;
 import com.roncoder.bookstore.activities.BookDetails;
-import com.roncoder.bookstore.activities.BuyCommend;
 import com.roncoder.bookstore.activities.Commended;
+import com.roncoder.bookstore.activities.Login;
 import com.roncoder.bookstore.activities.LoginWithSocial;
 import com.roncoder.bookstore.activities.MainActivity;
 import com.roncoder.bookstore.dbHelpers.CommendHelper;
@@ -38,10 +36,8 @@ import com.roncoder.bookstore.models.Book;
 import com.roncoder.bookstore.models.Commend;
 
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import static androidx.core.app.ActivityOptionsCompat.makeSceneTransitionAnimation;
 
@@ -174,10 +170,28 @@ public class Utils {
     }
 
     /**
+     * Function to format the time seconds.
+     * @param second Time second
+     * @return format.
+     */
+    public static String secondsToTime (int second) {
+        int hours = second / 3600;
+        int minutes = (second % 3600) / 60;
+        int seconds = second % 60;
+        if (hours == 0 && minutes == 0 && seconds == 0)
+            return "0s";
+        if (hours == 0 && minutes == 0)
+            return seconds+"s";
+        if (hours == 0)
+            return minutes + "m" + seconds +"s";
+        return hours + "h" + minutes + "m" + seconds + "s";
+    }
+
+    /**
      * Type of list indicator.
      */
     public enum ListTypes {
-        PRIMARY_CYCLE, FIRST_CYCLE, SECOND_CYCLE, CLASSES
+        PRIMARY_CYCLE, FIRST_CYCLE, SECOND_CYCLE, CLASSES, DICTIONARY;
     }
 
     public static final String EXTRA_FRAG_TYPE = "frag_type";
@@ -190,6 +204,7 @@ public class Utils {
      */
     public static void setDialogMessage (Activity activity, @StringRes int message) {
         new MaterialAlertDialogBuilder(activity, R.style.AppTheme_Dialog)
+                .setTitle(R.string.infon)
                 .setMessage(message)
                 .setPositiveButton(R.string.ok, null)
                 .show();
@@ -201,6 +216,19 @@ public class Utils {
      */
     public static void setDialogMessage (Activity activity, @StringRes int message, DialogInterface.OnClickListener listener) {
         new MaterialAlertDialogBuilder(activity, R.style.AppTheme_Dialog)
+                .setTitle(R.string.infon)
+                .setMessage(message)
+                .setPositiveButton(R.string.ok, listener)
+                .show();
+    }
+    /**
+     * Function that set a dialog message.
+     * @param activity Activity.
+     * @param message message.
+     */
+    public static void setDialogMessage (Activity activity, String message, DialogInterface.OnClickListener listener) {
+        new MaterialAlertDialogBuilder(activity, R.style.AppTheme_Dialog)
+                .setTitle(R.string.infon)
                 .setMessage(message)
                 .setPositiveButton(R.string.ok, listener)
                 .show();
@@ -216,12 +244,13 @@ public class Utils {
                     .setTitle(R.string.infon)
                     .setMessage(R.string.your_not_auth)
                     .setPositiveButton(R.string.ok, (dialog, which) -> {
-                        activity.startActivity(new Intent(activity, LoginWithSocial.class));
+                        activity.startActivity(new Intent(activity, Login.class));
                         dialog.dismiss();
                     })
                     .setCancelable(false).show();
         else
             new MaterialAlertDialogBuilder(activity, R.style.AppTheme_Dialog)
+                    .setTitle(R.string.infon)
                     .setMessage(message)
                     .setPositiveButton(R.string.ok, null)
                     .show();

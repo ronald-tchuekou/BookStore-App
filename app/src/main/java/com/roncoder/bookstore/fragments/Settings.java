@@ -6,7 +6,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreference;
 
 import com.roncoder.bookstore.R;
-import com.roncoder.bookstore.utils.Utils;
+import com.roncoder.bookstore.util.Utils;
 
 public class Settings extends PreferenceFragmentCompat {
 

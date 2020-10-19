@@ -22,6 +22,7 @@
     <string name="am_sign_up">Je m\'inscris</string>
     <string name="pass_forgot">Mot de passe oublié ?</string>
     <string name="prompt_email">Adresse e-mail</string>
+    <string name="prompt_email_facultatif">Adresse e-mail (facultatif)</string>
     <string name="prompt_login">Numero téléphone ou adresse e-mail</string>
     <string name="prompt_password">Mot de passe</string>
     <string name="prompt_confirm_password">Confirmation</string>
@@ -150,11 +151,11 @@
     <string name="set_the_phone">Indiquer le téléphone !</string>
     <string name="add_successful">Ajoutée avec succès.</string>
     <string name="no_result_found">Pas de résultat(s) trouvés pour</string>
-    <string name="deleting">Suppression...</string>
+    <string name="deleting">Suppression…</string>
     <string name="valid_successful">Validée avec succès.</string>
-    <string name="validation">Validation...</string>
+    <string name="validation">Validation…</string>
     <string name="cmd_not_billed_to_validate">Cette commande n\'est pas facturée pour être validée. Veuillez la facuter en cliquant sur le bouton *Acheter*.</string>
-    <string name="wait_a_moment">Patientez...</string>
+    <string name="wait_a_moment">Patientez…</string>
     <string name="connect_successful">Connecté avec succès.</string>
     <string name="send_mail">Envoie d\'e-mail.</string>
     <string name="allow_notification_summary">Recevoir une notification pour vous avisez de la disposition d\'un nouveau livre au programme.</string>
@@ -174,26 +175,26 @@
     <string name="login_error">Votre identifiant ou mot de passe n\'est pas correct.</string>
     <string name="login_with_email">Utiliser une adresse email</string>
     <string name="login_with_phone">Utiliser un number de téléphone</string>
-    <string name="enter_your_phone">Entrer votre numero de téléphone</string>
+    <string name="enter_your_phone">Numero de téléphone</string>
     <string name="enter_your_email">Entrer votre adresse e-mail</string>
     <string name="invalid_phone">Votre numero de téléphone est invalide. ex: 6 23 58 41 23</string>
     <string name="invalid_code">Entrer un code de 6 chiffres</string>
     <string name="invalid_mail">Le champ ne doit pas être vide.</string>
     <string name="prompt_phone">Numero de téléphone</string>
     <string name="invalid_email">Votre adresse e-mail n\'est pas sous le bon format. ex: boostore@roncoder.com</string>
-    <string name="wait_auth">Authentification...</string>
-    <string name="saver_data">Sauvegarde de données...</string>
+    <string name="wait_auth">Authentification…</string>
+    <string name="saver_data">Sauvegarde de données…</string>
     <string name="book_allready_commended">Vous avez déjà commandé ce livre, pour les modifications, aller dans votre pagné.</string>
     <string name="not_auth">Vous n\'êtes pas authentifié. Veuillez le faire.</string>
-    <string name="verification">Vérification...</string>
+    <string name="verification">Vérification…</string>
     <string name="chose_app">Choisir une application.</string>
     <string name="complete_information">Compléter les informations de votre compte pour la facilitation de vos achats.</string>
     <string name="validate">Validé</string>
     <string name="error_name">Le nom doit contenir au moins 3 caractères.</string>
     <string name="error_surname">Votre nom doit contenir au moins 3 caractères.</string>
     <string name="error_mail">Votre adresse email n\'est pas sous le bon format. ex: bookstore@ron.com</string>
-    <string name="saver_image_profile">Sauvegarde de l\'image...</string>
-    <string name="loading">Chargement...</string>
+    <string name="saver_image_profile">Sauvegarde de l\'image…</string>
+    <string name="loading">Chargement…</string>
     <string name="deleted_succesful">Supprimé.</string>
     <string name="your_not_auth">Vous n\'êtes pas un utilisateur authentifier. Pour pouvoir éffectuer cette action, vous devez vous authentifier en cliquant sur le bouton \"OK\".</string>
     <string name="empty_bill">Pas de facture trouvées !!!</string>
@@ -210,7 +211,7 @@
     <string name="not_save">Echèc de la sauvegarde.</string>
     <string name="cmd_is_billed">Commande facturée</string>
     <string name="cmd_is_not_billed">Commande non facturée.</string>
-    <string name="failled">Echèc...</string>
+    <string name="failled">Echèc…</string>
     <string name="cmd_has_been_billed">Cette commande à déjà été facturée.</string>
     <string name="not_commend_to_buy">Vous n\'avez pas de commandes dans votre pagné.</string>
     <string name="update_successful">Mis à jour avec succès.</string>
@@ -223,11 +224,20 @@
     <string name="commended_successful">Votre commande à été enregistrée avec succès.</string>
     <string name="bill_label_info">Informations sur le client et emplacement de livraison.</string>
     <string name="label_quantity">Quantité: </string>
+    <string name="error_phone">Entrer un numero de téléphone valide.</string>
+    <string name="retry_again">Reésayer de nouveau de vous connectez.</string>
+    <string name="resend_code">Renvoyer le code</string>
+    <string name="prompt_email_or_phone">Adresse e-mail ou numéro de téléphone</string>
+    <string name="subscribe">S\'inscrire</string>
+    <string name="dictionaries">Dictionnaires</string>
+    <string name="dictionary_state">Etat du dictionnaire *</string>
+    <string name="dictionary_allready_exist">Un dictionnaire possèdant les même caractéristiques existe déjà.</string>
 
     // Arrays.
 
     <string-array name="options_add">
         <item>Livre</item>
+        <item>Dictionnaire</item>
         <item>Classe</item>
     </string-array>
     <string-array name="nursery_anglophone">

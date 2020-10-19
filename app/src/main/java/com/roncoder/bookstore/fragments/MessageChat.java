@@ -77,7 +77,7 @@ public class MessageChat extends Fragment {
     }
 
     private void setConversationList() {
-        MessageHelper.getConversations(auth.getUid()).addSnapshotListener((value, error) -> {
+        MessageHelper.getConversations(auth.getUid() == null ? "not_user" : auth.getUid()).addSnapshotListener((value, error) -> {
             if (error != null) {
                 Log.e(TAG, "setContactMessageList: ", error);
                 return;

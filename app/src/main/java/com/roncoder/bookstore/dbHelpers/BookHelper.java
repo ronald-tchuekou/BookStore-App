@@ -12,6 +12,9 @@ import com.roncoder.bookstore.models.Book;
 public class BookHelper {
 
     public static final String COLLECTION = "Books";
+    public static final String DICTIONARIES = "Dictionaries";
+
+    public static CollectionReference getDictionariesColRef () { return FirebaseFirestore.getInstance().collection(DICTIONARIES); }
 
     public static CollectionReference getCollectionRef () { return FirebaseFirestore.getInstance().collection(COLLECTION); }
 
@@ -37,5 +40,17 @@ public class BookHelper {
 
     public static Task<QuerySnapshot> getBookByTitle(String title) {
         return getCollectionRef().whereEqualTo("title", title).get();
+    }
+
+    public static Query getDictionaries() {
+        return getDictionariesColRef().orderBy("title");
+    }
+
+    public static Task<QuerySnapshot> getDictionaryByTitle(String title) {
+        return getDictionariesColRef().whereEqualTo("title", title).get();
+    }
+
+    public static Task<DocumentReference> addDictionary(Book book) {
+        return getDictionariesColRef().add(book);
     }
 }

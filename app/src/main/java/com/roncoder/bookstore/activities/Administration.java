@@ -22,6 +22,7 @@ import com.roncoder.bookstore.administration.AddClass;
 import com.roncoder.bookstore.administration.AdminChat;
 
 public class Administration extends AppCompatActivity {
+    public static final String BOOK_TYPE = "is_book";
     private  TabLayout tabLayout;
     private ViewPager viewPager;
     private TextView message_badge;
@@ -101,7 +102,7 @@ public class Administration extends AppCompatActivity {
      */
     private void setTabBadge (int position, int number) {
         TabLayout.Tab tab = tabLayout.getTabAt(position);
-        if (tab != null){
+        if (tab != null) {
             View root = tab.getCustomView();
             assert root != null;
             TextView badge = root.findViewById(R.id.badge);
@@ -139,9 +140,14 @@ public class Administration extends AppCompatActivity {
                     .setCancelable(false)
                     .setTitle(R.string.what_to_add)
                     .setItems(R.array.options_add, (dialog, which) -> {
-                        if (which == 0)
-                            startActivity(new Intent(this, AddBook.class));
-                        else
+                        Intent intent = new Intent(this, AddBook.class);
+                        if (which == 0){
+                            intent.putExtra(BOOK_TYPE, true);
+                            startActivity(intent);
+                        }else if(which == 1) {
+                            intent.putExtra(BOOK_TYPE, false);
+                            startActivity(intent);
+                        }else
                             startActivity(new Intent(this, AddClass.class));
                     })
                     .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss())

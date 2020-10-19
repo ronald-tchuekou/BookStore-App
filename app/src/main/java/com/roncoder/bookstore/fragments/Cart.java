@@ -36,7 +36,7 @@ import com.roncoder.bookstore.models.Commend;
 import com.roncoder.bookstore.models.Conversation;
 import com.roncoder.bookstore.models.Message;
 import com.roncoder.bookstore.models.User;
-import com.roncoder.bookstore.utils.Utils;
+import com.roncoder.bookstore.util.Utils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -513,7 +513,7 @@ public class Cart extends Fragment {
 
     private void setCommendList () {
         progress.setVisibility(View.VISIBLE);
-        CommendHelper.getAllClientCmd(user.getUid()).addSnapshotListener((value, error) -> {
+        CommendHelper.getAllClientCmd(user.getUid() == null ? "not_user" : user.getUid()).addSnapshotListener((value, error) -> {
             progress.setVisibility(View.GONE);
             if (error != null) {
                 progress.setVisibility(View.GONE);

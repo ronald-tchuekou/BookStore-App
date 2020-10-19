@@ -28,7 +28,7 @@ import com.roncoder.bookstore.models.Bill;
 import com.roncoder.bookstore.models.Book;
 import com.roncoder.bookstore.models.Commend;
 import com.roncoder.bookstore.models.ShippingAddress;
-import com.roncoder.bookstore.utils.Utils;
+import com.roncoder.bookstore.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;

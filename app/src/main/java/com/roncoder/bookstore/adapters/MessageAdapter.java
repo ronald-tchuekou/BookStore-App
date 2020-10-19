@@ -16,7 +16,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.roncoder.bookstore.R;
 import com.roncoder.bookstore.models.Message;
 import com.roncoder.bookstore.models.MessageCmd;
-import com.roncoder.bookstore.utils.Utils;
+import com.roncoder.bookstore.util.Utils;
 
 import java.util.List;
 

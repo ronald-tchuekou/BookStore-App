@@ -21,12 +21,12 @@ import com.roncoder.bookstore.R;
 import com.roncoder.bookstore.activities.Administration;
 import com.roncoder.bookstore.activities.ContactUs;
 import com.roncoder.bookstore.activities.Help;
-import com.roncoder.bookstore.activities.LoginWithSocial;
+import com.roncoder.bookstore.activities.Login;
 import com.roncoder.bookstore.activities.MyInformation;
 import com.roncoder.bookstore.activities.Settings;
 import com.roncoder.bookstore.dbHelpers.UserHelper;
 import com.roncoder.bookstore.models.User;
-import com.roncoder.bookstore.utils.Utils;
+import com.roncoder.bookstore.util.Utils;
 
 import java.util.Objects;
 
@@ -102,44 +102,36 @@ public class Account extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.button_account_sign:
-                startActivity(new Intent(requireContext(), LoginWithSocial.class));
-                break;
-            case R.id.my_information:
-                startActivity(new Intent(requireContext(), MyInformation.class));
-                break;
-            case R.id.administration:
-                startActivity(new Intent(requireActivity(), Administration.class));
-                break;
-            case R.id.settings:
-                startActivity(new Intent(requireContext(), Settings.class));
-                break;
-            case R.id.help:
-                Intent intent = new Intent(requireContext(), Help.class);
-                intent.putExtra(Help.EXTRA_TYPE, Help.HELP);
-                startActivity(intent);
-                break;
-            case R.id.note_app:
-                Utils.setToastMessage(requireActivity(), "Faire ceci apres avoir mis l'application sur PlayStore !!");
-                // TODO set to the note of app.
-                break;
-            case R.id.contact_us:
-                startActivity(new Intent(requireContext(), ContactUs.class));
-                break;
-            default:
-                new MaterialAlertDialogBuilder(requireActivity(),
-                        R.style.Theme_MaterialComponents_Light_BottomSheetDialog)
-                        .setTitle(R.string.comfim)
-                        .setMessage(R.string.confir_disconnect)
-                        .setPositiveButton(R.string.yes, (dialog1, which) -> {
-                            disconnectUser();
-                            disconnect.setEnabled(false);
-                            button_account_sign.setEnabled(true);
-                        })
-                        .setNegativeButton(R.string.no, null)
-                        .show();
-                break;
+        int id = v.getId();
+        if (id == R.id.button_account_sign) {
+            startActivity(new Intent(requireContext(), Login.class));
+        } else if (id == R.id.my_information) {
+            startActivity(new Intent(requireContext(), MyInformation.class));
+        } else if (id == R.id.administration) {
+            startActivity(new Intent(requireActivity(), Administration.class));
+        } else if (id == R.id.settings) {
+            startActivity(new Intent(requireContext(), Settings.class));
+        } else if (id == R.id.help) {
+            Intent intent = new Intent(requireContext(), Help.class);
+            intent.putExtra(Help.EXTRA_TYPE, Help.HELP);
+            startActivity(intent);
+        } else if (id == R.id.note_app) {
+            Utils.setToastMessage(requireActivity(), "Faire ceci apres avoir mis l'application sur PlayStore !!");
+            // TODO set to the note of app.
+        } else if (id == R.id.contact_us) {
+            startActivity(new Intent(requireContext(), ContactUs.class));
+        } else {
+            new MaterialAlertDialogBuilder(requireActivity(),
+                    R.style.Theme_MaterialComponents_Light_BottomSheetDialog)
+                    .setTitle(R.string.comfim)
+                    .setMessage(R.string.confir_disconnect)
+                    .setPositiveButton(R.string.yes, (dialog1, which) -> {
+                        disconnectUser();
+                        disconnect.setEnabled(false);
+                        button_account_sign.setEnabled(true);
+                    })
+                    .setNegativeButton(R.string.no, null)
+                    .show();
         }
     }
 

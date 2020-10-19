@@ -20,7 +20,7 @@ import com.roncoder.bookstore.R;
 import com.roncoder.bookstore.dbHelpers.CommendHelper;
 import com.roncoder.bookstore.models.Book;
 import com.roncoder.bookstore.models.Commend;
-import com.roncoder.bookstore.utils.Utils;
+import com.roncoder.bookstore.util.Utils;
 
 import java.util.Calendar;
 import java.util.Objects;

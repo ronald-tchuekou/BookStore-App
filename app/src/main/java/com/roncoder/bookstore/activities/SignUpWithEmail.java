@@ -19,21 +19,17 @@ import com.google.firebase.auth.FirebaseUser;
 import com.roncoder.bookstore.R;
 import com.roncoder.bookstore.dbHelpers.UserHelper;
 import com.roncoder.bookstore.models.User;
-import com.roncoder.bookstore.utils.Utils;
-
-import io.michaelrocks.libphonenumber.android.NumberParseException;
-import io.michaelrocks.libphonenumber.android.PhoneNumberUtil;
-import io.michaelrocks.libphonenumber.android.Phonenumber;
+import com.roncoder.bookstore.util.Utils;
 
 public class SignUpWithEmail extends AppCompatActivity {
     private static final String TAG = "SignUpWithEmail";
-    private TextInputLayout layout_surname, layout_name, layout_email, layout_pass, layout_confirm_pass, layout_phone;
-    private TextInputEditText edit_surname, edit_name, edit_email, edit_pass, edit_confirm_pass, edit_phone;
+    private TextInputLayout layout_surname, layout_name, layout_email, layout_pass, layout_confirm_pass;
+    private TextInputEditText edit_surname, edit_name, edit_email, edit_pass, edit_confirm_pass;
     private Button submit_btn;
-    private boolean surname_ok = false, name_ok = false, email_ok = false, pass_ok = false, confirm_pass_ok = false, phone_ok = false;
-    private String surname, name, mail, pass, confirm_pass, phone;
+    private boolean surname_ok = false, name_ok = false, email_ok = false, pass_ok = false, confirm_pass_ok = false;
+    private String surname, name, mail, pass, confirm_pass;
     private FirebaseAuth auth;
-    private User user = new User();
+    private final User user = new User();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +41,6 @@ public class SignUpWithEmail extends AppCompatActivity {
         surnameWatcher();
         nameWatcher();
         emailWatcher();
-        phoneWatcher();
         passWatcher();
         confirmPassWatcher();
         submit_btn.setOnClickListener(v->submitForm());
@@ -54,7 +49,6 @@ public class SignUpWithEmail extends AppCompatActivity {
     private void submitForm() {
         user.setName(name);
         user.setSurname(surname);
-        user.setPhone(phone);
         user.setPassword(pass);
         user.setLogin(mail);
 
@@ -168,36 +162,6 @@ public class SignUpWithEmail extends AppCompatActivity {
             public void afterTextChanged(Editable s) { }
         });
     }
-    private void phoneWatcher() {
-        edit_phone.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                phone = s.toString().trim();
-                try {
-                    PhoneNumberUtil numberUtil = PhoneNumberUtil.createInstance(SignUpWithEmail.this);
-                    Phonenumber.PhoneNumber phoneNumber = numberUtil.parse(phone, "CM");
-                    boolean isValid = numberUtil.isValidNumber(phoneNumber);
-                    if (isValid) {
-                        phone_ok = true;
-                        layout_phone.setError(null);
-                    }
-                    else {
-                        layout_phone.setError(getString(R.string.invalid_phone));
-                        phone_ok = false;
-                    }
-                } catch (NumberParseException e) {
-                    Log.e(TAG, "Error when parsing the phone number : " + phone, e);
-                } catch (Exception e) {
-                    Log.e(TAG, "Phone parsing error : ", e);
-                }
-                activeConBtn();
-            }
-            @Override
-            public void afterTextChanged(Editable s) { }
-        });
-    }
     private void passWatcher() {
         edit_pass.addTextChangedListener(new TextWatcher() {
             @Override
@@ -256,7 +220,7 @@ public class SignUpWithEmail extends AppCompatActivity {
      * Function to activate the connection button.
      */
     private void activeConBtn() {
-        if (surname_ok && name_ok && email_ok && pass_ok && confirm_pass_ok && phone_ok) {
+        if (surname_ok && name_ok && email_ok && pass_ok && confirm_pass_ok) {
             submit_btn.setEnabled(true);
             submit_btn.setClickable(true);
         }
@@ -271,13 +235,11 @@ public class SignUpWithEmail extends AppCompatActivity {
         layout_email = findViewById(R.id.edit_email_layout);
         layout_pass = findViewById(R.id.edit_pass_layout);
         layout_confirm_pass = findViewById(R.id.layout_confirm_pass);
-        layout_phone = findViewById(R.id.edit_phone_layout);
         edit_surname = findViewById(R.id.edit_surname);
         edit_name = findViewById(R.id.edit_name);
         edit_email = findViewById(R.id.edit_login);
         edit_pass = findViewById(R.id.edit_pass);
         edit_confirm_pass = findViewById(R.id.edit_confirm_pass);
-        edit_phone = findViewById(R.id.edit_phone);
         submit_btn = findViewById(R.id.submit_btn);
         submit_btn.setEnabled(false);
         submit_btn.setClickable(false);

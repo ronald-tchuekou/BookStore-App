@@ -23,15 +23,16 @@ import com.roncoder.bookstore.R;
 import com.roncoder.bookstore.dbHelpers.BookHelper;
 import com.roncoder.bookstore.fragments.Home;
 import com.roncoder.bookstore.models.Book;
-import com.roncoder.bookstore.utils.Utils;
+import com.roncoder.bookstore.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static com.roncoder.bookstore.utils.Utils.ListTypes.FIRST_CYCLE;
-import static com.roncoder.bookstore.utils.Utils.ListTypes.PRIMARY_CYCLE;
-import static com.roncoder.bookstore.utils.Utils.ListTypes.SECOND_CYCLE;
+import static com.roncoder.bookstore.util.Utils.ListTypes.DICTIONARY;
+import static com.roncoder.bookstore.util.Utils.ListTypes.FIRST_CYCLE;
+import static com.roncoder.bookstore.util.Utils.ListTypes.PRIMARY_CYCLE;
+import static com.roncoder.bookstore.util.Utils.ListTypes.SECOND_CYCLE;
 
 public class AllCycleBook extends AppCompatActivity {
     private static final String TAG = "AllCycleBook";
@@ -88,23 +89,42 @@ public class AllCycleBook extends AppCompatActivity {
         }
 
         progress.setVisibility(View.VISIBLE);
-        BookHelper.getBooksByCycle(cycle)
-                .addSnapshotListener((value, error) -> {
-                    progress.setVisibility(View.GONE);
-                    if (error != null) {
-                        Log.e(TAG, "setNurseryContent: ", error);
-                        return;
-                    }
-                    if (value != null) {
-                        books.clear();
-                        books.addAll(value.toObjects(Book.class));
-                        if (books.isEmpty())
-                            empty.setVisibility(View.VISIBLE);
-                        else
-                            empty.setVisibility(View.GONE);
-                        adapter.notifyDataSetChanged();
-                    }
-                });
+        if(types == DICTIONARY)
+            BookHelper.getDictionaries().addSnapshotListener((value, error) -> {
+                progress.setVisibility(View.GONE);
+                if (error != null) {
+                    Utils.setDialogMessage(this, R.string.error_has_provide);
+                    Log.e(TAG, "setDictionaryContent: ", error);
+                    return;
+                }
+                if (value != null) {
+                    books.clear();
+                    books.addAll(value.toObjects(Book.class));
+                    if (books.isEmpty())
+                        empty.setVisibility(View.VISIBLE);
+                    else
+                        empty.setVisibility(View.GONE);
+                    adapter.notifyDataSetChanged();
+                }
+            });
+        else
+            BookHelper.getBooksByCycle(cycle).addSnapshotListener((value, error) -> {
+                progress.setVisibility(View.GONE);
+                if (error != null) {
+                    Utils.setDialogMessage(this, R.string.error_has_provide);
+                    Log.e(TAG, "setNurseryContent: ", error);
+                    return;
+                }
+                if (value != null) {
+                    books.clear();
+                    books.addAll(value.toObjects(Book.class));
+                    if (books.isEmpty())
+                        empty.setVisibility(View.VISIBLE);
+                    else
+                        empty.setVisibility(View.GONE);
+                    adapter.notifyDataSetChanged();
+                }
+            });
     }
 
     @Override

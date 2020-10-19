@@ -27,7 +27,7 @@ import com.roncoder.bookstore.dbHelpers.BillHelper;
 import com.roncoder.bookstore.dbHelpers.ShippingAddressHelper;
 import com.roncoder.bookstore.models.Bill;
 import com.roncoder.bookstore.models.ShippingAddress;
-import com.roncoder.bookstore.utils.Utils;
+import com.roncoder.bookstore.util.Utils;
 
 import java.util.Calendar;
 import java.util.Date;

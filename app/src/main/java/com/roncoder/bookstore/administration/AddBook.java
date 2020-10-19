@@ -5,12 +5,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,7 +20,12 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.FirebaseNetworkException;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -27,7 +34,7 @@ import com.roncoder.bookstore.dbHelpers.BookHelper;
 import com.roncoder.bookstore.dbHelpers.ClassHelper;
 import com.roncoder.bookstore.models.Book;
 import com.roncoder.bookstore.models.Classes;
-import com.roncoder.bookstore.utils.Utils;
+import com.roncoder.bookstore.util.Utils;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -35,17 +42,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static com.roncoder.bookstore.activities.Administration.BOOK_TYPE;
+
 public class AddBook extends AppCompatActivity {
 
-    StorageReference storage = FirebaseStorage.getInstance().getReference("Book_images");
+    StorageReference storage;
 
     private static final String TAG = "AddBook";
     private ImageView front_image;
     private ImageButton pick_image;
+    private TextView label_state;
     private EditText edit_title, edit_author, edit_editor, edit_state, edit_prise, edit_quantity;
+    private TextInputLayout edit_class_layout, edit_cycle_layout;
     private AutoCompleteTextView edit_class, edit_cycle;
     private Button submit_btn;
-    private List<CharSequence> classesList = new ArrayList<>();
+    private boolean is_book = true;
+    private final List<CharSequence> classesList = new ArrayList<>();
     private Uri imageUri;
 
     @Override
@@ -53,6 +65,11 @@ public class AddBook extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_book);
         initViews();
+        is_book = getIntent().getBooleanExtra(BOOK_TYPE, false);
+        if (is_book)
+            storage = FirebaseStorage.getInstance().getReference("Book_images");
+        else
+            storage = FirebaseStorage.getInstance().getReference("Dictionaries_images");
         submit_btn.setOnClickListener(v -> submitForm());
         pick_image.setOnClickListener(v -> pick_image());
         ActionBar actionBar = getSupportActionBar();
@@ -144,16 +161,18 @@ public class AddBook extends AppCompatActivity {
             all_is_valid = false;
         }
 
-        // Check validation of class
-        if (classes.equals("")) {
-            edit_class.setError(getString(R.string.error_this_field_can_be_empty));
-            all_is_valid = false;
-        }
+        if(is_book) {
+            // Check validation of class
+            if (classes.equals("")) {
+                edit_class.setError(getString(R.string.error_this_field_can_be_empty));
+                all_is_valid = false;
+            }
 
-        // Check validation of cycle
-        if (cycle.equals("")) {
-            edit_cycle.setError(getString(R.string.error_this_field_can_be_empty));
-            all_is_valid = false;
+            // Check validation of cycle
+            if (cycle.equals("")) {
+                edit_cycle.setError(getString(R.string.error_this_field_can_be_empty));
+                all_is_valid = false;
+            }
         }
 
         // Check validation of prise
@@ -171,27 +190,37 @@ public class AddBook extends AppCompatActivity {
         // Save if all is validate
         if (all_is_valid) {
             Utils.setProgressDialog(this, getString(R.string.wait_a_moment));
-            BookHelper.getBookByTitle (book.getTitle()).addOnCompleteListener(com -> {
-               if (!com.isSuccessful()) {
-                   Utils.dismissDialog();
-                   if (com.getException() instanceof FirebaseNetworkException)
-                       Utils.setDialogMessage(this, R.string.network_not_allowed);
-                   else
-                       Utils.setToastMessage(this, getString(R.string.failled));
-                   return;
-               }
-               if (!is_uniqueTitle(title, Objects.requireNonNull(com.getResult()).toObjects(Book.class))) {
-                   if (imageUri == null) {
-                       Utils.updateDialogMessage(getString(R.string.saver_data));
-                       addBook(book);
-                   } else
-                       uploadBookImage(book);
-               } else{
-                   Utils.dismissDialog();
-                   Utils.setToastMessage(this, getString(R.string.book_allready_exist));
-               }
+            getElementType(book).addOnCompleteListener(com -> {
+                if (!com.isSuccessful()) {
+                    Utils.dismissDialog();
+                    if (com.getException() instanceof FirebaseNetworkException)
+                        Utils.setDialogMessage(this, R.string.network_not_allowed);
+                    else
+                        Utils.setToastMessage(this, getString(R.string.failled));
+                    return;
+                }
+                if (!is_uniqueTitle(title, Objects.requireNonNull(com.getResult()).toObjects(Book.class))) {
+                    if (imageUri == null) {
+                        Utils.updateDialogMessage(getString(R.string.saver_data));
+                        addBook(book);
+                    } else
+                        uploadBookImage(book);
+                } else{
+                    Utils.dismissDialog();
+                    if (is_book)
+                        Utils.setToastMessage(this, getString(R.string.book_allready_exist));
+                    else
+                        Utils.setToastMessage(this, getString(R.string.dictionary_allready_exist));
+                }
             });
         }
+    }
+
+    private Task<QuerySnapshot> getElementType(Book book) {
+        if(is_book)
+            return BookHelper.getBookByTitle (book.getTitle());
+        else
+            return BookHelper.getDictionaryByTitle(book.getTitle());
     }
 
     private boolean is_uniqueTitle(String title, List<Book> books) {
@@ -229,7 +258,7 @@ public class AddBook extends AppCompatActivity {
     }
 
     private void addBook(Book book) {
-        BookHelper.addBook (book).addOnCompleteListener(com -> {
+        getHelperType(book).addOnCompleteListener(com -> {
             if (!com.isSuccessful()) { // When this request is success happen.
                 Utils.dismissDialog();
                 if (com.getException() instanceof FirebaseNetworkException)
@@ -239,7 +268,7 @@ public class AddBook extends AppCompatActivity {
                 return;
             }
             String id = Objects.requireNonNull(com.getResult()).getId();
-            BookHelper.getCollectionRef().document(id).update("id", id) // Set an id to this book.
+            getCollectionType().document(id).update("id", id) // Set an id to this book.
                     .addOnCompleteListener(command -> {
                         Utils.dismissDialog();
                         if (!com.isSuccessful()) {
@@ -254,25 +283,52 @@ public class AddBook extends AppCompatActivity {
         });
     }
 
+    private CollectionReference getCollectionType() {
+        if(is_book)
+            return BookHelper.getCollectionRef();
+        else
+            return BookHelper.getDictionariesColRef();
+    }
+
+    private Task<DocumentReference> getHelperType(Book book) {
+        if (is_book)
+            return BookHelper.addBook (book);
+        else
+            return BookHelper.addDictionary(book);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
-        ClassHelper.getAllClass().addSnapshotListener((value, error) -> {
-            if (error != null) {
-                Utils.setToastMessage(this, getString(R.string.failled));
-                Log.e(TAG, "Error: ", error);
-                return;
-            }
-            if (value != null) {
-                classesList.clear();
-                List<Classes> classes = value.toObjects(Classes.class);
-                for (Classes c : classes)
-                    classesList.add(c.getName());
-                ArrayAdapter<CharSequence> adapter_class = new ArrayAdapter<>(this,
-                        R.layout.cat_exposed_dropdown_popup_item, classesList);
-                edit_class.setAdapter(adapter_class);
-            }
-        });
+        // Check if the element to add is dictionary.
+        if (!is_book) {
+            edit_class_layout.setVisibility(View.GONE);
+            edit_cycle_layout.setVisibility(View.GONE);
+            label_state.setText(R.string.dictionary_state);
+            edit_state.setHint(R.string.dictionary_state);
+        }
+        else {
+            edit_class_layout.setVisibility(View.VISIBLE);
+            edit_cycle_layout.setVisibility(View.VISIBLE);
+            label_state.setText(R.string.state);
+            edit_state.setHint(R.string.state);
+            ClassHelper.getAllClass().addSnapshotListener((value, error) -> {
+                if (error != null) {
+                    Utils.setToastMessage(this, getString(R.string.failled));
+                    Log.e(TAG, "Error: ", error);
+                    return;
+                }
+                if (value != null) {
+                    classesList.clear();
+                    List<Classes> classes = value.toObjects(Classes.class);
+                    for (Classes c : classes)
+                        classesList.add(c.getName());
+                    ArrayAdapter<CharSequence> adapter_class = new ArrayAdapter<>(this,
+                            R.layout.cat_exposed_dropdown_popup_item, classesList);
+                    edit_class.setAdapter(adapter_class);
+                }
+            });
+        }
     }
 
     private void initViews() {
@@ -281,10 +337,13 @@ public class AddBook extends AppCompatActivity {
         edit_title = findViewById(R.id.edit_title);
         edit_author = findViewById(R.id.edit_author);
         edit_editor = findViewById(R.id.edit_editor);
+        label_state = findViewById(R.id.label_state);
         edit_state = findViewById(R.id.edit_state);
         edit_class = findViewById(R.id.edit_class);
         edit_cycle = findViewById(R.id.edit_cycle);
         edit_prise = findViewById(R.id.edit_prise);
+        edit_class_layout = findViewById(R.id.edit_class_layout);
+        edit_cycle_layout = findViewById(R.id.edit_cycle_layout);
         edit_quantity = findViewById(R.id.edit_quantity);
         submit_btn = findViewById(R.id.submit_btn);
 

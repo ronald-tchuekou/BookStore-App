@@ -29,7 +29,7 @@ import com.google.firebase.auth.PhoneAuthProvider;
 import com.roncoder.bookstore.R;
 import com.roncoder.bookstore.dbHelpers.UserHelper;
 import com.roncoder.bookstore.models.User;
-import com.roncoder.bookstore.utils.Utils;
+import com.roncoder.bookstore.util.Utils;
 
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;

@@ -33,7 +33,7 @@ import com.google.firebase.auth.OAuthProvider;
 import com.roncoder.bookstore.R;
 import com.roncoder.bookstore.dbHelpers.UserHelper;
 import com.roncoder.bookstore.models.User;
-import com.roncoder.bookstore.utils.Utils;
+import com.roncoder.bookstore.util.Utils;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -67,7 +67,7 @@ public class LoginWithSocial extends AppCompatActivity implements View.OnClickLi
             Utils.setDialogMessage(this, R.string.your_all_ready_auth, (dialog, which) -> finish());
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestIdToken(getString(R.string.contact_phone))
                 .requestProfile()
                 .requestEmail()
                 .build();

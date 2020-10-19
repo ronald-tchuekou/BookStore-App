@@ -16,7 +16,7 @@ import com.google.firebase.FirebaseNetworkException;
 import com.roncoder.bookstore.R;
 import com.roncoder.bookstore.dbHelpers.ClassHelper;
 import com.roncoder.bookstore.models.Classes;
-import com.roncoder.bookstore.utils.Utils;
+import com.roncoder.bookstore.util.Utils;
 
 import java.util.List;
 import java.util.Objects;
